@@ -21,14 +21,16 @@
     "dist"
   ],
   "scripts": {
-    "start": "node index.js",
     "build": "vite build",
     "lint:fix": "npm run test:lint -- --fix",
     "prepare": "husky",
+    "start": "node index.js",
     "test": "vitest run",
     "test:lint": "eslint",
     "test:types": "tsc --noEmit",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "release": "xs bump,git-push",
+    "publish-ci": "xs publish"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -43,6 +45,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "@pixi/extension-scripts": "latest",
     "@tsconfig/node20": "^20.1.4",
     "@types/cross-spawn": "^6.0.6",
     "@types/minimist": "^1.2.5",
