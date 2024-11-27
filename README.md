@@ -15,25 +15,25 @@
 With NPM:
 
 ```bash
-$ npm create pixijs@latest
+$ npm create pixi.js@latest
 ```
 
 With Yarn:
 
 ```bash
-$ yarn create pixijs
+$ yarn create pixi.js
 ```
 
 With PNPM:
 
 ```bash
-$ pnpm create pixijs
+$ pnpm create pixi.js
 ```
 
 With Bun:
 
 ```bash
-$ bun create pixijs
+$ bun create pixi.js
 ```
 
 Then follow the prompts!
@@ -42,16 +42,16 @@ You can also directly specify the project name and the template you want to use 
 
 ```bash
 # npm 7+, extra double-dash is needed:
-npm create pixijs@latest pixi-project -- --template bundler-vite
+npm create pixi.js@latest pixi-project -- --template bundler-vite
 
 # yarn
-yarn create pixijs pixi-project --template bundler-vite
+yarn create pixi.js pixi-project --template bundler-vite
 
 # pnpm
-pnpm create pixijs pixi-project --template bundler-vite
+pnpm create pixi.js pixi-project --template bundler-vite
 
 # Bun
-bun create pixijs pixi-project --template bundler-vite
+bun create pixi.js pixi-project --template bundler-vite
 ```
 
 Currently supported template presets include:
@@ -60,7 +60,6 @@ Currently supported template presets include:
 - `bundler-webpack`
 - `bundler-esbuild`
 - `bundler-import-map`
-- `bundler-parcel`
 
 We also have some additional templates that you can use for creating games for specific platforms:
 - `game-web`

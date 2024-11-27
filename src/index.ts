@@ -7,7 +7,7 @@ import minimist from "minimist";
 import colors from "picocolors";
 import prompts from "prompts";
 
-const { blue, blueBright, cyan, green, red, white, reset, yellow } = colors;
+const { blue, blueBright, cyan, green, red, reset, yellow } = colors;
 
 // Avoids autoconversion to number of the project name by defining that the args
 // non associated with an option ( _ ) needs to be parsed as a string. See #4606
@@ -34,7 +34,6 @@ Options:
 Available templates:
 ${yellow    ('Vite:             bundler-vite'       )}
 ${blueBright('Webpack:          bundler-webpack'    )}
-${white     ('Parcel:           bundler-parcel'     )}
 ${yellow    ('esbuild:          bundler-esbuild'    )}
 ${green     ('Import Map:       bundler-import-map' )}
 
@@ -60,7 +59,7 @@ type FrameworkVariant = {
 const FRAMEWORKS: Framework[] = [
     {
         name: "bundlers",
-        display: "App",
+        display: "Bundler",
         color: yellow,
         variants: [
             {
@@ -72,11 +71,6 @@ const FRAMEWORKS: Framework[] = [
                 name: "bundler-webpack",
                 display: "Webpack",
                 color: blueBright,
-            },
-            {
-                name: "bundler-parcel",
-                display: "Parcel",
-                color: white,
             },
             {
                 name: "bundler-esbuild",
