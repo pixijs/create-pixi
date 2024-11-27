@@ -1,4 +1,11 @@
-# create-pixi
+# PixiJS Create
+
+<div align="center">
+
+<img src=".github/logo.svg" alt="Logo"/>
+<p>A CLI tool to scaffold PixiJS projects</p>
+
+</div>
 
 ## Scaffolding Your First PixiJS Project
 
@@ -35,31 +42,31 @@ You can also directly specify the project name and the template you want to use 
 
 ```bash
 # npm 7+, extra double-dash is needed:
-npm create pixijs@latest pixi-project -- --template vite
+npm create pixijs@latest pixi-project -- --template bundler-vite
 
 # yarn
-yarn create pixijs pixi-project --template vite
+yarn create pixijs pixi-project --template bundler-vite
 
 # pnpm
-pnpm create pixijs pixi-project --template vite
+pnpm create pixijs pixi-project --template bundler-vite
 
 # Bun
-bun create pixijs pixi-project --template vite
+bun create pixijs pixi-project --template bundler-vite
 ```
 
 Currently supported template presets include:
 
-- `vite`
-- `webpack`
-- `esbuild`
-- `import-map`
-- `parcel`
+- `bundler-vite`
+- `bundler-webpack`
+- `bundler-esbuild`
+- `bundler-import-map`
+- `bundler-parcel`
 
 We also have some additional templates that you can use for creating games for specific platforms:
-- `web`
-- `discord`
-- `facebook`
-- `youtube`
+- `game-web`
+- `game-discord`
+- `game-facebook`
+- `game-youtube`
 
 There is also a template for generating a pixi plugin that follows our guidelines:
 

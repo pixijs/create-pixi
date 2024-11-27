@@ -1,0 +1,27 @@
+name: Pull Request CI
+on:
+  pull_request:
+    branches: ['**']
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install xvfb
+        run: sudo apt-get install xvfb
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Test Lint
+        run: npm run test:lint
+
+      - name: Test Types
+        run: npm run test:types
+
+      - name: Build for Distribution
+        run: xvfb-run --auto-servernum npm run build
