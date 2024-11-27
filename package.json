@@ -21,6 +21,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "node index.js",
     "build": "vite build",
     "lint:fix": "npm run test:lint -- --fix",
     "prepare": "husky",
