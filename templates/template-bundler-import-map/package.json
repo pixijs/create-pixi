@@ -1,10 +1,13 @@
 {
   "name": "template-import-map",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "http-server . -o"
+  },
+  "dependencies": {
+    "pixi.js": "^8.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
