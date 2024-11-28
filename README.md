@@ -72,3 +72,11 @@ There is also a template for generating a pixi plugin that follows our guideline
 - `plugin`
 
 You can use `.` for the project name to scaffold in the current directory.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+This project is based on [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite).
