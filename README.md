@@ -64,6 +64,7 @@ Currently supported template presets include:
 We also have some additional templates that you can use for creating games for specific platforms:
 - `game-web`
 - `game-discord`
+**Coming soon:**
 - `game-facebook`
 - `game-youtube`
 

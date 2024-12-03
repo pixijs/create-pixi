@@ -99,16 +99,16 @@ const FRAMEWORKS: Framework[] = [
         display: "Discord",
         color: blue,
       },
-      {
-        name: "game-facebook",
-        display: "Facebook",
-        color: blueBright,
-      },
-      {
-        name: "game-youtube",
-        display: "YouTube",
-        color: red,
-      },
+      // {
+      //   name: "game-facebook",
+      //   display: "Facebook",
+      //   color: blueBright,
+      // },
+      // {
+      //   name: "game-youtube",
+      //   display: "YouTube",
+      //   color: red,
+      // },
     ],
   },
 ];
