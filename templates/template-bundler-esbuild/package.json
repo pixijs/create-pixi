@@ -8,11 +8,11 @@
     "dev": "node scripts/esbuild.dev.mjs -w"
   },
   "dependencies": {
-    "pixi.js": "^8.6.1"
+    "pixi.js": "^8.6.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "eslint": "^9.15.0",
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
     "esbuild": "^0.24.0",
     "esbuild-plugin-clean": "^1.0.1",
     "esbuild-plugin-copy": "^2.1.1",

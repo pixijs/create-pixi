@@ -1,0 +1,24 @@
+{
+  "name": "template-game-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@esotericsoftware/spine-pixi-v8": "^4.2.66",
+    "@pixi/sound": "^6.0.1",
+    "@pixi/ui": "^2.2.0",
+    "motion": "^11.12.0",
+    "pixi.js": "^8.6.3"
+  },
+  "devDependencies": {
+    "@assetpack/core": "^1.2.2",
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.0"
+  }
+}

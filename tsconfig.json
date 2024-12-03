@@ -3,10 +3,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["es2023", "DOM", "DOM.Iterable"],
     "moduleResolution": "NodeNext",
     "noImplicitOverride": true,
     "strict": true,
     "resolveJsonModule": true,
-  }
+  },
 }
