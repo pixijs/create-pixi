@@ -82,18 +82,3 @@ export class SFX {
     this.volume = v;
   }
 }
-
-/** Get overall sound volume */
-export function getMasterVolume() {
-  return sound.volumeAll;
-}
-
-/** Set the overall sound volume, affecting all music and sound effects */
-export function setMasterVolume(v: number) {
-  sound.volumeAll = v;
-  if (!v) {
-    sound.muteAll();
-  } else {
-    sound.unmuteAll();
-  }
-}

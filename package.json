@@ -30,7 +30,8 @@
     "test:types": "tsc --noEmit",
     "test:watch": "vitest",
     "release": "xs bump,git-push",
-    "publish-ci": "xs publish"
+    "publish-ci": "xs publish",
+    "docs": "npm run --workspace docs start"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

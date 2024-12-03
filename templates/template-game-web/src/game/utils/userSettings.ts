@@ -1,4 +1,3 @@
-import { setMasterVolume } from "../../engine/audio";
 import { storage } from "../../engine/utils/storage";
 import { engine } from "../getEngine";
 
@@ -12,7 +11,7 @@ const KEY_VOLUME_SFX = "volume-sfx";
  */
 class UserSettings {
   public init() {
-    setMasterVolume(this.getMasterVolume());
+    engine().setMasterVolume(this.getMasterVolume());
     engine().bgm.setVolume(this.getBgmVolume());
     engine().sfx.setVolume(this.getSfxVolume());
   }
@@ -24,7 +23,7 @@ class UserSettings {
 
   /** Set overall sound volume */
   public setMasterVolume(value: number) {
-    setMasterVolume(value);
+    engine().setMasterVolume(value);
     storage.setNumber(KEY_VOLUME_MASTER, value);
   }
 

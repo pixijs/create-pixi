@@ -4,3 +4,7 @@ node_modules
 .DS_Store
 .env
 dist
+
+# Generated files
+.docusaurus
+.cache-loader

@@ -1,39 +1,34 @@
-# PixiJS Create
+---
+sidebar_position: 0
+title: Installation
+---
 
-<div align="center">
-
-<img src=".github/logo.svg" alt="Logo"/>
-<p>A CLI tool to scaffold PixiJS projects</p>
-
-</div>
-
-## Scaffolding Your First PixiJS Project
-
-> **Compatibility Note:**
+:::info **Compatibility Note**
 > PixiJS requires [Node.js](https://nodejs.org/en/) version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
+:::
 
 With NPM:
 
 ```bash
-$ npm create pixi.js@latest
+npm create pixi.js@latest
 ```
 
 With Yarn:
 
 ```bash
-$ yarn create pixi.js
+yarn create pixi.js
 ```
 
 With PNPM:
 
 ```bash
-$ pnpm create pixi.js
+pnpm create pixi.js
 ```
 
 With Bun:
 
 ```bash
-$ bun create pixi.js
+bun create pixi.js
 ```
 
 Then follow the prompts!
@@ -54,6 +49,10 @@ pnpm create pixi.js pixi-project --template bundler-vite
 bun create pixi.js pixi-project --template bundler-vite
 ```
 
+You can use `.` for the project name to scaffold in the current directory.
+
+### Templates
+
 Currently supported template presets include:
 
 - `bundler-vite`
@@ -61,14 +60,19 @@ Currently supported template presets include:
 - `bundler-esbuild`
 - `bundler-import-map`
 
+### Games
+
 We also have some additional templates that you can use for creating games for specific platforms:
 - `game-web`
 - `game-discord`
+
 **Coming soon:**
 - `game-facebook`
 - `game-youtube`
 
-You can use `.` for the project name to scaffold in the current directory.
+These templates include additional configurations and dependencies to help you get started with your game development. As such they are more opinionated than the general bundler templates.
+
+Find out more about the templates in the [Games](/docs/guide/games/intro) section.
 
 ## License
 

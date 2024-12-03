@@ -7,7 +7,7 @@ import { userSettings } from "./game/utils/userSettings";
 /**
  * Importing these modules will automatically register there plugins with the engine.
  */
-import "@esotericsoftware/spine-pixi-v8";
+// import "@esotericsoftware/spine-pixi-v8";
 import "@pixi/sound";
 
 // Create a new game engine instance

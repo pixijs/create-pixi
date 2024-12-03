@@ -107,6 +107,21 @@ export class GameEngine {
     return this.pixiApp.canvas;
   }
 
+  /** Get overall sound volume */
+  public getMasterVolume() {
+    return sound.volumeAll;
+  }
+
+  /** Set the overall sound volume, affecting all music and sound effects */
+  public setMasterVolume(v: number) {
+    sound.volumeAll = v;
+    if (!v) {
+      sound.muteAll();
+    } else {
+      sound.unmuteAll();
+    }
+  }
+
   /**
    * Resize the application ensuring that the minimum width and height are maintained.
    * @param w - The new width to resize to
