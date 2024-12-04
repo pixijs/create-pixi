@@ -8,6 +8,7 @@ dist
 # Generated files
 .docusaurus
 .cache-loader
+docs/build
 
 
 templates/template-game-web/public/assets

@@ -20,28 +20,29 @@
     "templates/*",
     "dist"
   ],
+  "workspaces": [
+    "templates/*",
+    "docs"
+  ],
   "scripts": {
     "build": "vite build",
+    "build:docs": "npm run --workspace docs build",
+    "deploy": "npm run deploy --workspace docs",
     "lint:fix": "npm run test:lint -- --fix",
     "prepare": "husky",
+    "publish-ci": "xs publish",
+    "release": "xs bump,git-push",
     "start": "node index.js",
+    "start:docs": "npm run --workspace docs start",
     "test": "vitest run",
     "test:lint": "eslint",
-    "test:watch": "vitest",
-    "release": "xs bump,git-push",
-    "publish-ci": "xs publish",
-    "docs": "npm run --workspace docs start",
-    "deploy": "npm run deploy --workspace docs"
+    "test:watch": "vitest"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
       "eslint --fix"
     ]
   },
-  "workspaces": [
-    "templates/*",
-    "docs"
-  ],
   "dependencies": {
     "cross-spawn": "^7.0.6",
     "minimist": "^1.2.8",
