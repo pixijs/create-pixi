@@ -2,6 +2,8 @@ import { sound } from "@pixi/sound";
 import type { ApplicationOptions } from "pixi.js";
 import { Application, Assets } from "pixi.js";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - This is a dynamically generated file by AssetPack
 import manifest from "../manifest.json";
 
 import { BGM, SFX } from "./audio";

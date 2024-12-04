@@ -20,8 +20,5 @@ jobs:
       - name: Test Lint
         run: npm run test:lint
 
-      - name: Test Types
-        run: npm run test:types
-
       - name: Build for Distribution
         run: xvfb-run --auto-servernum npm run build

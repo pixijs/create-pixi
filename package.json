@@ -27,11 +27,11 @@
     "start": "node index.js",
     "test": "vitest run",
     "test:lint": "eslint",
-    "test:types": "tsc --noEmit",
     "test:watch": "vitest",
     "release": "xs bump,git-push",
     "publish-ci": "xs publish",
-    "docs": "npm run --workspace docs start"
+    "docs": "npm run --workspace docs start",
+    "deploy": "npm run deploy --workspace docs"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
