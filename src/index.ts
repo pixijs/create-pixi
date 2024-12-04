@@ -38,6 +38,8 @@ ${yellow    ('esbuild:          bundler-esbuild'    )}
 ${green     ('Import Map:       bundler-import-map' )}
 
 ${cyan      ('Web Game:         game-web'           )}
+
+Coming soon:
 ${blue      ('Discord Game:     game-discord'       )}
 ${blueBright('Facebook Game:    game-facebook'      )}
 ${red       ('YouTube Game:     game-youtube'       )}`
@@ -94,11 +96,11 @@ const FRAMEWORKS: Framework[] = [
         display: "Web",
         color: yellow,
       },
-      {
-        name: "game-discord",
-        display: "Discord",
-        color: blue,
-      },
+      // {
+      //   name: "game-discord",
+      //   display: "Discord",
+      //   color: blue,
+      // },
       // {
       //   name: "game-facebook",
       //   display: "Facebook",

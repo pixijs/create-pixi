@@ -31,9 +31,9 @@ We highly recommend that you familiarize yourself with these libraries to get th
 We are slowly building up templates to help you build a game for different platforms. Currently, we have the following templates:
 
 - **Web**: A general template for building web-based games.
-- **Discord**: A template for building games that can be run on the Discord platform.
 
 **Coming Soon**:
+- **Discord**: A template for building games that can be run on the Discord platform.
 - **Facebook**: A template for building games that can be run on the Facebook platform.
 - **YouTube**: A template for building games that can be run on the YouTube platform.
 
