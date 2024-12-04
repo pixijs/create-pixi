@@ -11,6 +11,6 @@ dist
 docs/build
 
 
-templates/template-game-web/public/assets
-templates/template-game-web/.assetpack
-templates/template-game-web/manifest.json
+templates/template-creation-web/public/assets
+templates/template-creation-web/.assetpack
+templates/template-creation-web/src/manifest.json

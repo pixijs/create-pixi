@@ -51,6 +51,17 @@ export default function Home(): JSX.Element {
             padding: 20,
           }}
         >
+          <img
+            src="/create-pixi/img/demo.gif"
+            alt="Demo GIF"
+            style={{
+              width: "100%",
+              maxWidth: 800,
+              marginBottom: 20,
+              borderRadius: 10, // Add this line for rounded borders
+              border: "2px solid #676767", // Optional: Add a border
+            }}
+          />
           <p>With NPM:</p>
           <pre>
             <code>npm create pixi.js@latest</code>

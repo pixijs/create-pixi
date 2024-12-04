@@ -1,6 +1,6 @@
 ---
 sidebar_position: 0
-title: Installation
+title: Getting Started
 ---
 
 :::info **Compatibility Note**
@@ -33,6 +33,39 @@ bun create pixi.js
 
 Then follow the prompts!
 
+## Bundler Templates
+
+Bundler templates are general templates that you can use to scaffold a PixiJS project with a specific bundler.
+They include the necessary configurations and dependencies to get you started however they are not particularly opinionated about the project structure.
+
+Currently supported template presets include:
+
+- **[Vite](https://vite.dev)** + PixiJS (Recommended)
+- **[Webpack](https://webpack.js.org/)** + PixiJS
+- **[esbuild](https://esbuild.github.io/)** + PixiJS
+- PixiJS imported via **[import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)**
+
+## Creation Templates (Recommended)
+
+We have created some additional templates that you can use for creating projects for specific platforms.
+These templates include additional configurations and dependencies to help you get started with your app development.
+As such they are more opinionated than the general bundler templates.
+
+The goal of these templates is to provide a more tailored experience for developers who are less experienced with setting up a PixiJS project from scratch.
+
+Find out more about these templates in the [Creation Template](/docs/guide/creations/intro) section.
+
+Currently supported creation templates include:
+- Web: A general template for building web-based applications.
+
+**Coming soon:**
+- **[Discord](https://github.com/discord/embedded-app-sdk)**: A multiplayer template for building applications that can be run on the Discord platform.
+- **[Facebook](https://www.facebook.com/fbgaminghome/developers)**: A template for building applications that can be run on the Facebook instant games platform.
+- **[YouTube](https://developers.google.com/youtube/gaming/playables/reference/sdk)**: A template for building applications that can be run on the YouTube Playables platform.
+
+
+## Advanced Usage
+
 You can also directly specify the project name and the template you want to use via additional command line options. For example, to scaffold a PixiJS + Vite project, run:
 
 ```bash
@@ -51,28 +84,13 @@ bun create pixi.js pixi-project --template bundler-vite
 
 You can use `.` for the project name to scaffold in the current directory.
 
-### Templates
-
-Currently supported template presets include:
+### Template List
 
 - `bundler-vite`
 - `bundler-webpack`
 - `bundler-esbuild`
 - `bundler-import-map`
-
-### Games
-
-We also have some additional templates that you can use for creating games for specific platforms:
-- `game-web`
-
-**Coming soon:**
-- `game-discord`
-- `game-facebook`
-- `game-youtube`
-
-These templates include additional configurations and dependencies to help you get started with your game development. As such they are more opinionated than the general bundler templates.
-
-Find out more about the templates in the [Games](/docs/guide/games/intro) section.
+- `creation-web`
 
 ## License
 

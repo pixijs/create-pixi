@@ -32,17 +32,17 @@ Options:
   -t, --template NAME        use a specific template
 
 Available templates:
-${yellow    ('Vite:             bundler-vite'       )}
-${blueBright('Webpack:          bundler-webpack'    )}
-${yellow    ('esbuild:          bundler-esbuild'    )}
-${green     ('Import Map:       bundler-import-map' )}
+${yellow    ('Vite:                     bundler-vite'       )}
+${blueBright('Webpack:                  bundler-webpack'    )}
+${yellow    ('esbuild:                  bundler-esbuild'    )}
+${green     ('Import Map:               bundler-import-map' )}
 
-${cyan      ('Web Game:         game-web'           )}
+${cyan      ('Web Creation App:         creation-web'           )}
 
 Coming soon:
-${blue      ('Discord Game:     game-discord'       )}
-${blueBright('Facebook Game:    game-facebook'      )}
-${red       ('YouTube Game:     game-youtube'       )}`
+${blue      ('Discord Creation App:     creation-discord'       )}
+${blueBright('Facebook Creation App:    creation-facebook'      )}
+${red       ('YouTube Creation App:     creation-youtube'       )}`
 
 type ColorFunc = (str: string | number) => string;
 type Framework = {
@@ -61,7 +61,7 @@ type FrameworkVariant = {
 const FRAMEWORKS: Framework[] = [
   {
     name: "bundlers",
-    display: "Bundler",
+    display: "Bundler Templates",
     color: yellow,
     variants: [
       {
@@ -87,27 +87,27 @@ const FRAMEWORKS: Framework[] = [
     ],
   },
   {
-    name: "game",
-    display: "Games",
+    name: "creation",
+    display: "Creation Templates",
     color: cyan,
     variants: [
       {
-        name: "game-web",
+        name: "creation-web",
         display: "Web",
         color: yellow,
       },
       // {
-      //   name: "game-discord",
+      //   name: "creation-discord",
       //   display: "Discord",
       //   color: blue,
       // },
       // {
-      //   name: "game-facebook",
+      //   name: "creation-facebook",
       //   display: "Facebook",
       //   color: blueBright,
       // },
       // {
-      //   name: "game-youtube",
+      //   name: "creation-youtube",
       //   display: "YouTube",
       //   color: red,
       // },

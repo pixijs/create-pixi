@@ -38,6 +38,8 @@ $ bun create pixi.js
 
 Then follow the prompts!
 
+### Advanced Usage
+
 You can also directly specify the project name and the template you want to use via additional command line options. For example, to scaffold a PixiJS + Vite project, run:
 
 ```bash
@@ -60,14 +62,7 @@ Currently supported template presets include:
 - `bundler-webpack`
 - `bundler-esbuild`
 - `bundler-import-map`
-
-We also have some additional templates that you can use for creating games for specific platforms:
-- `game-web`
-
-**Coming soon:**
-- `game-discord`
-- `game-facebook`
-- `game-youtube`
+- `creation-web`
 
 You can use `.` for the project name to scaffold in the current directory.
 
