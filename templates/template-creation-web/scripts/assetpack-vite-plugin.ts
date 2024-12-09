@@ -25,9 +25,9 @@ export function assetpackPlugin() {
       mode = resolvedConfig.command;
       if (!resolvedConfig.publicDir) return;
       if (apConfig.output) return;
-      // remove the root from the oublic dir
+      // remove the root from the public dir
       const publicDir = resolvedConfig.publicDir.replace(process.cwd(), "");
-      apConfig.output = `.${publicDir}/assets/`;
+      apConfig.output = `${publicDir}/assets/`;
     },
     buildStart: async () => {
       if (mode === "serve") {
