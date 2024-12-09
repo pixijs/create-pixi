@@ -1,13 +1,13 @@
 # PixiJS Create
 
 <div align="center">
-
 <img src=".github/logo.svg" alt="Logo"/>
-<p>A CLI tool to scaffold PixiJS projects</p>
-
+<h3>A CLI tool to scaffold PixiJS projects</h3>
 </div>
 
 ## Scaffolding Your First PixiJS Project
+
+Check out the full documentation at [pixijs.io/create-pixi](https://pixijs.io/create-pixi/).
 
 > **Compatibility Note:**
 > PixiJS requires [Node.js](https://nodejs.org/en/) version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
@@ -72,4 +72,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-This project is based on [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite).
+This project is based on amazing [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) tool and inspired by the [create-game](https://github.com/phaserjs/create-game) project by [Phaser](https://phaser.io/).
+We are grateful for their work and the inspiration it provided.
