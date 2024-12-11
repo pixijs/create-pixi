@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "npm run dev",
     "build": "webpack --mode=production",
     "dev": "webpack serve --mode=development"
   },

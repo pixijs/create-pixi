@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "npm run dev",
     "build": "node scripts/esbuild.prod.mjs",
     "dev": "node scripts/esbuild.dev.mjs -w"
   },
