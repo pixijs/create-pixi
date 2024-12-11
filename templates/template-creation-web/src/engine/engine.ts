@@ -14,6 +14,7 @@ import manifest from "../manifest.json";
 import { CreationAudioPlugin } from "./audio/AudioPlugin";
 import { CreationNavigationPlugin } from "./navigation/NavigationPlugin";
 import { CreationResizePlugin } from "./resize/ResizePlugin";
+import { getResolution } from "./utils/getResolution";
 
 extensions.remove(ResizePlugin);
 extensions.add(CreationResizePlugin);
@@ -36,6 +37,9 @@ export class CreationEngine extends Application {
   /** Initialize the application */
   public async init(opts: Partial<ApplicationOptions>): Promise<void> {
     opts.resizeTo ??= window;
+    opts.resolution ??= getResolution();
+    opts.antialias ??= true;
+
     await super.init(opts);
 
     // Append the application canvas to the document body
@@ -55,7 +59,7 @@ export class CreationEngine extends Application {
 
   public override destroy(
     rendererDestroyOptions: RendererDestroyOptions = false,
-    options: DestroyOptions = false,
+    options: DestroyOptions = false
   ): void {
     document.removeEventListener("visibilitychange", this.visibilityChange);
     super.destroy(rendererDestroyOptions, options);
