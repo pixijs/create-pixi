@@ -21,29 +21,10 @@ export class LargeButton extends FancyButton {
   constructor(options: Partial<LargeButtonOptions> = {}) {
     const opts = { ...defaultLargeButtonOptions, ...options };
 
-    const defaultView = new NineSliceSprite({
-      texture: Texture.from("button-large.png"),
-      leftWidth: 36,
-      topHeight: 42,
-      rightWidth: 36,
-      bottomHeight: 52,
-      width: opts.width,
-      height: opts.height,
-    });
-
-    const pressedView = new NineSliceSprite({
-      texture: Texture.from("button-large-press.png"),
-      leftWidth: 36,
-      topHeight: 42,
-      rightWidth: 36,
-      bottomHeight: 52,
-      width: opts.width,
-      height: opts.height,
-    });
-
     super({
-      defaultView,
-      pressedView,
+      defaultView: "button-large.png",
+      pressedView: "button-large-press.png",
+      nineSliceSprite: [38, 42, 38, 50],
       anchor: 0.5,
       text: new Label({
         text: opts.text,
@@ -65,12 +46,15 @@ export class LargeButton extends FancyButton {
         },
         pressed: {
           props: {
-            scale: { x: 1.03, y: 1.03 },
+            scale: { x: 1.0, y: 1.0 },
           },
           duration: 100,
         },
       },
     });
+
+    this.width = opts.width;
+    this.height = opts.height;
 
     this.onDown.connect(this.handleDown.bind(this));
     this.onUp.connect(this.handleUp.bind(this));
