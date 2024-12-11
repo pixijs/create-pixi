@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "dev": "vite",
-    "start": "vite"
+    "dev": "vite"
   },
   "dependencies": {
     "@esotericsoftware/spine-pixi-v8": "^4.2.66",
