@@ -7,7 +7,7 @@ import { Container } from "pixi.js";
 import { engine } from "../../getEngine";
 import { PausePopup } from "../../popups/PausePopup";
 import { SettingsPopup } from "../../popups/SettingsPopup";
-import { LargeButton } from "../../ui/LargeButton";
+import { Button } from "../../ui/Button";
 
 import { Bouncer } from "./Bouncer";
 
@@ -65,7 +65,7 @@ export class MainScreen extends Container {
     );
     this.addChild(this.settingsButton);
 
-    this.addButton = new LargeButton({
+    this.addButton = new Button({
       text: "Add",
       width: 175,
       height: 110,
@@ -73,7 +73,7 @@ export class MainScreen extends Container {
     this.addButton.onPress.connect(() => this.bouncer.add());
     this.addChild(this.addButton);
 
-    this.removeButton = new LargeButton({
+    this.removeButton = new Button({
       text: "Remove",
       width: 175,
       height: 110,

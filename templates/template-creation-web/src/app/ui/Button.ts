@@ -1,30 +1,28 @@
 import { FancyButton } from "@pixi/ui";
-import { NineSliceSprite, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
 
 import { Label } from "./Label";
 
-const defaultLargeButtonOptions = {
+const defaultButtonOptions = {
   text: "",
   width: 301,
   height: 112,
   fontSize: 28,
 };
 
-type LargeButtonOptions = typeof defaultLargeButtonOptions;
+type ButtonOptions = typeof defaultButtonOptions;
 
 /**
  * The big rectangle button, with a label, idle and pressed states
  */
-export class LargeButton extends FancyButton {
-  constructor(options: Partial<LargeButtonOptions> = {}) {
-    const opts = { ...defaultLargeButtonOptions, ...options };
+export class Button extends FancyButton {
+  constructor(options: Partial<ButtonOptions> = {}) {
+    const opts = { ...defaultButtonOptions, ...options };
 
     super({
-      defaultView: "button-large.png",
-      pressedView: "button-large-press.png",
-      nineSliceSprite: [38, 42, 38, 50],
+      defaultView: "button.png",
+      nineSliceSprite: [38, 50, 38, 50],
       anchor: 0.5,
       text: new Label({
         text: opts.text,
@@ -41,12 +39,14 @@ export class LargeButton extends FancyButton {
         hover: {
           props: {
             scale: { x: 1.03, y: 1.03 },
+            y: 0,
           },
           duration: 100,
         },
         pressed: {
           props: {
-            scale: { x: 1.0, y: 1.0 },
+            scale: { x: 0.97, y: 0.97 },
+            y: 10,
           },
           duration: 100,
         },
@@ -57,7 +57,6 @@ export class LargeButton extends FancyButton {
     this.height = opts.height;
 
     this.onDown.connect(this.handleDown.bind(this));
-    this.onUp.connect(this.handleUp.bind(this));
     this.onHover.connect(this.handleHover.bind(this));
   }
 
@@ -67,10 +66,5 @@ export class LargeButton extends FancyButton {
 
   private handleDown() {
     engine().audio.sfx.play("main/sounds/sfx-press.wav");
-    this.textOffset = { x: 0, y: -7 };
-  }
-
-  private handleUp() {
-    this.textOffset = { x: 0, y: -13 };
   }
 }

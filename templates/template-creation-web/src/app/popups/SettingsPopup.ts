@@ -5,7 +5,7 @@ import { BlurFilter, Container, Sprite, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
 import { Label } from "../ui/Label";
-import { LargeButton } from "../ui/LargeButton";
+import { Button } from "../ui/Button";
 import { RoundedBox } from "../ui/RoundedBox";
 import { VolumeSlider } from "../ui/VolumeSlider";
 import { userSettings } from "../utils/userSettings";
@@ -19,7 +19,7 @@ export class SettingsPopup extends Container {
   /** The popup title label */
   private title: Text;
   /** Button that closes the popup */
-  private doneButton: LargeButton;
+  private doneButton: Button;
   /** The panel background */
   private panelBase: RoundedBox;
   /** The build version label */
@@ -57,7 +57,7 @@ export class SettingsPopup extends Container {
     this.title.y = -this.panelBase.boxHeight * 0.5 + 60;
     this.panel.addChild(this.title);
 
-    this.doneButton = new LargeButton({ text: "OK" });
+    this.doneButton = new Button({ text: "OK" });
     this.doneButton.y = this.panelBase.boxHeight * 0.5 - 78;
     this.doneButton.onPress.connect(() => engine().navigation.dismissPopup());
     this.panel.addChild(this.doneButton);

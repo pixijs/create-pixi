@@ -3,7 +3,7 @@ import { BlurFilter, Container, Sprite, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
 import { Label } from "../ui/Label";
-import { LargeButton } from "../ui/LargeButton";
+import { Button } from "../ui/Button";
 import { RoundedBox } from "../ui/RoundedBox";
 
 /** Popup that shows up when gameplay is paused */
@@ -15,7 +15,7 @@ export class PausePopup extends Container {
   /** The popup title label */
   private title: Label;
   /** Button that closes the popup */
-  private doneButton: LargeButton;
+  private doneButton: Button;
   /** The panel background */
   private panelBase: RoundedBox;
 
@@ -40,7 +40,7 @@ export class PausePopup extends Container {
     this.title.y = -80;
     this.panel.addChild(this.title);
 
-    this.doneButton = new LargeButton({ text: "Resume" });
+    this.doneButton = new Button({ text: "Resume" });
     this.doneButton.y = 70;
     this.doneButton.onPress.connect(() => engine().navigation.dismissPopup());
     this.panel.addChild(this.doneButton);
