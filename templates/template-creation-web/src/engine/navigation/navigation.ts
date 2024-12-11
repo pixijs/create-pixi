@@ -25,6 +25,8 @@ interface AppScreen extends Container {
   blur?(): void;
   /** Focus the screen */
   focus?(): void;
+  /** Method to react on assets loading progress */
+  onLoad?: (progress: number) => void;
 }
 
 /** Interface for app screens constructors */
@@ -139,7 +141,15 @@ export class Navigation {
     // Load assets for the new screen, if available
     if (ctor.assetBundles) {
       // Load all assets required by this new screen
-      await Assets.loadBundle(ctor.assetBundles);
+      await Assets.loadBundle(ctor.assetBundles, (progress) => {
+        if (this.currentScreen?.onLoad) {
+          this.currentScreen.onLoad(progress * 100);
+        }
+      });
+    }
+
+    if (this.currentScreen?.onLoad) {
+      this.currentScreen.onLoad(100);
     }
 
     // If there is a screen already created, hide and destroy it
