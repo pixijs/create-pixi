@@ -2,8 +2,8 @@ import { animate } from "motion";
 import { BlurFilter, Container, Sprite, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
-import { Label } from "../ui/Label";
 import { Button } from "../ui/Button";
+import { Label } from "../ui/Label";
 import { RoundedBox } from "../ui/RoundedBox";
 
 /** Popup that shows up when gameplay is paused */

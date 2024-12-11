@@ -4,8 +4,8 @@ import type { Text } from "pixi.js";
 import { BlurFilter, Container, Sprite, Texture } from "pixi.js";
 
 import { engine } from "../getEngine";
-import { Label } from "../ui/Label";
 import { Button } from "../ui/Button";
+import { Label } from "../ui/Label";
 import { RoundedBox } from "../ui/RoundedBox";
 import { VolumeSlider } from "../ui/VolumeSlider";
 import { userSettings } from "../utils/userSettings";
