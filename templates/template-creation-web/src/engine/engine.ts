@@ -59,7 +59,7 @@ export class CreationEngine extends Application {
 
   public override destroy(
     rendererDestroyOptions: RendererDestroyOptions = false,
-    options: DestroyOptions = false
+    options: DestroyOptions = false,
   ): void {
     document.removeEventListener("visibilitychange", this.visibilityChange);
     super.destroy(rendererDestroyOptions, options);
