@@ -1,0 +1,55 @@
+{
+  "name": "template-creation-extension",
+  "version": "1.0.0",
+  "description": "[Description of extension]",
+  "author": "[Author's name]",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "homepage": "https://pixijs.com/",
+  "bugs": "https://github.com/pixijs-userland/template-creation-extension/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixijs-userland/template-creation-extension.git"
+  },
+  "scripts": {
+    "dev": "xs serve",
+    "start": "xs serve",
+    "watch": "xs watch",
+    "build": "xs build",
+    "docs": "xs docs",
+    "lint": "xs lint",
+    "types": "xs types",
+    "release": "xs release",
+    "test": "xs test"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  },
+  "files": [
+    "dist/",
+    "lib/"
+  ],
+  "extensionConfig": {
+    "bundle": "dist/extension.js",
+    "bundleModule": "dist/extension.mjs"
+  },
+  "peerDependencies": {
+    "pixi.js": ">=8 <9"
+  },
+  "devDependencies": {
+    "@pixi/extension-scripts": "latest"
+  }
+}
