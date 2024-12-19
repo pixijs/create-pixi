@@ -32,17 +32,17 @@ Options:
   -t, --template NAME        use a specific template
 
 Available templates:
-${yellow    ('Vite:                     bundler-vite'       )}
-${blueBright('Webpack:                  bundler-webpack'    )}
-${yellow    ('esbuild:                  bundler-esbuild'    )}
-${green     ('Import Map:               bundler-import-map' )}
-
-${cyan      ('Web Creation App:         creation-web'           )}
+${yellow    ('Vite:                     bundler-vite'        )}
+${blueBright('Webpack:                  bundler-webpack'     )}
+${yellow    ('esbuild:                  bundler-esbuild'     )}
+${green     ('Import Map:               bundler-import-map'  )}
+${cyan      ('Web Creation App:         creation-web'        )}
+${blueBright('Extension:                creaction-extension' )}
 
 Coming soon:
-${blue      ('Discord Creation App:     creation-discord'       )}
-${blueBright('Facebook Creation App:    creation-facebook'      )}
-${red       ('YouTube Creation App:     creation-youtube'       )}`
+${blue      ('Discord Creation App:     creation-discord'    )}
+${blueBright('Facebook Creation App:    creation-facebook'   )}
+${red       ('YouTube Creation App:     creation-youtube'    )}`
 
 type ColorFunc = (str: string | number) => string;
 type Framework = {
@@ -95,6 +95,11 @@ const FRAMEWORKS: Framework[] = [
         name: "creation-web",
         display: "Web",
         color: yellow,
+      },
+      {
+        name: "creation-extension",
+        display: "Extension",
+        color: blueBright,
       },
       // {
       //   name: "creation-discord",
