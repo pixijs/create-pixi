@@ -37,7 +37,7 @@ ${blueBright('Webpack:                  bundler-webpack'     )}
 ${yellow    ('esbuild:                  bundler-esbuild'     )}
 ${green     ('Import Map:               bundler-import-map'  )}
 ${cyan      ('Web Creation App:         creation-web'        )}
-${blueBright('Extension:                creaction-extension' )}
+${blueBright('Extension:                extension-default'   )}
 
 Coming soon:
 ${blue      ('Discord Creation App:     creation-discord'    )}
@@ -96,11 +96,6 @@ const FRAMEWORKS: Framework[] = [
         display: "Web",
         color: yellow,
       },
-      {
-        name: "creation-extension",
-        display: "Extension",
-        color: blueBright,
-      },
       // {
       //   name: "creation-discord",
       //   display: "Discord",
@@ -116,6 +111,18 @@ const FRAMEWORKS: Framework[] = [
       //   display: "YouTube",
       //   color: red,
       // },
+    ],
+  },
+  {
+    name: "extension",
+    display: "Extension",
+    color: blueBright,
+    variants: [
+      {
+        name: "extension-default",
+        display: "Default",
+        color: blue,
+      },
     ],
   },
 ];

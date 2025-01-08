@@ -63,7 +63,7 @@ Currently supported template presets include:
 - `bundler-esbuild`
 - `bundler-import-map`
 - `creation-web`
-- `creation-extension`
+- `extension-default`
 
 You can use `.` for the project name to scaffold in the current directory.
 

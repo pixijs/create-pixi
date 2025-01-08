@@ -1,5 +1,5 @@
 {
-  "name": "template-creation-extension",
+  "name": "template-extension",
   "version": "1.0.0",
   "description": "[Description of extension]",
   "author": "[Author's name]",
@@ -14,11 +14,11 @@
     }
   },
   "homepage": "https://pixijs.com/",
-  "bugs": "https://github.com/pixijs-userland/template-creation-extension/issues",
+  "bugs": "https://github.com/pixijs-userland/template-extension/issues",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pixijs-userland/template-creation-extension.git"
+    "url": "https://github.com/pixijs-userland/template-extension.git"
   },
   "scripts": {
     "dev": "xs serve",
