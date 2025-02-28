@@ -38,6 +38,7 @@ ${yellow    ('esbuild:                  bundler-esbuild'     )}
 ${green     ('Import Map:               bundler-import-map'  )}
 ${cyan      ('Web Creation App:         creation-web'        )}
 ${blueBright('Extension:                extension-default'   )}
+${cyan      ('React:                    framework-react'     )}
 
 Coming soon:
 ${blue      ('Discord Creation App:     creation-discord'    )}
@@ -83,6 +84,18 @@ const FRAMEWORKS: Framework[] = [
         name: "bundler-import-map",
         display: "Import Map",
         color: green,
+      },
+    ],
+  },
+  {
+    name: "framework",
+    display: "Framework Templates",
+    color: green,
+    variants: [
+      {
+        name: "framework-react",
+        display: "React",
+        color: cyan,
       },
     ],
   },
