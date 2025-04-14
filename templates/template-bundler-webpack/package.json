@@ -7,7 +7,8 @@
     "start": "npm run dev",
     "build": "npm run lint && webpack --mode=production",
     "lint": "eslint .",
-    "dev": "webpack serve --mode=development"
+    "dev": "webpack serve --mode=development",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "pixi.js": "^8.8.1"
@@ -16,7 +17,9 @@
     "@eslint/js": "^9.21.0",
     "copy-webpack-plugin": "^12.0.2",
     "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.1.2",
     "html-webpack-plugin": "^5.6.3",
+    "prettier": "^3.5.3",
     "terser-webpack-plugin": "^5.3.12",
     "ts-loader": "^9.5.2",
     "typescript": "~5.7.3",
