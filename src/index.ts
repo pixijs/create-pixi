@@ -95,6 +95,11 @@ const FRAMEWORKS: Framework[] = [
         display: "Vite (JS)",
         color: blue,
       },
+      {
+        name: "bundler-webpack-js",
+        display: "Webpack (JS)",
+        color: blueBright,
+      },
     ],
   },
   {
