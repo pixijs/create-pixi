@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run dev",
     "lint": "eslint .",
-    "dev": "http-server . -o"
+    "dev": "http-server . -o",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "pixi.js": "^8.8.1"
@@ -14,7 +15,9 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.1.2",
     "http-server": "^14.1.1",
+    "prettier": "^3.5.3",
     "typescript-eslint": "^8.25.0"
   }
 }
