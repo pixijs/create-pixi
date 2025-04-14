@@ -1,0 +1,19 @@
+{
+  "name": "template-import-map-js",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "lint": "eslint .",
+    "dev": "http-server . -o"
+  },
+  "dependencies": {
+    "pixi.js": "^8.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
+    "http-server": "^14.1.1"
+  }
+}
