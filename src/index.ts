@@ -90,6 +90,11 @@ const FRAMEWORKS: Framework[] = [
         display: "esbuild (JS)",
         color: yellow,
       },
+      {
+        name: "bundler-vite-js",
+        display: "Vite (JS)",
+        color: blue,
+      },
     ],
   },
   {
