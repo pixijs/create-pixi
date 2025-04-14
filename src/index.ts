@@ -71,8 +71,18 @@ const FRAMEWORKS: Framework[] = [
         color: blue,
       },
       {
+        name: "bundler-vite-js",
+        display: "Vite (JS)",
+        color: blue,
+      },
+      {
         name: "bundler-webpack",
         display: "Webpack",
+        color: blueBright,
+      },
+      {
+        name: "bundler-webpack-js",
+        display: "Webpack (JS)",
         color: blueBright,
       },
       {
@@ -81,24 +91,14 @@ const FRAMEWORKS: Framework[] = [
         color: yellow,
       },
       {
-        name: "bundler-import-map",
-        display: "Import Map",
-        color: green,
-      },
-      {
         name: "bundler-esbuild-js",
         display: "esbuild (JS)",
         color: yellow,
       },
       {
-        name: "bundler-vite-js",
-        display: "Vite (JS)",
-        color: blue,
-      },
-      {
-        name: "bundler-webpack-js",
-        display: "Webpack (JS)",
-        color: blueBright,
+        name: "bundler-import-map",
+        display: "Import Map",
+        color: green,
       },
     ],
   },
