@@ -85,6 +85,11 @@ const FRAMEWORKS: Framework[] = [
         display: "Import Map",
         color: green,
       },
+      {
+        name: "bundler-esbuild-js",
+        display: "esbuild (JS)",
+        color: yellow,
+      },
     ],
   },
   {

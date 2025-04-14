@@ -1,0 +1,23 @@
+{
+  "name": "template-esbuild-js",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "build": "npm run lint && node scripts/esbuild.prod.mjs",
+    "lint": "eslint .",
+    "dev": "node scripts/esbuild.dev.mjs -w"
+  },
+  "dependencies": {
+    "pixi.js": "^8.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "esbuild": "^0.25.0",
+    "esbuild-plugin-clean": "^1.0.1",
+    "esbuild-plugin-copy": "^2.1.1",
+    "esbuild-serve": "^1.0.1",
+    "eslint": "^9.21.0"
+  }
+}
