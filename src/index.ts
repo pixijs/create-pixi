@@ -109,6 +109,11 @@ const FRAMEWORKS: Framework[] = [
         display: "Web",
         color: yellow,
       },
+      {
+        name: "creation-youtube",
+        display: "YouTube",
+        color: red,
+      },
       // {
       //   name: "creation-discord",
       //   display: "Discord",
@@ -118,11 +123,6 @@ const FRAMEWORKS: Framework[] = [
       //   name: "creation-facebook",
       //   display: "Facebook",
       //   color: blueBright,
-      // },
-      // {
-      //   name: "creation-youtube",
-      //   display: "YouTube",
-      //   color: red,
       // },
     ],
   },

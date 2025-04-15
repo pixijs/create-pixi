@@ -1,0 +1,27 @@
+{
+  "name": "template-creation-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "build": "npm run lint && tsc && vite build",
+    "lint": "eslint .",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@esotericsoftware/spine-pixi-v8": "^4.2.74",
+    "@pixi/sound": "^6.0.1",
+    "@pixi/ui": "^2.2.2",
+    "motion": "^12.4.7",
+    "pixi.js": "^8.8.1"
+  },
+  "devDependencies": {
+    "@assetpack/core": "^1.4.0",
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
+    "typescript": "~5.7.3",
+    "typescript-eslint": "^8.25.0",
+    "vite": "^6.2.0"
+  }
+}
