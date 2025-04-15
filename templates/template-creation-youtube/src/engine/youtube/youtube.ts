@@ -20,6 +20,7 @@ interface YouTubePlayablesConfig {
 
 /** YouTube Playables SDK integration */
 export class YouTube {
+    private currentScore = 0;
     private config: YouTubePlayablesConfig;
 
     constructor(config: YouTubePlayablesConfig = {}) {
@@ -145,20 +146,38 @@ export class YouTube {
     public async submitScore(score: number): Promise<void> {
         const ytgame = window.ytgame;
         if (ytgame) {
+            // Update current score
+            this.currentScore = score;
+            
+            // Save score to persistent storage
+            await this.saveData({ score });
+
+            // Notify callback if provided
             if (this.config.onSubmitScore) {
                 this.config.onSubmitScore(score);
             }
+
+            // Submit to YouTube
             await ytgame.engagement.sendScore({ value: score });
         }
     }
 
     /** Get the player's score */
     public async getScore(): Promise<number> {
-        // Note: There is no direct getScore method in the SDK
-        // We'll return the callback value if provided
         const ytgame = window.ytgame;
-        if (ytgame && this.config.onGetScore) {
-            return this.config.onGetScore();
+        if (ytgame) {
+            // Try to get score from callback first
+            if (this.config.onGetScore) {
+                return this.config.onGetScore();
+            }
+
+            // Try to load score from storage
+            const data = await this.loadData();
+            if (data && typeof data === 'object' && 'score' in data) {
+                this.currentScore = (data as { score: number }).score;
+            }
+
+            return this.currentScore;
         }
         return 0;
     }

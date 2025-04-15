@@ -2,7 +2,7 @@ import { FancyButton } from "@pixi/ui";
 import { animate } from "motion";
 import type { AnimationPlaybackControls } from "motion/react";
 import type { Ticker } from "pixi.js";
-import { Container } from "pixi.js";
+import { Container, Text } from "pixi.js";
 
 import { engine } from "../../getEngine";
 import { PausePopup } from "../../popups/PausePopup";
@@ -22,6 +22,8 @@ export class MainScreen extends Container {
   private addButton: FancyButton;
   private removeButton: FancyButton;
   private bouncer: Bouncer;
+  private scoreText: Text;
+  private score: number = 0;
   private paused = false;
 
   constructor() {
@@ -30,6 +32,9 @@ export class MainScreen extends Container {
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
     this.bouncer = new Bouncer();
+    
+    // Load saved score
+    this.loadScore();
 
     const buttonAnimations = {
       hover: {
@@ -70,7 +75,10 @@ export class MainScreen extends Container {
       width: 175,
       height: 110,
     });
-    this.addButton.onPress.connect(() => this.bouncer.add());
+    this.addButton.onPress.connect(() => {
+      this.bouncer.add();
+      this.updateScore(true);
+    });
     this.addChild(this.addButton);
 
     this.removeButton = new Button({
@@ -78,12 +86,24 @@ export class MainScreen extends Container {
       width: 175,
       height: 110,
     });
-    this.removeButton.onPress.connect(() => this.bouncer.remove());
+    this.removeButton.onPress.connect(() => {
+      this.bouncer.remove();
+      this.updateScore(false);
+    });
     this.addChild(this.removeButton);
+
+    this.scoreText = new Text({ 
+      text: 'Score: 0',
+    });
+
+    this.addChild(this.scoreText);
   }
 
   /** Prepare the screen just before showing */
-  public prepare() {}
+  public async prepare() {
+    // Load saved score when screen is shown
+    await this.loadScore();
+  }
 
   /** Update the screen */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -104,8 +124,36 @@ export class MainScreen extends Container {
     this.paused = false;
   }
 
+  /** Load saved score from YouTube */
+  private async loadScore() {
+    const savedScore = await engine().youtube.getScore();
+    this.score = savedScore;
+    this.updateScoreDisplay();
+  }
+
+  /** Update the score */
+  public async updateScore(add: boolean) {
+    // Get score from bouncer
+    this.score = add ? this.score + 1 : this.score - 1;
+    
+    // Update display
+    this.updateScoreDisplay();
+
+    // Submit to YouTube
+    await engine().youtube.submitScore(this.score);
+  }
+
+  /** Update score display */
+  private updateScoreDisplay() {
+    this.scoreText.text = `Score: ${this.score}`;
+  }
+
   /** Fully reset */
-  public reset() {}
+  public async reset() {
+    this.score = 0;
+    this.updateScoreDisplay();
+    await engine().youtube.submitScore(0);
+  }
 
   /** Resize the screen, fired whenever window size changes */
   public resize(width: number, height: number) {
@@ -122,6 +170,8 @@ export class MainScreen extends Container {
     this.removeButton.y = height - 75;
     this.addButton.x = width / 2 + 100;
     this.addButton.y = height - 75;
+    this.scoreText.x = 50;
+    this.scoreText.y = 100;
 
     this.bouncer.resize(width, height);
   }

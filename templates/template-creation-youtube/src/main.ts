@@ -15,24 +15,24 @@ const engine = new CreationEngine();
 setEngine(engine);
 
 (async () => {
-
-  // Signal first frame ready to YouTube
-  engine.youtube.firstFrameReady();
-
   // Initialize the creation engine instance
   await engine.init({
     background: "#1E1E1E",
     resizeOptions: { minWidth: 768, minHeight: 1024, letterbox: false },
   });
 
-  // Signal game ready to YouTube
-  engine.youtube.ready();
+  // Signal first frame ready to YouTube
+  engine.youtube.firstFrameReady();
 
   // Initialize the user settings
   userSettings.init();
 
   // Show the load screen
   await engine.navigation.showScreen(LoadScreen);
+
+  // Signal game ready to YouTube after loading
+  engine.youtube.ready();
+
   // Show the main screen once the load screen is dismissed
   await engine.navigation.showScreen(MainScreen);
 })();
