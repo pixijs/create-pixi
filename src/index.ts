@@ -113,7 +113,7 @@ const FRAMEWORKS: Framework[] = [
         color: cyan,
       },
       {
-        name: "framework-react",
+        name: "framework-react-js",
         display: "React (JS)",
         color: cyan,
       },
