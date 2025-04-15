@@ -100,11 +100,6 @@ const FRAMEWORKS: Framework[] = [
         display: "Import Map",
         color: green,
       },
-      {
-        name: "bundler-import-map-js",
-        display: "Import Map (JS)",
-        color: green,
-      },
     ],
   },
   {
@@ -115,6 +110,11 @@ const FRAMEWORKS: Framework[] = [
       {
         name: "framework-react",
         display: "React",
+        color: cyan,
+      },
+      {
+        name: "framework-react",
+        display: "React (JS)",
         color: cyan,
       },
     ],

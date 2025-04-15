@@ -65,9 +65,9 @@ Currently supported template presets include:
 - `bundler-esbuild`
 - `bundler-esbuild-js`
 - `bundler-import-map`
-- `bundler-import-map-js`
 - `creation-web`
 - `framework-react`
+- `framework-react-js`
 - `extension-default`
 
 You can use `.` for the project name to scaffold in the current directory.
