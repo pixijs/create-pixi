@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import prettier from "eslint-plugin-prettier/recommended";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
@@ -6,6 +7,7 @@ import globals from "globals";
 export default [
   { ignores: ["dist"] },
   {
+    extends: [prettier],
     files: ["**/*.{js,jsx}"],
     languageOptions: {
       ecmaVersion: 2020,
