@@ -7,8 +7,7 @@
     "start": "npm run dev",
     "build": "npm run lint && node scripts/esbuild.prod.mjs",
     "lint": "eslint .",
-    "dev": "node scripts/esbuild.dev.mjs -w",
-    "format": "prettier --write ."
+    "dev": "node scripts/esbuild.dev.mjs -w"
   },
   "dependencies": {
     "pixi.js": "^8.8.1"
@@ -21,6 +20,7 @@
     "esbuild-serve": "^1.0.1",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
     "prettier": "^3.5.3",
     "typescript": "~5.7.3",
     "typescript-eslint": "^8.25.0"

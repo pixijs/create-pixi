@@ -7,8 +7,7 @@
     "start": "npm run dev",
     "dev": "vite",
     "build": "npm run lint && tsc -b && vite build",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint": "eslint ."
   },
   "dependencies": {
     "@pixi/react": "^8.0.0",
@@ -23,6 +22,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
