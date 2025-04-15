@@ -15,11 +15,18 @@ const engine = new CreationEngine();
 setEngine(engine);
 
 (async () => {
+
+  // Signal first frame ready to YouTube
+  engine.youtube.firstFrameReady();
+
   // Initialize the creation engine instance
   await engine.init({
     background: "#1E1E1E",
     resizeOptions: { minWidth: 768, minHeight: 1024, letterbox: false },
   });
+
+  // Signal game ready to YouTube
+  engine.youtube.ready();
 
   // Initialize the user settings
   userSettings.init();

@@ -35,9 +35,6 @@ export class YouTube {
         }
 
         this.setupEventListeners();
-        
-        // Signal first frame ready
-        window.ytgame.game.firstFrameReady();
     }
 
     private setupEventListeners(): void {
@@ -63,7 +60,15 @@ export class YouTube {
         });
     }
 
-    /** Ready the game */
+    /** Signal first frame ready - call this when you can show a loading screen */
+    public firstFrameReady(): void {
+        const ytgame = window.ytgame;
+        if (ytgame) {
+            ytgame.game.firstFrameReady();
+        }
+    }
+
+    /** Signal game ready - call this after all assets are loaded and game can start */
     public ready(): void {
         const ytgame = window.ytgame;
         if (ytgame) {
