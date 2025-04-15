@@ -27,7 +27,7 @@ $ yarn create pixi.js
 With PNPM:
 
 ```bash
-$ pnpm create pixi.js
+$ pnpm --package=create-pixi.js dlx cpa
 ```
 
 With Bun:
