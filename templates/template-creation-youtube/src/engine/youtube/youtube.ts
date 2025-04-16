@@ -20,7 +20,7 @@ interface YouTubePlayablesConfig {
 
 /** YouTube Playables SDK integration */
 export class YouTube {
-    private currentScore = 0;
+    public currentScore = 0;
     private config: YouTubePlayablesConfig;
 
     constructor(config: YouTubePlayablesConfig = {}) {

@@ -2,7 +2,7 @@ import { FancyButton } from "@pixi/ui";
 import { animate } from "motion";
 import type { AnimationPlaybackControls } from "motion/react";
 import type { Ticker } from "pixi.js";
-import { Container, Text } from "pixi.js";
+import { Color, Container, FillGradient, Text, TextStyle } from "pixi.js";
 
 import { engine } from "../../getEngine";
 import { PausePopup } from "../../popups/PausePopup";
@@ -34,7 +34,7 @@ export class MainScreen extends Container {
     this.bouncer = new Bouncer();
     
     // Load saved score
-    this.loadScore();
+    this.prepare();
 
     const buttonAnimations = {
       hover: {
@@ -50,6 +50,35 @@ export class MainScreen extends Container {
         duration: 100,
       },
     };
+
+    // Create gradient fill
+    const fill = new FillGradient(0, 0, 0, 10);
+
+    const colors = [0xffffff, 0x00ff99].map((color) => Color.shared.setValue(color).toNumber());
+
+    colors.forEach((number, index) =>
+    {
+        const ratio = index / colors.length;
+
+        fill.addColorStop(ratio, number);
+    });
+
+    const style = new TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 36,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
+      fill: { fill },
+      stroke: { color: '#4a1850', width: 5, join: 'round' },
+      dropShadow: {
+          color: '#000000',
+          blur: 4,
+          angle: Math.PI / 6,
+          distance: 6,
+      },
+      wordWrap: true,
+      wordWrapWidth: 440,
+  });
     this.pauseButton = new FancyButton({
       defaultView: "icon-pause.png",
       anchor: 0.5,
@@ -93,14 +122,20 @@ export class MainScreen extends Container {
     this.addChild(this.removeButton);
 
     this.scoreText = new Text({ 
-      text: 'Score: 0',
+      anchor: 0.5,
+      text: `Score: 0`,
+      style,
     });
 
     this.addChild(this.scoreText);
+    console.log(window.ytgame?.SDK_VERSION);
   }
 
   /** Prepare the screen just before showing */
   public async prepare() {
+    // Initialize score
+    engine().youtube.currentScore = Bouncer.LOGO_COUNT;
+
     // Load saved score when screen is shown
     await this.loadScore();
   }
@@ -134,7 +169,11 @@ export class MainScreen extends Container {
   /** Update the score */
   public async updateScore(add: boolean) {
     // Get score from bouncer
-    this.score = add ? this.score + 1 : this.score - 1;
+    if (add) {
+      this.score += 1;
+    } else if (this.score > 0) {
+      this.score -= 1;
+    }
     
     // Update display
     this.updateScoreDisplay();
@@ -150,9 +189,9 @@ export class MainScreen extends Container {
 
   /** Fully reset */
   public async reset() {
-    this.score = 0;
+    this.score = Bouncer.LOGO_COUNT;
     this.updateScoreDisplay();
-    await engine().youtube.submitScore(0);
+    await engine().youtube.submitScore(this.score);
   }
 
   /** Resize the screen, fired whenever window size changes */
@@ -170,7 +209,7 @@ export class MainScreen extends Container {
     this.removeButton.y = height - 75;
     this.addButton.x = width / 2 + 100;
     this.addButton.y = height - 75;
-    this.scoreText.x = 50;
+    this.scoreText.x = width / 2;
     this.scoreText.y = 100;
 
     this.bouncer.resize(width, height);

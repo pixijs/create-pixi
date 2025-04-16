@@ -1,5 +1,9 @@
 import { sound } from '@pixi/sound';
-import { Application, ExtensionMetadata, ExtensionType } from 'pixi.js';
+import { ExtensionType } from 'pixi.js';
+import type { Application, ExtensionMetadata } from 'pixi.js';
+
+import type { CreationEngine } from '../engine';
+
 import { YouTube } from './youtube';
 
 declare module 'pixi.js' {
@@ -8,23 +12,36 @@ declare module 'pixi.js' {
     }
 }
 
-/** Plugin that adds YouTube Playables SDK support to the CreationEngine */
+/**
+ * Middleware for Application's YouTube Playables SDK functionality.
+ *
+ * Adds the following to Application:
+ * * Application#youtube
+ */
 export class YouTubePlugin {
+    /** @ignore */
     public static extension: ExtensionMetadata = ExtensionType.Application;
 
-    constructor(app: Application) {
+    /**
+     * Initialize the plugin with scope of application instance
+     */
+    public static init(): void {
+        const app = this as unknown as CreationEngine;
+
         // Create and attach the YouTube instance with audio handlers
-        const youtube = new YouTube({
+        app.youtube = new YouTube({
             onMute: () => sound.muteAll(),
             onUnmute: () => sound.unmuteAll(),
             onPause: () => sound.pauseAll(),
             onResume: () => sound.resumeAll(),
         });
-        (app as any).youtube = youtube;
     }
 
-    public destroy(app: Application): void {
-        // Cleanup any resources
-        (app as any).youtube = null;
+    /**
+     * Clean up resources, scoped to application
+     */
+    public static destroy(): void {
+        const app = this as unknown as Application;
+        app.youtube = null as unknown as YouTube;
     }
 }
