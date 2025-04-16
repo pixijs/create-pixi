@@ -32,7 +32,7 @@ export class MainScreen extends Container {
     this.mainContainer = new Container();
     this.addChild(this.mainContainer);
     this.bouncer = new Bouncer();
-    
+
     // Load saved score
     this.prepare();
 
@@ -54,31 +54,32 @@ export class MainScreen extends Container {
     // Create gradient fill
     const fill = new FillGradient(0, 0, 0, 10);
 
-    const colors = [0xffffff, 0x00ff99].map((color) => Color.shared.setValue(color).toNumber());
+    const colors = [0xffffff, 0x00ff99].map((color) =>
+      Color.shared.setValue(color).toNumber(),
+    );
 
-    colors.forEach((number, index) =>
-    {
-        const ratio = index / colors.length;
+    colors.forEach((number, index) => {
+      const ratio = index / colors.length;
 
-        fill.addColorStop(ratio, number);
+      fill.addColorStop(ratio, number);
     });
 
     const style = new TextStyle({
-      fontFamily: 'Arial',
+      fontFamily: "Arial",
       fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
+      fontStyle: "italic",
+      fontWeight: "bold",
       fill: { fill },
-      stroke: { color: '#4a1850', width: 5, join: 'round' },
+      stroke: { color: "#4a1850", width: 5, join: "round" },
       dropShadow: {
-          color: '#000000',
-          blur: 4,
-          angle: Math.PI / 6,
-          distance: 6,
+        color: "#000000",
+        blur: 4,
+        angle: Math.PI / 6,
+        distance: 6,
       },
       wordWrap: true,
       wordWrapWidth: 440,
-  });
+    });
     this.pauseButton = new FancyButton({
       defaultView: "icon-pause.png",
       anchor: 0.5,
@@ -121,7 +122,7 @@ export class MainScreen extends Container {
     });
     this.addChild(this.removeButton);
 
-    this.scoreText = new Text({ 
+    this.scoreText = new Text({
       anchor: 0.5,
       text: `Score: 0`,
       style,
@@ -174,7 +175,7 @@ export class MainScreen extends Container {
     } else if (this.score > 0) {
       this.score -= 1;
     }
-    
+
     // Update display
     this.updateScoreDisplay();
 

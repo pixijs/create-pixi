@@ -14,8 +14,8 @@ import manifest from "../manifest.json";
 import { CreationAudioPlugin } from "./audio/AudioPlugin";
 import { CreationNavigationPlugin } from "./navigation/NavigationPlugin";
 import { CreationResizePlugin } from "./resize/ResizePlugin";
-import { YouTubePlugin } from "./youtube/YouTubePlugin";
 import { getResolution } from "./utils/getResolution";
+import { YouTubePlugin } from "./youtube/YouTubePlugin";
 
 extensions.remove(ResizePlugin);
 extensions.add(CreationResizePlugin);
