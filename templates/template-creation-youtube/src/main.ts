@@ -25,7 +25,7 @@ setEngine(engine);
   engine.youtube.firstFrameReady();
 
   // Initialize the user settings
-  userSettings.init();
+  await userSettings.init();
 
   // Show the load screen
   await engine.navigation.showScreen(LoadScreen);

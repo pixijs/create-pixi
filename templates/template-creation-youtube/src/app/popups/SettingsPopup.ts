@@ -79,20 +79,20 @@ export class SettingsPopup extends Container {
     this.panel.addChild(this.layout);
 
     this.masterSlider = new VolumeSlider("Master Volume");
-    this.masterSlider.onUpdate.connect((v) => {
-      userSettings.setMasterVolume(v / 100);
+    this.masterSlider.onUpdate.connect(async (v) => {
+      await userSettings.setMasterVolume(v / 100);
     });
     this.layout.addChild(this.masterSlider);
 
     this.bgmSlider = new VolumeSlider("BGM Volume");
-    this.bgmSlider.onUpdate.connect((v) => {
-      userSettings.setBgmVolume(v / 100);
+    this.bgmSlider.onUpdate.connect(async (v) => {
+      await userSettings.setBgmVolume(v / 100);
     });
     this.layout.addChild(this.bgmSlider);
 
     this.sfxSlider = new VolumeSlider("SFX Volume");
-    this.sfxSlider.onUpdate.connect((v) => {
-      userSettings.setSfxVolume(v / 100);
+    this.sfxSlider.onUpdate.connect(async (v) => {
+      await userSettings.setSfxVolume(v / 100);
     });
     this.layout.addChild(this.sfxSlider);
   }
@@ -106,10 +106,10 @@ export class SettingsPopup extends Container {
   }
 
   /** Set things up just before showing the popup */
-  public prepare() {
-    this.masterSlider.value = userSettings.getMasterVolume() * 100;
-    this.bgmSlider.value = userSettings.getBgmVolume() * 100;
-    this.sfxSlider.value = userSettings.getSfxVolume() * 100;
+  public async prepare() {
+    this.masterSlider.value = (await userSettings.getMasterVolume()) * 100;
+    this.bgmSlider.value = (await userSettings.getBgmVolume()) * 100;
+    this.sfxSlider.value = (await userSettings.getSfxVolume()) * 100;
   }
 
   /** Present the popup, animated */
