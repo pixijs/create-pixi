@@ -17,37 +17,22 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      globals: {
-        ...globals.browser,
-        ...globals.es2023,
-        ...globals.node,
-      },
+      globals: { ...globals.browser, ...globals.es2023, ...globals.node },
     },
     rules: {
-      "prettier/prettier": [
-        "error",
-        {},
-        {
-          usePrettierrc: false,
-        },
-      ],
+      "prettier/prettier": ["error", {}, { usePrettierrc: false }],
       "import/no-unresolved": "off",
       "import/order": [
         "error",
         {
-          alphabetize: {
-            caseInsensitive: true,
-            order: "asc",
-          },
+          alphabetize: { caseInsensitive: true, order: "asc" },
           "newlines-between": "always",
         },
       ],
       "import/first": "error",
       "@typescript-eslint/consistent-type-imports": [
         "error",
-        {
-          disallowTypeAnnotations: false,
-        },
+        { disallowTypeAnnotations: false },
       ],
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
       "import/no-duplicates": ["error"],

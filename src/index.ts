@@ -71,13 +71,28 @@ const FRAMEWORKS: Framework[] = [
         color: blue,
       },
       {
+        name: "bundler-vite-js",
+        display: "Vite (JS)",
+        color: blue,
+      },
+      {
         name: "bundler-webpack",
         display: "Webpack",
         color: blueBright,
       },
       {
+        name: "bundler-webpack-js",
+        display: "Webpack (JS)",
+        color: blueBright,
+      },
+      {
         name: "bundler-esbuild",
         display: "esbuild",
+        color: yellow,
+      },
+      {
+        name: "bundler-esbuild-js",
+        display: "esbuild (JS)",
         color: yellow,
       },
       {
@@ -95,6 +110,11 @@ const FRAMEWORKS: Framework[] = [
       {
         name: "framework-react",
         display: "React",
+        color: cyan,
+      },
+      {
+        name: "framework-react-js",
+        display: "React (JS)",
         color: cyan,
       },
     ],

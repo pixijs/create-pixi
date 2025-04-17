@@ -59,11 +59,15 @@ bun create pixi.js pixi-project --template bundler-vite
 Currently supported template presets include:
 
 - `bundler-vite`
+- `bundler-vite-js`
 - `bundler-webpack`
+- `bundler-webpack-js`
 - `bundler-esbuild`
+- `bundler-esbuild-js`
 - `bundler-import-map`
 - `creation-web`
 - `framework-react`
+- `framework-react-js`
 - `extension-default`
 
 You can use `.` for the project name to scaffold in the current directory.
