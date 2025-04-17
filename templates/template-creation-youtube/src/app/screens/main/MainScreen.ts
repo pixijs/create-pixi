@@ -129,7 +129,6 @@ export class MainScreen extends Container {
     });
 
     this.addChild(this.scoreText);
-    console.log(window.ytgame?.SDK_VERSION);
   }
 
   /** Prepare the screen just before showing */

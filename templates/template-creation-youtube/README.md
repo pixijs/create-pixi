@@ -15,18 +15,15 @@ This template provides a starting point for creating YouTube Playable games usin
 
 1. Create a new project using this template:
 ```bash
-npm create pixi@latest my-youtube-game -- --template creation-youtube
+npm create pixi@latest
 ```
+2. Name your project and choose the "Youtube" template under "Creation Templates"
 
-2. Install dependencies:
+3. Then simply run:
 ```bash
-cd my-youtube-game
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
+  cd <PROJECT_NAME>
+  npm install
+  npm run dev
 ```
 
 4. Test your game in the YouTube SDK Test Suite:
@@ -34,33 +31,66 @@ npm run dev
    - Enter `http://localhost:8080` as the Game URL
    - Test your game's integration with the YouTube SDK
 
-## YouTube Plugin Usage
+## User Settings & Persistence
 
-The template includes a `YouTubePlugin` that provides easy access to YouTube Playables SDK functionality:
+This template saves user settings and game state **persistently** using the official YouTube Playables API (`ytgame.game.saveData`/`loadData`) when running in the Playables environment, and falls back to `localStorage` for local development/testing.
+
+All settings are stored as a single JSON object. The provided `StorageWrapper` class exposes an async API for getting and setting values of various types:
 
 ```typescript
-// The plugin is automatically initialized with the CreationEngine
-const app = new CreationEngine();
-await app.init();
+// Get/set a string value
+await storage.setString('username', 'Alice');
+const username = await storage.getString('username');
 
-// Start the game
-app.youtube.start();
+// Get/set a number value
+await storage.setNumber('highScore', 12345);
+const score = await storage.getNumber('highScore');
 
-// Save game data
-await app.youtube.saveData({ score: 100, level: 5 });
+// Get/set a boolean value
+await storage.setBool('musicEnabled', true);
+const musicEnabled = await storage.getBool('musicEnabled');
 
-// Load game data
-const data = await app.youtube.loadData();
+// Get/set an object
+await storage.setObject('settings', { volume: 0.5, theme: 'dark' });
+const settings = await storage.getObject<{ volume: number; theme: string }>('settings');
+```
 
-// Submit a score
-await app.youtube.submitScore(100);
+### How it works
+- In YouTube Playables: Uses `ytgame.game.saveData` and `ytgame.game.loadData` for persistence.
+- Locally: Falls back to `localStorage` using a single key (`user_settings`).
+- All storage APIs are **async** and should be awaited.
 
-// Get the player's score
-const score = await app.youtube.getScore();
+### Example: Saving and Loading User Settings
+```typescript
+// Save settings
+await storage.setObject('user', { masterVolume: 0.8, sfxVolume: 0.5 });
 
-// Handle mute/unmute
-app.youtube.mute();
-app.youtube.unmute();
+// Load settings
+const userSettings = await storage.getObject<{ masterVolume: number; sfxVolume: number }>('user');
+```
+
+## YouTube Plugin Usage
+
+The template includes a `YouTubePlugin` for Playables-specific features:
+
+```typescript
+import { engine } from "../../getEngine";
+
+// The plugin is automatically initialized with the engine
+
+const currentScore = await engine().youtube.getScore();
+
+if (add) {
+    this.score += 1;
+} else if (this.score > 0) {
+    this.score -= 1;
+}
+
+// Update display
+this.updateScoreDisplay();
+
+// Submit to YouTube
+await engine().youtube.submitScore(currentScore);
 ```
 
 ## Project Structure
@@ -72,35 +102,20 @@ app.youtube.unmute();
 - `raw-assets/` - Source assets
 - `public/` - Static assets and styles
 
-## Building for Production
-
-1. Build your game:
-```bash
-npm run build
-```
-
-2. Test the production build:
-```bash
-npm run preview
-```
-
-3. Deploy the contents of the `dist` directory to your hosting provider
 
 ## YouTube Playables Requirements
 
 Make sure your game follows YouTube's requirements:
 
-1. Must respond to pause/resume events
-2. Must support mute/unmute functionality
-3. Should save and restore game state
-4. Must work in the YouTube player iframe
-5. Should adapt to different screen sizes
+1. SDK loaded before any game code
+2. Initial bundle < 15 MiB
+3. firstFrameReady called before gameReady
+4. gameReady called
+5. Cloud save data < 3 MiB
+6. JS heap size < 512 MiB
 
 ## Documentation
 
 - [YouTube Playables SDK Documentation](https://developers.google.com/youtube/gaming/playables/reference/sdk)
 - [PixiJS Documentation](https://pixijs.com/docs)
 
-## License
-
-This template is MIT licensed.
