@@ -12,7 +12,6 @@
   "author": "PixiJS",
   "type": "module",
   "bin": {
-    "cpa": "index.js",
     "create-pixi": "index.js"
   },
   "files": [
