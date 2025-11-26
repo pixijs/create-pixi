@@ -40,13 +40,6 @@ const config: Config = {
           editUrl:
             "https://github.com/pixijs/create-pixi/tree/main/packages/docs/",
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/pixijs/create-pixi/tree/main/packages/docs/",
-        },
         theme: {
           customCss: "./src/css/custom.css",
         },
