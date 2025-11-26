@@ -37,8 +37,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/pixijs/create-pixi/tree/main/packages/docs/",
+          editUrl: "https://github.com/pixijs/create-pixi/tree/main/docs/",
         },
         theme: {
           customCss: "./src/css/custom.css",
