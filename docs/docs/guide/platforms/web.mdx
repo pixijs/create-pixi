@@ -1,0 +1,71 @@
+---
+title: Web
+description: Run a game template as a web page. Single-player games build to static files for any web host, and multiplayer games add a Node.js game server.
+---
+
+import { CreateCommand } from "@site/src/components/PackageManagerTabs";
+import CodeBlock from "@theme/CodeBlock";
+import platformSource from "!!raw-loader!@templates/layers/platforms/web/core/src/platform.ts";
+import connectSource from "!!raw-loader!@templates/layers/platforms/web/multiplayer/src/connect.ts";
+import serverPlatformSource from "!!raw-loader!@templates/layers/platforms/web/multiplayer/server/platform.ts";
+
+The web platform runs the game as a page in any browser, with no SDK and no sign-in.
+
+| Template                                   | Id                        | Runs on                                           |
+| ------------------------------------------ | ------------------------- | ------------------------------------------------- |
+| [Starter](../games/starter.mdx)            | `starter-web`             | Any static web host                               |
+| [Starter, multiplayer](../multiplayer.mdx) | `starter-web-multiplayer` | A Node.js host that accepts WebSocket connections |
+
+<CreateCommand dir="my-game" template="starter-web" />
+
+Add `-js` to the id for JavaScript. [Game templates](../games/index.mdx) covers the files every game template shares, and the [starter game](../games/starter.mdx) covers the scene.
+
+## Platform startup code
+
+`src/main.ts` calls three functions from `src/platform.ts` while the game starts. A plain web page has nothing to start or report, so they do nothing:
+
+<CodeBlock language="ts" title="src/platform.ts">
+  {platformSource}
+</CodeBlock>
+
+They're still a good place for your own startup code. For example, add a loading bar to `index.html`, update it from `setLoadingProgress`, and remove it in `gameReady`. See [platform startup code](../games/index.mdx#platform-startup-code) for when each one runs.
+
+## Scripts
+
+The scripts are the same as the [Vite template](../bundlers.mdx#scripts): `dev` starts the dev server on port 8080, `build` lints, type-checks in TypeScript projects, and writes the game to `dist/`, and `preview` serves that build locally.
+
+## Deploy
+
+Upload `dist/` to any static web host, such as GitHub Pages or itch.io. The build uses relative paths, so it works from any folder.
+
+## Multiplayer
+
+`starter-web-multiplayer` adds a Colyseus game server. Anyone who opens the page joins the game, without signing in. [Multiplayer](../multiplayer.mdx) covers the server, the scripts and how to deploy it. The web platform adds two files to it.
+
+`src/connect.ts` joins the game's room:
+
+<CodeBlock language="ts" title="src/connect.ts">
+  {connectSource}
+</CodeBlock>
+
+- `new Client()` without a URL connects to the server that served the page, which is the same in development and production.
+- `joinOrCreate("game")` joins a `game` room, or creates one if none is open.
+- If joining fails, `joinGame()` throws "Can't reach the game server", and the scene shows that message.
+
+`server/platform.ts` tells the game's room who can join and which room they join:
+
+<CodeBlock language="ts" title="server/platform.ts">
+  {serverPlatformSource}
+</CodeBlock>
+
+On the web, everyone can join, every player joins the same room, and there are no extra routes. [How platforms change the server](../multiplayer.mdx#how-platforms-change-the-server) explains what each export does. To ask players for a name, see [show player names](../multiplayer.mdx#change-the-game).
+
+### Play with friends
+
+The dev server lets in requests through a [cloudflared](https://github.com/cloudflare/cloudflared) quick tunnel, which gives it a public HTTPS address. Start the dev server, then in a second terminal:
+
+```bash
+npx cloudflared tunnel --url http://localhost:8080
+```
+
+Send the address it prints, such as `https://funky-jogging-bunny.trycloudflare.com`, to your friends. Anyone with it can play on your dev server until you stop the tunnel. See [allowed hosts](./discord.mdx#allowed-hosts) for other tunnels.

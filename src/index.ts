@@ -1,27 +1,61 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import spawn from "cross-spawn";
 import minimist from "minimist";
 import colors from "picocolors";
 import prompts from "prompts";
 
-const { blue, blueBright, cyan, green, red, reset, yellow } = colors;
+import {
+  categories,
+  categoryIds,
+  findVariant,
+  gameTemplateOf,
+  games,
+  labelOf,
+  languageNames,
+  multiplayerDescription,
+  platforms,
+  templatesIn,
+  variantOf,
+  variants,
+} from "../templates/manifest.ts";
+import type {
+  Category,
+  Game,
+  Platform,
+  TemplateDefinition,
+} from "../templates/manifest.ts";
+import { installCommand, runCommand } from "./commands.ts";
+import { scaffold } from "./scaffold.ts";
+
+const { blue, cyan, dim, green, red, reset, yellow } = colors;
 
 // Avoids autoconversion to number of the project name by defining that the args
 // non associated with an option ( _ ) needs to be parsed as a string. See #4606
 const argv = minimist<{
   template?: string;
   help?: boolean;
+  overwrite?: string;
 }>(process.argv.slice(2), {
   default: { help: false },
   alias: { h: "help", t: "template" },
-  string: ["_"],
+  string: ["_", "template", "overwrite"],
 });
 const cwd = process.cwd();
 
-// prettier-ignore
+const categoryColors: Record<Category, (text: string) => string> = {
+  game: green,
+  bundler: yellow,
+  framework: cyan,
+  extension: blue,
+};
+
+class CancelledError extends Error {}
+
+const idWidth = Math.max(...variants.map(({ id }) => id.length)) + 2;
+
 const helpMessage = `\
 Usage: create-pixi [OPTION]... [DIRECTORY]
 
@@ -30,154 +64,39 @@ With no arguments, start the CLI in interactive mode.
 
 Options:
   -t, --template NAME        use a specific template
+      --overwrite MODE       yes, ignore or no when the directory isn't empty
+  -h, --help                 display this message
 
 Available templates:
-${yellow    ('Vite:                     bundler-vite'        )}
-${blueBright('Webpack:                  bundler-webpack'     )}
-${yellow    ('esbuild:                  bundler-esbuild'     )}
-${green     ('Import Map:               bundler-import-map'  )}
-${cyan      ('Web Creation App:         creation-web'        )}
-${blueBright('Extension:                extension-default'   )}
-${cyan      ('React:                    framework-react'     )}
+${variants
+  .map(({ id, language, template }) => {
+    const suffix = template.languages.length > 1 ? ` (${language})` : "";
 
-Coming soon:
-${blue      ('Discord Creation App:     creation-discord'    )}
-${blueBright('Facebook Creation App:    creation-facebook'   )}
-${red       ('YouTube Creation App:     creation-youtube'    )}`
-
-type ColorFunc = (str: string | number) => string;
-type Framework = {
-  name: string;
-  display: string;
-  color: ColorFunc;
-  variants: FrameworkVariant[];
-};
-type FrameworkVariant = {
-  name: string;
-  display: string;
-  color: ColorFunc;
-  customCommand?: string;
-};
-
-const FRAMEWORKS: Framework[] = [
-  {
-    name: "bundlers",
-    display: "Bundler Templates",
-    color: yellow,
-    variants: [
-      {
-        name: "bundler-vite",
-        display: "Vite",
-        color: blue,
-      },
-      {
-        name: "bundler-vite-js",
-        display: "Vite (JS)",
-        color: blue,
-      },
-      {
-        name: "bundler-webpack",
-        display: "Webpack",
-        color: blueBright,
-      },
-      {
-        name: "bundler-webpack-js",
-        display: "Webpack (JS)",
-        color: blueBright,
-      },
-      {
-        name: "bundler-esbuild",
-        display: "esbuild",
-        color: yellow,
-      },
-      {
-        name: "bundler-esbuild-js",
-        display: "esbuild (JS)",
-        color: yellow,
-      },
-      {
-        name: "bundler-import-map",
-        display: "Import Map",
-        color: green,
-      },
-    ],
-  },
-  {
-    name: "framework",
-    display: "Framework Templates",
-    color: green,
-    variants: [
-      {
-        name: "framework-react",
-        display: "React",
-        color: cyan,
-      },
-      {
-        name: "framework-react-js",
-        display: "React (JS)",
-        color: cyan,
-      },
-    ],
-  },
-  {
-    name: "creation",
-    display: "Creation Templates",
-    color: cyan,
-    variants: [
-      {
-        name: "creation-web",
-        display: "Web",
-        color: yellow,
-      },
-      // {
-      //   name: "creation-discord",
-      //   display: "Discord",
-      //   color: blue,
-      // },
-      // {
-      //   name: "creation-facebook",
-      //   display: "Facebook",
-      //   color: blueBright,
-      // },
-      // {
-      //   name: "creation-youtube",
-      //   display: "YouTube",
-      //   color: red,
-      // },
-    ],
-  },
-  {
-    name: "extension",
-    display: "Extension",
-    color: blueBright,
-    variants: [
-      {
-        name: "extension-default",
-        display: "Default",
-        color: blue,
-      },
-    ],
-  },
-];
-
-const TEMPLATES = FRAMEWORKS.map(
-  (f) => (f.variants && f.variants.map((v) => v.name)) || [f.name],
-).reduce((a, b) => a.concat(b), []);
-
-const renameFiles: Record<string, string | undefined> = {
-  _gitignore: ".gitignore",
-  "eslint__config.mjs": "eslint.config.mjs",
-};
+    return categoryColors[template.category](
+      `  ${id.padEnd(idWidth)}${labelOf(template)}${suffix}`,
+    );
+  })
+  .join("\n")}`;
 
 const defaultTargetDir = "pixi-project";
+const overwriteModes = ["yes", "ignore", "no"];
 
 async function init() {
   const argTargetDir = formatTargetDir(argv._[0]);
-  const argTemplate = argv.template || argv.t;
+  const argTemplate = argv.template;
+  const argVariant = argTemplate ? findVariant(argTemplate) : undefined;
 
-  const help = argv.help;
-  if (help) {
+  if (argv.help) {
     console.log(helpMessage);
+    return;
+  }
+
+  if (
+    argv.overwrite !== undefined &&
+    !overwriteModes.includes(argv.overwrite)
+  ) {
+    console.error(red("✖") + " --overwrite must be yes, ignore or no");
+    process.exitCode = 1;
     return;
   }
 
@@ -185,7 +104,15 @@ async function init() {
   const getProjectName = () => path.basename(path.resolve(targetDir));
 
   let result: prompts.Answers<
-    "projectName" | "overwrite" | "packageName" | "framework" | "variant"
+    | "projectName"
+    | "overwrite"
+    | "packageName"
+    | "category"
+    | "game"
+    | "platform"
+    | "multiplayer"
+    | "template"
+    | "language"
   >;
 
   prompts.override({
@@ -232,7 +159,7 @@ async function init() {
         {
           type: (_, { overwrite }: { overwrite?: string }) => {
             if (overwrite === "no") {
-              throw new Error(red("✖") + " Operation cancelled");
+              throw new CancelledError();
             }
             return null;
           },
@@ -247,171 +174,171 @@ async function init() {
             isValidPackageName(dir) || "Invalid package.json name",
         },
         {
-          type:
-            argTemplate && TEMPLATES.includes(argTemplate) ? null : "select",
-          name: "framework",
-          message:
-            typeof argTemplate === "string" && !TEMPLATES.includes(argTemplate)
-              ? reset(
-                  `"${argTemplate}" isn't a valid template. Please choose from below: `,
-                )
-              : reset("Select a type of template:"),
+          type: argVariant ? null : "select",
+          name: "category",
+          message: reset(
+            argTemplate
+              ? `"${argTemplate}" isn't a valid template. Please choose from below:`
+              : "Select a type of template:",
+          ),
           initial: 0,
-          choices: FRAMEWORKS.map((framework) => {
-            const frameworkColor = framework.color;
-            return {
-              title: frameworkColor(framework.display || framework.name),
-              value: framework,
-            };
-          }),
+          choices: categoryIds.map((category) => ({
+            title: categoryColors[category](categories[category].name),
+            description: categories[category].description,
+            value: category,
+          })),
         },
         {
-          type: (framework: Framework) =>
-            framework && framework.variants ? "select" : null,
-          name: "variant",
-          message: reset("Select a variant:"),
-          choices: (framework: Framework) =>
-            framework.variants.map((variant) => {
-              const variantColor = variant.color;
-              return {
-                title: variantColor(variant.display || variant.name),
-                value: variant.name,
-              };
-            }),
+          type: (_, { category }: { category?: Category }) =>
+            category === "game" && games.length > 1 ? "select" : null,
+          name: "game",
+          message: reset("Select a game:"),
+          choices: games.map((game) => ({
+            title: categoryColors.game(game.name),
+            description: game.description,
+            value: game,
+          })),
+        },
+        {
+          type: (_, { category }: { category?: Category }) =>
+            category === "game" && platforms.length > 1 ? "select" : null,
+          name: "platform",
+          message: reset("Select a platform:"),
+          choices: platforms.map((platform) => ({
+            title: categoryColors.game(platform.name),
+            description: platform.description,
+            value: platform,
+          })),
+        },
+        {
+          type: (_, values) =>
+            values.category === "game" &&
+            selectedGameTemplate({ ...values, multiplayer: true })
+              ? "select"
+              : null,
+          name: "multiplayer",
+          message: reset("Multiplayer?"),
+          choices: [
+            { title: categoryColors.game("No"), value: false },
+            {
+              title: categoryColors.game("Yes"),
+              description: multiplayerDescription,
+              value: true,
+            },
+          ],
+        },
+        {
+          type: (_, { category }: { category?: Category }) =>
+            category && category !== "game" ? "select" : null,
+          name: "template",
+          message: reset("Select a template:"),
+          choices: (_, { category }: { category: Category }) =>
+            templatesIn(category).map((template) => ({
+              title: categoryColors[category](template.name),
+              description: template.description,
+              value: template,
+            })),
+        },
+        {
+          type: (_, values) =>
+            (selectedTemplate(values)?.languages.length ?? 0) > 1
+              ? "select"
+              : null,
+          name: "language",
+          message: reset("Select a language:"),
+          choices: (_, values) =>
+            selectedTemplate(values)!.languages.map((language) => ({
+              title: languageNames[language],
+              value: language,
+            })),
         },
       ],
       {
         onCancel: () => {
-          throw new Error(red("✖") + " Operation cancelled");
+          throw new CancelledError();
         },
       },
     );
-  } catch (cancelled) {
-    console.log((cancelled as Error).message);
+  } catch (error) {
+    if (!(error instanceof CancelledError)) throw error;
+
+    console.log(red("✖") + " Operation cancelled");
+    process.exitCode = 1;
     return;
   }
 
-  // user choice associated with prompts
-  const { framework, overwrite, packageName, variant } = result;
+  const { overwrite, packageName } = result;
+  const template = selectedTemplate(result);
+  const variant =
+    argVariant ??
+    (template &&
+      variantOf(template, result.language ?? template.languages[0]))!;
 
-  const root = path.join(cwd, targetDir);
+  const root = path.resolve(cwd, targetDir);
 
-  if (overwrite === "yes") {
-    emptyDir(root);
-  } else if (!fs.existsSync(root)) {
-    fs.mkdirSync(root, { recursive: true });
-  }
-
-  // determine template
-  const template: string = variant || framework?.name || argTemplate;
-  const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
-  const pkgManager = pkgInfo ? pkgInfo.name : "npm";
-  const isYarn1 = pkgManager === "yarn" && pkgInfo?.version.startsWith("1.");
-
-  const { customCommand } =
-    FRAMEWORKS.flatMap((f) => f.variants).find((v) => v.name === template) ??
-    {};
-
-  if (customCommand) {
-    const fullCustomCommand = customCommand
-      .replace(/^npm create /, () => {
-        // `bun create` uses it's own set of templates,
-        // the closest alternative is using `bun x` directly on the package
-        if (pkgManager === "bun") {
-          return "bun x create-";
-        }
-        return `${pkgManager} create `;
-      })
-      // Only Yarn 1.x doesn't support `@version` in the `create` command
-      .replace("@latest", () => (isYarn1 ? "" : "@latest"))
-      .replace(/^npm exec/, () => {
-        // Prefer `pnpm dlx`, `yarn dlx`, or `bun x`
-        if (pkgManager === "pnpm") {
-          return "pnpm dlx";
-        }
-        if (pkgManager === "yarn" && !isYarn1) {
-          return "yarn dlx";
-        }
-        if (pkgManager === "bun") {
-          return "bun x";
-        }
-        // Use `npm exec` in all other cases,
-        // including Yarn 1.x and other custom npm clients.
-        return "npm exec";
-      });
-
-    const [command, ...args] = fullCustomCommand.split(" ");
-    // we replace TARGET_DIR here because targetDir may include a space
-    const replacedArgs = args.map((arg) =>
-      arg.replace("TARGET_DIR", () => targetDir),
-    );
-    const { status } = spawn.sync(command, replacedArgs, {
-      stdio: "inherit",
-    });
-    process.exit(status ?? 0);
-  }
+  if (overwrite === "yes") emptyDir(root);
 
   console.log(`\nScaffolding project in ${root}...`);
 
   const templateDir = path.resolve(
     fileURLToPath(import.meta.url),
-    "../../templates",
-    `template-${template}`,
+    "../templates",
+    variant.id,
   );
 
-  const write = (file: string, content?: string) => {
-    const targetPath = path.join(root, renameFiles[file] ?? file);
-    if (content) {
-      fs.writeFileSync(targetPath, content);
-    } else {
-      copy(path.join(templateDir, file), targetPath);
-    }
-  };
+  scaffold(templateDir, root, {
+    packageName: packageName || getProjectName(),
+    author: getGitUserName(),
+  });
 
-  const files = fs.readdirSync(templateDir);
-  for (const file of files.filter((f) => f !== "package.json")) {
-    write(file);
+  const pkgInfo = pkgFromUserAgent(process.env.npm_config_user_agent);
+  const pkgManager = pkgInfo ? pkgInfo.name : "npm";
+  const cdProjectName = path.relative(cwd, root);
+
+  // TypeScript 7's native tsc can't resolve modules through Yarn Plug'n'Play
+  if (pkgManager === "yarn" && !pkgInfo?.version.startsWith("1.")) {
+    fs.writeFileSync(
+      path.join(root, ".yarnrc.yml"),
+      "nodeLinker: node-modules\n",
+    );
   }
 
-  const pkg = JSON.parse(
-    fs.readFileSync(path.join(templateDir, `package.json`), "utf-8"),
-  );
-
-  pkg.name = packageName || getProjectName();
-
-  write("package.json", JSON.stringify(pkg, null, 2) + "\n");
-
-  const cdProjectName = path.relative(cwd, root);
   console.log(`\nDone. Now run:\n`);
   if (root !== cwd) {
     console.log(
-      `  cd ${cdProjectName.includes(" ") ? `"${cdProjectName}"` : cdProjectName}`,
+      `  cd ${/[^\w./\\:-]/.test(cdProjectName) ? `"${cdProjectName}"` : cdProjectName}`,
     );
   }
-  switch (pkgManager) {
-    case "yarn":
-      console.log("  yarn");
-      console.log("  yarn dev");
-      break;
-    default:
-      console.log(`  ${pkgManager} install`);
-      console.log(`  ${pkgManager} run dev`);
-      break;
-  }
-  console.log();
+  console.log(`  ${installCommand(pkgManager)}`);
+  console.log(`  ${runCommand(pkgManager, "dev")}`);
+  console.log(dim(`\nDocs: https://pixijs.io/create-pixi/\n`));
+}
+
+interface TemplateAnswers {
+  category?: Category;
+  game?: Game;
+  platform?: Platform;
+  multiplayer?: boolean;
+  template?: TemplateDefinition;
+}
+
+/** Questions that weren't asked take their only answer */
+function selectedGameTemplate({
+  game = games[0],
+  platform = platforms[0],
+  multiplayer = false,
+}: TemplateAnswers) {
+  return gameTemplateOf(game, platform, multiplayer);
+}
+
+function selectedTemplate(values: TemplateAnswers) {
+  if (values.category === "game") return selectedGameTemplate(values);
+
+  return values.template;
 }
 
 function formatTargetDir(targetDir: string | undefined) {
-  return targetDir?.trim().replace(/\/+$/g, "");
-}
-
-function copy(src: string, dest: string) {
-  const stat = fs.statSync(src);
-  if (stat.isDirectory()) {
-    copyDir(src, dest);
-  } else {
-    fs.copyFileSync(src, dest);
-  }
+  return targetDir?.trim().replace(/[\\/]+$/g, "");
 }
 
 function isValidPackageName(projectName: string) {
@@ -427,15 +354,6 @@ function toValidPackageName(projectName: string) {
     .replace(/\s+/g, "-")
     .replace(/^[._]/, "")
     .replace(/[^a-z\d\-~]+/g, "-");
-}
-
-function copyDir(srcDir: string, destDir: string) {
-  fs.mkdirSync(destDir, { recursive: true });
-  for (const file of fs.readdirSync(srcDir)) {
-    const srcFile = path.resolve(srcDir, file);
-    const destFile = path.resolve(destDir, file);
-    copy(srcFile, destFile);
-  }
 }
 
 function isEmpty(path: string) {
@@ -465,6 +383,29 @@ function pkgFromUserAgent(userAgent: string | undefined) {
   };
 }
 
-init().catch((e) => {
-  console.error(e);
+function getGitUserName() {
+  const { status, stdout } = spawnSync("git", ["config", "user.name"], {
+    encoding: "utf8",
+  });
+
+  return status === 0 ? stdout.trim() : undefined;
+}
+
+let settled = false;
+
+init()
+  .catch((error: Error) => {
+    console.error(red("✖") + " " + error.message);
+    process.exitCode = 1;
+  })
+  .finally(() => {
+    settled = true;
+  });
+
+// A prompt never resolves when stdin closes before it's answered, e.g. in a non-interactive shell
+process.once("beforeExit", () => {
+  if (settled) return;
+
+  console.log("\n" + red("✖") + " Operation cancelled");
+  process.exitCode = 1;
 });

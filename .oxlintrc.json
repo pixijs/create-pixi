@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "import/first": "error",
+    "import/no-duplicates": "error",
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "typescript/consistent-type-imports": "error"
+  },
+  "ignorePatterns": [
+    "dist",
+    "playground",
+    "docs/build",
+    "docs/.docusaurus",
+    "templates/layers/stack/extension"
+  ]
+}

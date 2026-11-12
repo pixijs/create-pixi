@@ -1,0 +1,103 @@
+---
+title: Extension template
+description: Build, test, document and publish a PixiJS extension with PixiJS Extension Scripts.
+---
+
+import { CreateCommand } from "@site/src/components/PackageManagerTabs";
+
+The extension template is a library project for publishing your own PixiJS plugin, such as a filter, a display object or new methods on existing classes. It uses [PixiJS Extension Scripts](https://github.com/pixijs/extension-scripts), a CLI called `xs` that wraps the build, lint, test, docs and release tools in one dev dependency.
+
+<CreateCommand dir="my-extension" template="extension-default" />
+
+The extension template is TypeScript only. It doesn't use oxlint or oxfmt. `xs lint` runs ESLint with the PixiJS config instead.
+
+## Project structure
+
+```text
+my-extension/
+├── examples/
+│   └── index.html
+├── src/
+│   ├── __tests__/
+│   │   └── Rectangle.test.ts
+│   └── index.ts
+├── .gitignore
+├── jest.config.mjs
+├── LICENSE
+├── README.md
+├── package.json
+└── tsconfig.json
+```
+
+The example in `src/index.ts` adds an `expand` method to PixiJS's `Rectangle` and declares it on the global `PixiMixins` namespace, so TypeScript knows about the new method:
+
+```ts title="src/index.ts"
+import { Rectangle } from "pixi.js";
+
+declare global {
+  namespace PixiMixins {
+    interface Rectangle {
+      expand(amount: number): this;
+    }
+  }
+}
+
+Rectangle.prototype.expand = function expand(this: Rectangle, amount: number) {
+  this.x -= amount;
+  this.y -= amount;
+  this.width += amount * 2;
+  this.height += amount * 2;
+
+  return this;
+};
+```
+
+`pixi.js` (`>=8.23.0 <9`) and `@pixi/3d` (`^0.1.0`) are peer dependencies, so your package uses the app's copies instead of shipping its own. Both are dev dependencies too, so the build and the tests have them.
+
+The CLI fills in `name` from the folder name and `author` from your `git config user.name`. Update `description` in `package.json` before you publish.
+
+## Scripts
+
+| Script         | Runs            | What it does                                                                                     |
+| -------------- | --------------- | ------------------------------------------------------------------------------------------------ |
+| `dev`, `start` | `xs serve`      | Rebuilds on change and serves the project on port 8080, opening `examples/`                      |
+| `watch`        | `xs watch`      | Rebuilds on change without a server                                                              |
+| `build`        | `xs build`      | Cleans, lints, type-checks, then bundles into `lib/` and `dist/`                                 |
+| `lint`         | `xs lint`       | Runs ESLint on `src/` and `examples/`                                                            |
+| `format`       | `xs lint --fix` | Runs ESLint and fixes what it can                                                                |
+| `types`        | `xs types`      | Type-checks the project with TypeScript                                                          |
+| `test`         | `xs test`       | Runs the Jest tests in `src/__tests__/` inside Electron, so they have a real browser environment |
+| `docs`         | `xs docs`       | Writes API docs from your JSDoc comments into `docs/`                                            |
+| `release`      | `xs release`    | Bumps the version, tests, builds, deploys docs to GitHub Pages, publishes to npm and pushes tags |
+
+`xs` commands chain with commas, so `"test": "xs types,test"` runs the type check before the tests.
+
+## Build output
+
+`npm run build` writes two sets of files:
+
+- `lib/` holds ES module (`index.mjs`) and CommonJS (`index.js`) builds plus type declarations. These are what bundlers and Node.js use through `main`, `module`, `types` and `exports` in `package.json`.
+- `dist/` holds `extension.mjs`, a single ES module for browsers, set by `extensionConfig` in `package.json`. `examples/index.html` loads it through an import map, with `pixi.js` and `@pixi/3d` from jsDelivr.
+
+PixiJS 3D is only published as ES modules, so there's no bundle for a plain `<script>` tag. `"environments": ["node"]` in `extensionConfig` turns that bundle off.
+
+If your extension doesn't use PixiJS 3D, run `npm uninstall @pixi/3d`, which also removes the peer dependency. Then delete `environments` and add `"bundle": "dist/extension.js"` to `extensionConfig` to build the `<script>` tag bundle again.
+
+Both folders are generated and listed in `.gitignore`. The `files` field in `package.json` limits the npm package to these two folders, plus `package.json`, `README.md` and `LICENSE`.
+
+## Tests on CI
+
+`xs test` runs Jest inside Electron with the config in `jest.config.mjs`. That file is the Extension Scripts default plus a transform for the packages that are only published as ES modules: `earcut`, which PixiJS uses, and `@pixi/3d` and its `meshoptimizer` dependency.
+
+On a Linux CI machine without a display, install `xvfb` and run the tests through it:
+
+```yaml
+- run: sudo apt-get install xvfb
+- run: xvfb-run --auto-servernum npm test
+```
+
+## Publishing
+
+`npm run release` asks which version to bump to, then runs the tests, builds, deploys the docs and examples to the `gh-pages` branch, publishes to npm and pushes the git tags. You need to be logged in to npm (`npm login`) and have a GitHub remote.
+
+The [Extension Scripts README](https://github.com/pixijs/extension-scripts) lists every command and every `extensionConfig` option.

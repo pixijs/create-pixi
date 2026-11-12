@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@esotericsoftware/spine-pixi-v8": "catalog:",
+    "@pixi/sound": "catalog:",
+    "@pixi/ui": "catalog:",
+    "gsap": "catalog:",
+    "pixi-filters": "catalog:"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "{{packageName}}",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npm run dev",
+    "lint": "oxlint",
+    "format": "oxfmt"
+  },
+  "dependencies": {
+    "@pixi/3d": "catalog:",
+    "pixi.js": "catalog:"
+  },
+  "devDependencies": {
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:"
+  }
+}

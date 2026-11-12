@@ -1,115 +1,80 @@
 ---
-sidebar_position: 0
-title: Getting Started
+title: Getting started
+description: Create a PixiJS project with npm, yarn, pnpm or bun, answer the prompts, and start the dev server.
 ---
 
-:::info **Compatibility Note**
-> PixiJS requires [Node.js](https://nodejs.org/en/) version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
-:::
+import {
+  CreateCommand,
+  NextSteps,
+  RunScript,
+} from "@site/src/components/PackageManagerTabs";
+import { CategoryList } from "@site/src/components/TemplateTables";
 
-With NPM:
+create-pixi.js asks a few questions, then writes a small PixiJS project that runs as soon as its dependencies are installed.
 
-```bash
-npm create pixi.js@latest
-```
+## Requirements
 
-With Yarn:
+- [Node.js](https://nodejs.org/) 22.12 or newer (22.15 or newer for the webpack template). Check with `node --version`.
+- npm, yarn, pnpm or bun. npm comes with Node.js.
 
-```bash
-yarn create pixi.js
-```
+## Create a project
 
-With PNPM:
+Run the create command for your package manager:
 
-```bash
-pnpm create pixi.js
-```
+<CreateCommand />
 
-With Bun:
+You don't need to install anything first. The package manager downloads create-pixi.js, runs it, and starts the prompts. Keep `@latest` in the npm command so npm doesn't reuse an older copy from its cache.
 
-```bash
-bun create pixi.js
-```
+## Answer the prompts
 
-Then follow the prompts!
+| Prompt           | When it appears                                                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Project name     | When you didn't pass a folder. The folder to create, `pixi-project` by default.                                         |
+| Target directory | When the folder already has files in it. Cancel, remove the existing files, or keep them and write the template on top. |
+| Package name     | When the folder name isn't a valid npm package name, for example because it has capital letters or spaces.              |
+| Type of template | Unless you passed `--template`.                                                                                         |
+| Game             | For the Game type, when there's more than one game.                                                                     |
+| Platform         | For the Game type. Where the game runs, such as the web or Discord.                                                     |
+| Multiplayer?     | For the Game type, when the game and the platform both have a multiplayer version.                                      |
+| Template         | For the other types.                                                                                                    |
+| Language         | When the template comes in both TypeScript and JavaScript.                                                              |
 
-## Bundler Templates
+A folder that holds only a `.git` folder counts as empty. The template types are:
 
-Bundler templates are general templates that you can use to scaffold a PixiJS project with a specific bundler.
-They include the necessary configurations and dependencies to get you started however they are not particularly opinionated about the project structure.
+<CategoryList />
 
-Currently supported template presets include:
+[Choosing a template](./choosing-a-template.mdx) compares them side by side.
 
-- **[Vite](https://vite.dev)** + PixiJS (Recommended)
-- **[Webpack](https://webpack.js.org/)** + PixiJS
-- **[esbuild](https://esbuild.github.io/)** + PixiJS
-- PixiJS imported via **[import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)**
+## Skip the prompts
 
-## Creation Templates (Recommended)
+Pass a folder and `--template` to create a project without any questions:
 
-We have created some additional templates that you can use for creating projects for specific platforms.
-These templates include additional configurations and dependencies to help you get started with your app development.
-As such they are more opinionated than the general bundler templates.
+<CreateCommand dir="my-app" template="bundler-vite" />
 
-The goal of these templates is to provide a more tailored experience for developers who are less experienced with setting up a PixiJS project from scratch.
+npm needs the extra `--`. Without it, npm reads `--template` as one of its own options instead of passing it to create-pixi.js. yarn, pnpm and bun pass it along as is.
 
-Find out more about these templates in the [Creation Template](/docs/guide/creations/intro) section.
+Use `.` as the folder to create the project in the current folder:
 
-Currently supported creation templates include:
-- Web: A general template for building web-based applications.
+<CreateCommand dir="." template="bundler-vite" />
 
-**Coming soon:**
-- **[Discord Template](https://github.com/discord/embedded-app-sdk)**: Build multiplayer applications for Discord using their SDK.
-- **[Facebook Template](https://www.facebook.com/fbgaminghome/developers)**: Create apps for Facebook Instant Games.
-- **[YouTube Template](https://developers.google.com/youtube/gaming/playables/reference/sdk)**: Develop YouTube Playables.
+You still get the overwrite prompt if the folder isn't empty. The [CLI reference](./cli.mdx) lists every template id.
 
-## Extension Templates
+## Run it
 
-Extension templates are designed for creating libraries and plugins that enhance PixiJS functionality, such as custom filters or plugins that introduce new features.
+When it finishes, the CLI prints the commands to run next:
 
-These templates leverage [PixiJS ExtensionScript](https://github.com/pixijs/extension-scripts), a CLI tool that simplifies the development process for building PixiJS-compatible extensions. To get the most out of this tool, we recommend reviewing the ExtensionScript documentation.
+<NextSteps />
 
-These templates are best suited for experienced developers familiar with PixiJS and common development toolchains.
+`dev` starts a development server on [http://localhost:8080](http://localhost:8080). Every template except esbuild also opens it in your browser.
 
-## Advanced Usage
+To make a production build:
 
-You can also directly specify the project name and the template you want to use via additional command line options. For example, to scaffold a PixiJS + Vite project, run:
+<RunScript script="build" />
 
-```bash
-# npm 7+, extra double-dash is needed:
-npm create pixi.js@latest pixi-project -- --template bundler-vite
+The build lints your code, type-checks it in TypeScript templates, and writes the result to `dist/`. Upload that folder to any static host. A few templates work differently: the [import map template](./bundlers.mdx#import-map) has no build step, the [multiplayer](./multiplayer.mdx) and [Discord](./platforms/discord.mdx) game templates build a Node.js server as well, and the [extension template](./extension.mdx) builds a library.
 
-# yarn
-yarn create pixi.js pixi-project --template bundler-vite
+## Next
 
-# pnpm
-pnpm create pixi.js pixi-project --template bundler-vite
-
-# Bun
-bun create pixi.js pixi-project --template bundler-vite
-```
-
-You can use `.` for the project name to scaffold in the current directory.
-
-### Template List
-
-- `bundler-vite`
-- `bundler-vite-js`
-- `bundler-webpack`
-- `bundler-webpack-js`
-- `bundler-esbuild`
-- `bundler-esbuild-js`
-- `bundler-import-map`
-- `creation-web`
-- `framework-react`
-- `framework-react-js`
-- `extension-default`
-
-## License
-
-This project is licensed under the MIT License
-
-## Acknowledgements
-
-This project is based on amazing [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) tool and inspired by the [create-game](https://github.com/phaserjs/create-game) project by [Phaser](https://phaser.io/).
-We are grateful for their work and the inspiration it provided.
+- [Choosing a template](./choosing-a-template.mdx) if you haven't picked one yet.
+- [Game templates](./games/index.mdx), [bundler templates](./bundlers.mdx), the [React template](./react.mdx) or the [extension template](./extension.mdx) for what's inside each project.
+- [Troubleshooting](./troubleshooting.mdx) if a command fails.

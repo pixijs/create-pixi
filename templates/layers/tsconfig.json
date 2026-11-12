@@ -1,0 +1,20 @@
+{
+  "extends": "./stack/typescript/tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "rootDirs": [
+      "stack/game",
+      "stack/colyseus",
+      "games/starter/core",
+      "games/starter/multiplayer",
+      "platforms/discord/multiplayer",
+      "platforms/discord/core",
+      "platforms/discord/single-player",
+      "platforms/web/core",
+      "platforms/web/multiplayer"
+    ]
+  },
+  "include": ["**/*"],
+  "exclude": ["stack/extension"]
+}

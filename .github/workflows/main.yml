@@ -1,24 +1,55 @@
-name: Pull Request CI
+name: CI
+
 on:
   pull_request:
-    branches: ['**']
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    name: Build
+  check:
+    name: Lint, test and build
     runs-on: ubuntu-latest
+    outputs:
+      templates: ${{ steps.templates.outputs.list }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Install xvfb
-        run: sudo apt-get install xvfb
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
-      - name: Install Dependencies
-        run: npm ci
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+      # The docs show template files, so moving a layer can break them
+      - run: npm run typecheck --workspace docs
+      - run: npm run build:docs
+      - id: templates
+        name: List templates
+        run: |
+          list=$(node --input-type=module -e "const { variants } = await import('./templates/manifest.ts'); console.log(JSON.stringify(variants.map((v) => v.id)))")
+          echo "list=$list" >> "$GITHUB_OUTPUT"
 
-      - name: Test Lint
-        run: npm run test:lint
-
-      - name: Build for Distribution
-        run: xvfb-run --auto-servernum npm run build
+  template:
+    name: Template ${{ matrix.template }}
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        template: ${{ fromJSON(needs.check.outputs.templates) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci --workspaces=false
+      - run: npm run build
+      - run: npm run verify -- ${{ matrix.template }}

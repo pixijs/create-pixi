@@ -1,0 +1,235 @@
+---
+title: Multiplayer
+description: Add a Colyseus server to a game template to keep every player in sync. Vite runs the game and the server in one process.
+---
+
+import { CreateCommand } from "@site/src/components/PackageManagerTabs";
+import { minorVersion } from "@site/src/data/templates";
+import CodeBlock from "@theme/CodeBlock";
+import viteConfigSource from "!!raw-loader!@templates/layers/stack/colyseus/vite.config.ts";
+import gameStateSource from "!!raw-loader!@templates/layers/games/starter/multiplayer/server/GameState.ts";
+import gameRoomSource from "!!raw-loader!@templates/layers/games/starter/multiplayer/server/GameRoom.ts";
+import serverSource from "!!raw-loader!@templates/layers/games/starter/multiplayer/server/index.ts";
+
+A multiplayer game template adds a [Colyseus](https://colyseus.io) {minorVersion("colyseus")} game server to the game. The server is in charge. Players send it requests, such as "move me here". The server checks them, updates the game state, and Colyseus sends the changes to every player.
+
+Answer Yes to "Multiplayer?" when you create a game, or add `-multiplayer` to its id. [Pick a game and a platform](./games/index.mdx#pick-a-game-and-a-platform) lists every id.
+
+<CreateCommand dir="my-game" template="starter-web-multiplayer" />
+
+Add `-js` to the id for JavaScript. This page uses the [starter game](./games/starter.mdx#multiplayer) on the web: everyone who opens the game gets a bunny on a shared floor. Click or tap the floor to walk there, and press Jump to make your bunny jump on every player's screen. Open the game in two browser windows to see both bunnies.
+
+The first install needs [Git](https://git-scm.com/downloads) and takes longer than the other templates. Colyseus lists a uWebSockets.js transport as a peer dependency, so npm also downloads `uWebSockets.js`, about 125 MB, from GitHub. The template doesn't use it. See [npm install fails with spawn git](./troubleshooting.mdx#npm-install-fails-with-spawn-git).
+
+## Project structure
+
+```text
+my-game/
+├── public/
+│   ├── assets/
+│   │   ├── sounds/
+│   │   │   └── sfx-press.wav
+│   │   ├── bunny.png
+│   │   └── button.png
+│   ├── favicon.png
+│   └── style.css
+├── server/
+│   ├── GameRoom.ts
+│   ├── GameState.ts
+│   ├── index.ts
+│   ├── platform.ts
+│   └── world.ts
+├── src/
+│   ├── assets.ts
+│   ├── connect.ts
+│   ├── cube.ts
+│   ├── main.ts
+│   ├── platform.ts
+│   ├── scene.ts
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+The code in `server/` runs on Node.js. Most of it belongs to the game:
+
+- `index.ts` defines the server and its rooms. A room is one game session that players join.
+- `GameRoom.ts` handles players joining, sending messages and leaving.
+- `GameState.ts` describes the state that Colyseus keeps in sync on every player's screen.
+- `world.ts` holds the size of the floor, which the server and the game both import.
+
+Two files come from the platform: `server/platform.ts` decides who can join and which room they join, and `src/connect.ts` joins the room from the game. `src/scene.ts` replaces the single-player scene and draws a bunny for each player, with the spinning cube in the middle of the floor. `src/main.ts`, `src/assets.ts`, `src/cube.ts` and `src/platform.ts` are the same as in the [single-player template](./games/index.mdx#start-the-game).
+
+## Scripts
+
+| Script    | Runs                          | What it does                                                                                    |
+| --------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| `dev`     | `vite`                        | Starts the dev server with the game server inside it, on port 8080                              |
+| `build`   | `oxlint && tsc && vite build` | Lints, type-checks, then builds the game into `dist/client/` and the server into `dist/server/` |
+| `preview` | `node dist/server/server.mjs` | Runs the production server, which serves the game and the rooms on port 8080                    |
+
+`start` runs `dev`. In JavaScript projects, `build` skips `tsc`.
+
+## The game and the server in one process
+
+`vite.config.ts` adds the Colyseus [Vite plugin](https://docs.colyseus.io/server/vite):
+
+<CodeBlock language="ts" title="vite.config.ts">
+  {viteConfigSource}
+</CodeBlock>
+
+`allowedHosts` lets the dev server answer requests that come through a [cloudflared](https://github.com/cloudflare/cloudflared) quick tunnel, which gives it a public HTTPS address. You can use one to [play with friends](./platforms/web.mdx#play-with-friends) on your dev server, and the [Discord platform](./platforms/discord.mdx#test-inside-discord) runs the game inside Discord this way.
+
+In development, `npm run dev` starts one process. Vite serves the game, and the plugin runs the server from `server/index.ts` on the same port, so there's no second terminal and no proxy. When you save a file in `src/`, the page reloads. When you save a file in `server/`, the plugin reloads the server code without restarting the process. Rooms keep their state, and open pages reconnect on their own, so bunnies stay where they were. A file that both the game and the server import, such as `server/world.ts`, reloads the pages too. Their old bunnies stay for about 15 seconds, until the room gives up on the old connections. If a page shows "Can't reach the game server", refresh it.
+
+`vite build` builds two things: the game into `dist/client/`, and a standalone server into `dist/server/server.mjs`. With `serveClient: true`, that server also serves the files in `dist/client/`, so one Node.js process runs the whole game.
+
+## How state sync works
+
+### The state
+
+`server/GameState.ts` describes the state with `schema()` from `@colyseus/schema`:
+
+<CodeBlock language="ts" title="server/GameState.ts">
+  {gameStateSource}
+</CodeBlock>
+
+`players` is a map from each player's session id to their `Player`. Only fields declared here are synced. Colyseus sends just the fields that changed, 20 times a second by default, in a compact binary format.
+
+### The room
+
+`server/GameRoom.ts` is the only code that changes the state:
+
+<CodeBlock language="ts" title="server/GameRoom.ts">
+  {gameRoomSource}
+</CodeBlock>
+
+- `onJoin` adds a `Player` at a random spot when someone joins, and `onLeave` removes it when they leave. After a dev server reload, players join the restored room again, so `onJoin` keeps a bunny that's already there. The player's `name` comes from `client.auth`, which the platform's `onAuth` sets. On the web it doesn't, so `name` stays empty.
+- `messages` handles what players send. `move` ignores anything that isn't a pair of numbers and keeps the bunny on the floor, so a modified client can't send its bunny off the floor. Use `client.sessionId` to know who sent a message, never an id from the message itself.
+- `jump` isn't state. Nothing needs to remember that a bunny jumped, so the room passes it on to every player with `broadcast` instead.
+- `onUncaughtException` logs errors thrown in the room's code, so one bug doesn't take the server down for everyone.
+
+`server/index.ts` registers the room under the name `game`:
+
+<CodeBlock language="ts" title="server/index.ts">
+  {serverSource}
+</CodeBlock>
+
+### How platforms change the server
+
+`onAuth`, `JoinOptions`, `filterBy` and `routes` come from `server/platform.ts`, which belongs to the platform. They're how the same room works on every platform:
+
+| Export        | What it does                                                       | Web                              | Discord                                                      |
+| ------------- | ------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------ |
+| `onAuth`      | Runs before a player joins. What it returns becomes `client.auth`. | Lets everyone in                 | Lets in only players signed in with Discord, with their name |
+| `JoinOptions` | The options `src/connect.ts` joins with, so TypeScript checks them | None                             | The Activity session's `instanceId`                          |
+| `filterBy`    | Join options that split players into separate rooms                | None, so everyone joins one room | `instanceId`, so each Activity session gets its own room     |
+| `routes`      | HTTP routes the server adds                                        | None                             | `/api/token`, which trades a sign-in code for a token        |
+
+See the [web](./platforms/web.mdx#multiplayer) and [Discord](./platforms/discord.mdx#multiplayer) platforms for their versions of the file.
+
+### The game
+
+`src/connect.ts` exports `joinGame()`, which joins the `game` room. On the web it's one call to `joinOrCreate("game")`; on Discord it also sends the token of the player `initPlatform` signed in, and the Activity session's id. Either way, the scene doesn't change. See [the web's `src/connect.ts`](./platforms/web.mdx#multiplayer).
+
+`src/scene.ts` calls `joinGame()` and reacts to state changes with `Callbacks` from `@colyseus/sdk`:
+
+```ts title="src/scene.ts"
+const room = await joinGame();
+const callbacks = Callbacks.get(room);
+const players = new Map<string, Container>();
+
+status.text = "";
+
+callbacks.onAdd("players", (player, sessionId) => {
+  const view = createPlayer(sessionId === room.sessionId, player.name);
+
+  view.position.set(player.x, player.y);
+  players.set(sessionId, view);
+  world.addChild(view);
+
+  const stopWalking = callbacks.onChange(player, () =>
+    walk(view, player.x, player.y),
+  );
+
+  // Without this, a dev server reload can try to move a removed bunny
+  view.once("destroyed", stopWalking);
+});
+
+const removePlayer = (sessionId: string) => {
+  const view = players.get(sessionId)!;
+
+  players.delete(sessionId);
+  gsap.killTweensOf([view, ...view.children]);
+  view.destroy({ children: true });
+};
+
+callbacks.onRemove("players", (_player, sessionId) => removePlayer(sessionId));
+```
+
+- The local `players` map holds the bunny drawn for each session id, so later callbacks can find it.
+- `onAdd` runs for every player already in the room and for each one who joins later, including you. Your own bunny gets the glow. `createPlayer` also draws the player's `name` above the bunny. On the web `name` is empty, so no label shows.
+- `onChange` runs when the server changes a player's `x` or `y`. It returns a function that stops listening, which the scene calls when it destroys the bunny.
+- `onRemove` runs when a player leaves.
+
+If the connection drops, the SDK tries to reconnect on its own, and the scene shows "Reconnecting..." until it succeeds or "Disconnected" if it can't. The room removes a player as soon as they disconnect, so apart from server reloads in development, a player who drops has to reload the page to play again. When the game leaves the room, the scene removes every bunny.
+
+Clicking the floor sends a `move` message with the spot you clicked. The bunny doesn't move until the server answers with a new position. `walk` then tweens it there with GSAP at a steady speed, which also smooths over the gaps between updates:
+
+```ts title="src/scene.ts"
+function walk(view: Container, x: number, y: number) {
+  gsap.to(view, {
+    x,
+    y,
+    duration: Math.hypot(x - view.x, y - view.y) / SPEED,
+    ease: "none",
+    overwrite: true,
+  });
+}
+```
+
+`Client<typeof server>` in `connect.ts` imports the server's type, so TypeScript checks room names, and `player` in the scene's callbacks has the fields from the schema. The import is type-only, so no server code ends up in the game bundle. The game does import `server/world.ts`, which holds plain numbers.
+
+The floor's size is set in world units in `server/world.ts`. The scene scales the floor to fit the screen, so a position means the same spot for every player, whatever their screen size.
+
+## Run the production build
+
+```bash
+npm run build
+npm run preview
+```
+
+Then open [http://localhost:8080](http://localhost:8080). `preview` runs `dist/server/server.mjs` with Node.js. It's the same server you deploy.
+
+## Deploy
+
+A multiplayer game needs a host that runs Node.js and accepts WebSocket connections. A static host can serve `dist/client/`, but the game can't connect without the server.
+
+`dist/server/server.mjs` loads `colyseus`, `express` and the other dependencies from `node_modules` instead of bundling them. On the server:
+
+1. Copy `dist/`, `package.json` and your lockfile.
+2. Install the dependencies without the dev tools, for example with `npm ci --omit=dev`. This still comes to about 380 MB, mostly `uWebSockets.js`.
+3. Run `node dist/server/server.mjs`, or `npm run preview`.
+
+The server listens on `port` from `vite.config.ts`, 8080 by default. The build writes the port into `dist/server/server.mjs`, so to use another one, change it and build again. The server doesn't read the `PORT` environment variable. A host that picks the port when the server starts and passes it in `PORT` needs `PORT` set to your port; if the host doesn't let you choose it, the built server can't run there as it is.
+
+The server answers any path it has no file for with `index.html`, so a missing asset in production loads as HTML and fails to decode instead of returning a 404.
+
+The [Colyseus deployment guide](https://docs.colyseus.io/deployment) covers process managers, scaling to more than one process, and Colyseus Cloud. A Discord Activity also needs HTTPS and its Discord settings; see [deploy a Discord Activity](./platforms/discord.mdx#deploy).
+
+## Change the game
+
+- **Sync more data**: add a field to `Player` or `GameState`, such as `score: t.number()`, and set it in the room. The game sees it in `onChange`. See [schema types](https://docs.colyseus.io/state/schema).
+- **Show player names**: on the web, pass a name in `joinOrCreate("game", { name })` in `src/connect.ts`, change `JoinOptions` in `server/platform.ts` to `{ name: string }`, and use `options.name` for the new `Player`'s `name` in the room's `onJoin`. The scene draws it above the bunny. Check that it's a short string first, as `move` checks its message. The [Discord platform](./platforms/discord.mdx#multiplayer) takes the name from the player's Discord account instead.
+- **Send another action**: add a handler to `messages` in the room and call `room.send()` from the game.
+- **Limit message spam**: set `maxMessagesPerSecond` on the room to disconnect a client that sends more messages than that.
+- **Limit players**: set `maxClients` on the room. When a room is full, `joinOrCreate` opens a new one.
+- **Keep a player's seat after a dropped connection**: the template removes a player as soon as they disconnect. Colyseus can hold the seat while the game reconnects. See [reconnection](https://docs.colyseus.io/room/reconnection).
+
+## Learn more
+
+- [Colyseus documentation](https://docs.colyseus.io), including [state sync callbacks](https://docs.colyseus.io/state/callbacks), [rooms](https://docs.colyseus.io/room) and the [client SDK](https://docs.colyseus.io/sdk).
+- [Client prediction](https://docs.colyseus.io/netcode/client-prediction), to move your own bunny before the server answers.
+- [Game templates](./games/index.mdx) for the libraries the game uses.

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "http-server . -o -c-1"
+  },
+  "devDependencies": {
+    "http-server": "catalog:"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "{{packageName}}",
+  "version": "1.0.0",
+  "description": "[Description of extension]",
+  "author": "{{author}}",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "lib/"
+  ],
+  "scripts": {
+    "start": "xs serve",
+    "dev": "xs serve",
+    "watch": "xs watch",
+    "build": "xs build",
+    "docs": "xs docs",
+    "lint": "xs lint",
+    "format": "xs lint --fix",
+    "types": "xs types",
+    "test": "xs test",
+    "release": "xs release"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "extensionConfig": {
+    "environments": [
+      "node"
+    ],
+    "bundleModule": "dist/extension.mjs",
+    "jestConfig": "jest.config.mjs"
+  },
+  "peerDependencies": {
+    "@pixi/3d": "^0.1.0",
+    "pixi.js": ">=8.23.0 <9"
+  },
+  "devDependencies": {
+    "@pixi/3d": "catalog:",
+    "@pixi/extension-scripts": "catalog:",
+    "esbuild": "catalog:",
+    "pixi.js": "catalog:"
+  },
+  "allowScripts": {
+    "core-js": false,
+    "electron": true,
+    "esbuild": true
+  }
+}

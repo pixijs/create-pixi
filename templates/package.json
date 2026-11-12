@@ -1,0 +1,43 @@
+{
+  "name": "create-pixi-templates",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Version catalog for every template dependency. Layer package.json files reference these versions with \"catalog:\".",
+  "type": "module",
+  "dependencies": {
+    "@colyseus/schema": "^5.0.43",
+    "@colyseus/sdk": "^0.18.9",
+    "@discord/embedded-app-sdk": "^2.5.0",
+    "@esotericsoftware/spine-pixi-v8": "~4.3.13",
+    "@pixi/3d": "^0.1.0",
+    "@pixi/react": "^8.0.5",
+    "@pixi/sound": "^6.0.2",
+    "@pixi/ui": "^2.4.1",
+    "colyseus": "^0.18.10",
+    "express": "^5.3.0",
+    "gsap": "^3.15.0",
+    "pixi-filters": "^6.1.5",
+    "pixi.js": "^8.23.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@pixi/extension-scripts": "^4.0.0",
+    "@types/express": "^5.0.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "copy-webpack-plugin": "^14.0.0",
+    "esbuild": "^0.28.2",
+    "esbuild-loader": "^4.5.0",
+    "html-webpack-plugin": "^5.6.8",
+    "http-server": "^14.1.1",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.5",
+    "webpack": "^5.112.2",
+    "webpack-cli": "^7.3.1",
+    "webpack-dev-server": "^6.1.0"
+  }
+}

@@ -1,12 +1,15 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "lib": ["es2023", "DOM", "DOM.Iterable"],
-    "moduleResolution": "NodeNext",
-    "noImplicitOverride": true,
-    "strict": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
+    "noImplicitOverride": true,
+    "noEmit": true
   },
+  "include": ["src", "scripts", "test", "templates/*.ts", "*.mts"]
 }
