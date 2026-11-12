@@ -1,0 +1,37 @@
+# PixiJS Create
+
+> Scaffold a PixiJS project in one command. Run `npm create pixi.js@latest`, answer the prompts, and get a working PixiJS project.
+
+Each link is the Markdown version of a docs page. Add `.md` to any docs URL to get its Markdown.
+
+## Guide
+
+- [Getting started](https://pixijs.io/create-pixi/docs/guide/installation.md): Create a PixiJS project with npm, yarn, pnpm or bun, answer the prompts, and start the dev server.
+- [Choosing a template](https://pixijs.io/create-pixi/docs/guide/choosing-a-template.md): Compare every create-pixi.js template by build tool and language, and pick the right one for your project.
+
+## Templates
+
+- [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md): Game starters with GSAP, PixiJS UI, PixiJS Sound, PixiJS Filters and Spine. Pick a game, the platform it runs on, and whether it's multiplayer.
+- [Starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md): A glowing bunny that jumps when you press a button, in front of a spinning 3D cube. Built with GSAP, PixiJS UI, PixiJS Sound, PixiJS Filters and PixiJS 3D, with a multiplayer version where every player walks a bunny around a shared floor.
+- [Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md): Run a game template as a web page. Single-player games build to static files for any web host, and multiplayer games add a Node.js game server.
+- [Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md): Run a game template inside Discord as an Activity. Players sign in with Discord, and in the multiplayer version everyone in an Activity session shares a Colyseus room.
+- [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md): Add a Colyseus server to a game template to keep every player in sync. Vite runs the game and the server in one process.
+- [Bundler templates](https://pixijs.io/create-pixi/docs/guide/bundlers.md): Project structure, scripts, static assets and dev server ports for the Vite, webpack, esbuild and import map templates.
+- [React template](https://pixijs.io/create-pixi/docs/guide/react.md): Render PixiJS inside a React app with @pixi/react, built with Vite.
+- [Extension template](https://pixijs.io/create-pixi/docs/guide/extension.md): Build, test, document and publish a PixiJS extension with PixiJS Extension Scripts.
+
+## Project setup
+
+- [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md): Every template comes with PixiJS 3D. How it's set up, the spinning cube each app template draws, and how to remove it.
+- [Linting and formatting](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md): The oxlint and oxfmt setup in every app template, its config files, and the VS Code extension.
+- [TypeScript and JavaScript](https://pixijs.io/create-pixi/docs/guide/typescript-and-javascript.md): How the JavaScript versions of the templates differ from the TypeScript ones, and which templates come in each language.
+
+## Reference
+
+- [CLI reference](https://pixijs.io/create-pixi/docs/guide/cli.md): Every create-pixi.js option and template id.
+- [Troubleshooting](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md): Fixes for common problems with create-pixi.js and the templates.
+- [Contributing](https://pixijs.io/create-pixi/docs/guide/contributing.md): Work on create-pixi.js and its templates locally.
+
+## Optional
+
+- [Every page in one file](https://pixijs.io/create-pixi/llms-full.txt)

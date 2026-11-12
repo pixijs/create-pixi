@@ -1,0 +1,86 @@
+# PixiJS 3D
+
+Every template comes with [PixiJS 3D](https://github.com/pixijs/3d), the `@pixi/3d` package. Its `View3D` is a 2D display object that draws a 3D scene into its rectangle, so 3D and 2D share one stage. Each app template draws a lit, spinning cube behind its 2D content to show this.
+
+## How it's set up
+
+- `@pixi/3d` is a dependency next to `pixi.js`. It needs `pixi.js` 8.23.0 or later, which the templates install.
+- Importing `@pixi/3d` registers it with PixiJS. `app.init` then loads the 3D code for the renderer it starts, WebGL or WebGPU. Vite, webpack and the import map keep each in its own file, so the browser downloads only the one it uses. The esbuild template bundles both into `bundle.js`.
+- Import `@pixi/3d` before `app.init` runs. A `View3D` on an app that started earlier draws nothing. That happens when 3D code is in a file that loads later, so the game templates import `@pixi/3d` at the top of `src/main.ts`. Keep that import when you split your game into files that load on demand.
+- The import map template maps `@pixi/3d` and `@pixi/3d/extras` to jsDelivr, next to `pixi.js`.
+- The [extension template](https://pixijs.io/create-pixi/docs/guide/extension.md) lists `@pixi/3d` as a peer dependency, like `pixi.js`.
+
+## The cube
+
+The bundler templates draw the cube in `src/main.ts`, the React template in the `SpinningCube` component in `src/App.tsx`, and the game templates in `src/cube.ts`. This is the bundler version:
+
+```ts title="src/main.ts"
+const view = new View3D({
+  autoResize: true,
+  environment: { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 },
+});
+
+const cube = new Mesh3D({
+  geometry: new CubeGeometry(),
+  material: new Material3D({ baseColor: 0xe72264 }),
+});
+
+const sun = new DirectionalLight({ intensity: 3 });
+
+sun.position.set(-3, 5, 2);
+sun.lookAt(cube.position);
+
+view.root.addChild(cube, sun);
+view.camera.position.set(0, 1.6, 3);
+view.camera.lookAt(cube.position);
+```
+
+- `autoResize` makes the view fill the screen, and keeps it filling the screen when the window resizes. The game templates give the view a fixed `width`, `height` and `anchor` instead, and place it like a sprite. See [the starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md#3d).
+- `environment` is soft light from every direction: `skyColor` lights surfaces that face up, and `groundColor` lights surfaces that face down.
+- Everything 3D goes under `view.root`, including lights. The view owns its camera.
+- Lights and cameras face along their -Z axis. `lookAt` turns them to face a point.
+- The view is added to the stage before the bunny, so the bunny draws in front of it. A 2D object added after a view always draws over it. The view also catches pointer events anywhere on screen, so put clickable 2D objects in front of it.
+- The camera sits above and in front of the cube, so you see its top as well as its sides.
+- The app's ticker turns the cube every frame.
+
+Every app template passes `antialias: true` to `app.init`, which smooths the edges of 3D shapes. `View3D` has no antialias option of its own.
+
+## Extras
+
+`@pixi/3d/extras` has optional pieces, such as camera controls, particles, toon shading and post-processing effects like bloom. For example, to orbit the camera around the cube when you drag, import `OrbitCamera` and create one after the `view.camera` lines:
+
+```ts
+import { OrbitCamera } from "@pixi/3d/extras";
+
+new OrbitCamera({ view });
+```
+
+`OrbitCamera` reads the view's pointer events. In a game template, change `eventMode` in `src/cube.ts` to `"static"` first. In the React template, keep it in a `const` and call its `destroy()` in the effect's cleanup, or each hot reload adds another controller.
+
+## TypeScript
+
+The app templates' `tsconfig.json` uses the `DOM` library, which in TypeScript 7 leaves out some WebGPU constants, such as `GPUTextureUsage`. If your code uses them, install `@types/web` and use it in place of `DOM` and `DOM.Iterable`, as the [PixiJS 3D README](https://github.com/pixijs/3d#typescript) explains.
+
+## Coding agents
+
+`@pixi/3d` comes with an agent skill in `node_modules/@pixi/3d/skills/pixijs-3d`. It has a complete example for each job, such as loading glTF models, shadows, picking and particles. Point your coding agent at that folder before it writes 3D code.
+
+## Remove it
+
+If your project is 2D only:
+
+1. Delete the cube code and its `@pixi/3d` imports:
+
+   - In a bundler template, the code from `new View3D` to the camera lines in `src/main.ts` or `src/main.js`, `view` in `app.stage.addChild`, and the cube line in the ticker.
+   - In the React template, `SpinningCube` and `<SpinningCube />`, the `environment` constant, `View3D` in `extend`, and `src/pixi-react.d.ts`.
+   - In a game template, `src/cube.ts`, and in `src/scene.ts` the `createSpinningCube` import and the code that adds the cube.
+
+2. In a game template, delete `import "@pixi/3d"` from `src/main.ts`.
+
+3. Run `npm uninstall @pixi/3d`. In the import map template, delete the two `@pixi/3d` entries from `index.html`.
+
+Only code that imports `@pixi/3d` adds it to a build, so steps 1 and 2 are what make the build smaller.
+
+## Learn more
+
+The [PixiJS 3D repository](https://github.com/pixijs/3d) has a [quick start](https://github.com/pixijs/3d/blob/main/src/__docs__/getting-started/quick-start.md), guides for each part, and examples.

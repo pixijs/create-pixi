@@ -1,0 +1,2924 @@
+# Getting started
+
+create-pixi.js asks a few questions, then writes a small PixiJS project that runs as soon as its dependencies are installed.
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) 22.12 or newer (22.15 or newer for the webpack template). Check with `node --version`.
+- npm, yarn, pnpm or bun. npm comes with Node.js.
+
+## Create a project
+
+Run the create command for your package manager:
+
+**npm**
+
+```bash
+npm create pixi.js@latest
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js
+```
+
+**bun**
+
+```bash
+bun create pixi.js
+```
+
+You don't need to install anything first. The package manager downloads create-pixi.js, runs it, and starts the prompts. Keep `@latest` in the npm command so npm doesn't reuse an older copy from its cache.
+
+## Answer the prompts
+
+| Prompt           | When it appears                                                                                                         |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Project name     | When you didn't pass a folder. The folder to create, `pixi-project` by default.                                         |
+| Target directory | When the folder already has files in it. Cancel, remove the existing files, or keep them and write the template on top. |
+| Package name     | When the folder name isn't a valid npm package name, for example because it has capital letters or spaces.              |
+| Type of template | Unless you passed `--template`.                                                                                         |
+| Game             | For the Game type, when there's more than one game.                                                                     |
+| Platform         | For the Game type. Where the game runs, such as the web or Discord.                                                     |
+| Multiplayer?     | For the Game type, when the game and the platform both have a multiplayer version.                                      |
+| Template         | For the other types.                                                                                                    |
+| Language         | When the template comes in both TypeScript and JavaScript.                                                              |
+
+A folder that holds only a `.git` folder counts as empty. The template types are:
+
+- **Game**: A game starter for the platform of your choice, with GSAP, PixiJS UI, PixiJS Sound, PixiJS Filters and Spine. Then pick a platform (Web or Discord Activity) and whether it's multiplayer.
+- **Bundler**: A minimal PixiJS app wired up to the build tool of your choice. Then pick Vite, webpack, esbuild, or Import map.
+- **Framework**: PixiJS rendered inside a UI framework.
+- **Extension**: A library project for publishing your own PixiJS plugin.
+
+[Choosing a template](https://pixijs.io/create-pixi/docs/guide/choosing-a-template.md) compares them side by side.
+
+## Skip the prompts
+
+Pass a folder and `--template` to create a project without any questions:
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template bundler-vite
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template bundler-vite
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template bundler-vite
+```
+
+npm needs the extra `--`. Without it, npm reads `--template` as one of its own options instead of passing it to create-pixi.js. yarn, pnpm and bun pass it along as is.
+
+Use `.` as the folder to create the project in the current folder:
+
+**npm**
+
+```bash
+npm create pixi.js@latest . -- --template bundler-vite
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js . --template bundler-vite
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js . --template bundler-vite
+```
+
+**bun**
+
+```bash
+bun create pixi.js . --template bundler-vite
+```
+
+You still get the overwrite prompt if the folder isn't empty. The [CLI reference](https://pixijs.io/create-pixi/docs/guide/cli.md) lists every template id.
+
+## Run it
+
+When it finishes, the CLI prints the commands to run next:
+
+**npm**
+
+```bash
+cd my-app
+npm install
+npm run dev
+```
+
+**yarn**
+
+```bash
+cd my-app
+yarn
+yarn dev
+```
+
+**pnpm**
+
+```bash
+cd my-app
+pnpm install
+pnpm run dev
+```
+
+**bun**
+
+```bash
+cd my-app
+bun install
+bun run dev
+```
+
+`dev` starts a development server on <http://localhost:8080>. Every template except esbuild also opens it in your browser.
+
+To make a production build:
+
+**npm**
+
+```bash
+npm run build
+```
+
+**yarn**
+
+```bash
+yarn build
+```
+
+**pnpm**
+
+```bash
+pnpm run build
+```
+
+**bun**
+
+```bash
+bun run build
+```
+
+The build lints your code, type-checks it in TypeScript templates, and writes the result to `dist/`. Upload that folder to any static host. A few templates work differently: the [import map template](https://pixijs.io/create-pixi/docs/guide/bundlers.md#import-map) has no build step, the [multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) and [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md) game templates build a Node.js server as well, and the [extension template](https://pixijs.io/create-pixi/docs/guide/extension.md) builds a library.
+
+## Next
+
+- [Choosing a template](https://pixijs.io/create-pixi/docs/guide/choosing-a-template.md) if you haven't picked one yet.
+- [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md), [bundler templates](https://pixijs.io/create-pixi/docs/guide/bundlers.md), the [React template](https://pixijs.io/create-pixi/docs/guide/react.md) or the [extension template](https://pixijs.io/create-pixi/docs/guide/extension.md) for what's inside each project.
+- [Troubleshooting](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md) if a command fails.
+
+---
+
+# Choosing a template
+
+Every template is a working PixiJS project. They differ in build tool, in how much code they start you with, and in what you're building.
+
+| Template                                                                                                                | What you get                                                                                                                                                  | Build tool        | TypeScript                    | JavaScript                       |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------- | -------------------------------- |
+| [Starter, Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md)Game                                           | A bunny that jumps when you press a button. A standalone browser game built with Vite.                                                                        | Vite              | `starter-web`                 | `starter-web-js`                 |
+| [Starter, Web, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer)Game                  | A bunny that jumps when you press a button. A standalone browser game built with Vite. Adds a Colyseus server that keeps every player in sync.                | Vite              | `starter-web-multiplayer`     | `starter-web-multiplayer-js`     |
+| [Starter, Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md)Game                          | A bunny that jumps when you press a button. Runs inside Discord as an Activity, with Discord sign-in.                                                         | Vite              | `starter-discord`             | `starter-discord-js`             |
+| [Starter, Discord Activity, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer)Game | A bunny that jumps when you press a button. Runs inside Discord as an Activity, with Discord sign-in. Adds a Colyseus server that keeps every player in sync. | Vite              | `starter-discord-multiplayer` | `starter-discord-multiplayer-js` |
+| [Vite](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite)Bundler                                                | Instant dev server that reloads on save. The recommended starting point.                                                                                      | Vite              | `bundler-vite`                | `bundler-vite-js`                |
+| [webpack](https://pixijs.io/create-pixi/docs/guide/bundlers.md#webpack)Bundler                                          | webpack with esbuild-loader for fast TypeScript builds.                                                                                                       | webpack           | `bundler-webpack`             | `bundler-webpack-js`             |
+| [esbuild](https://pixijs.io/create-pixi/docs/guide/bundlers.md#esbuild)Bundler                                          | Plain esbuild scripts with a live-reloading dev server and no plugins.                                                                                        | esbuild           | `bundler-esbuild`             | `bundler-esbuild-js`             |
+| [Import map](https://pixijs.io/create-pixi/docs/guide/bundlers.md#import-map)Bundler                                    | No build step. PixiJS loads from a CDN through a browser import map.                                                                                          | None              | –                             | `bundler-import-map`             |
+| [React](https://pixijs.io/create-pixi/docs/guide/react.md)Framework                                                     | React with @pixi/react, built with Vite.                                                                                                                      | Vite              | `framework-react`             | `framework-react-js`             |
+| [Default](https://pixijs.io/create-pixi/docs/guide/extension.md)Extension                                               | Build, test, document and publish a PixiJS extension with PixiJS Extension Scripts.                                                                           | Extension Scripts | `extension-default`           | –                                |
+
+## Which one to pick
+
+| If you want                                                     | Use                                                                                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| A browser game with animation, UI, sound, filters and Spine     | [Starter on the web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md)                              |
+| A multiplayer game where a server keeps every player in sync    | [Starter on the web, multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md)                   |
+| A game that people launch from a Discord channel                | [Starter on Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md)                          |
+| A multiplayer game that people play together inside Discord     | [Starter on Discord, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer) |
+| A blank PixiJS app and no strong opinion on tooling             | [Vite](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite)                                            |
+| webpack, because your team or another project already uses it   | [webpack](https://pixijs.io/create-pixi/docs/guide/bundlers.md#webpack)                                      |
+| A build you can read in full: two short scripts and no plugins  | [esbuild](https://pixijs.io/create-pixi/docs/guide/bundlers.md#esbuild)                                      |
+| No build step, for a quick prototype or a page on a static host | [Import map](https://pixijs.io/create-pixi/docs/guide/bundlers.md#import-map)                                |
+| PixiJS inside a React app                                       | [React](https://pixijs.io/create-pixi/docs/guide/react.md)                                                   |
+| To publish a library that adds features to PixiJS               | [Extension](https://pixijs.io/create-pixi/docs/guide/extension.md)                                           |
+
+If you're making a game, start with a [game template](https://pixijs.io/create-pixi/docs/guide/games.md): pick the platform it runs on, and whether it's multiplayer. It's the Vite template plus the libraries most games add, and you can remove the ones you don't need. For anything else, or if you're unsure, start with Vite. Its config only sets `base: "./"`, the dev server port and `open: true`. The game and React templates use Vite too, so you can move to them later without learning a new build tool.
+
+## What every app template includes
+
+All templates except the extension template share these:
+
+- A `public/` folder for static files such as images and the favicon.
+- A dev server on port 8080. See [change the dev server port](https://pixijs.io/create-pixi/docs/guide/bundlers.md#change-the-dev-server-port).
+- [oxlint and oxfmt](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md) with `lint` and `format` scripts, plus VS Code settings that use the Oxc extension to lint and format on save.
+- A `.gitignore` for `node_modules`, `dist` and editor files.
+- [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md), with a spinning cube that shows 3D and 2D on one stage.
+
+The extension template uses [PixiJS Extension Scripts](https://pixijs.io/create-pixi/docs/guide/extension.md) for building, linting and testing instead, and lists PixiJS 3D as a peer dependency.
+
+## TypeScript or JavaScript
+
+The table above shows which languages each template comes in. When a template has both, pick JavaScript at the language prompt or use its `-js` id. [TypeScript and JavaScript](https://pixijs.io/create-pixi/docs/guide/typescript-and-javascript.md) explains how the two versions differ.
+
+---
+
+# Game templates
+
+A game template is a game, set up for the platform it runs on, with an optional multiplayer server. Every game template comes with the libraries most PixiJS games end up adding:
+
+- [GSAP](https://gsap.com) to animate anything with tweens and timelines.
+- [PixiJS UI](https://pixijs.io/ui/) for buttons, sliders, checkboxes, scroll boxes and other controls.
+- [PixiJS Sound](https://github.com/pixijs/sound) to load and play sound effects and music.
+- [PixiJS Filters](https://github.com/pixijs/filters) for visual effects such as glow, outline and blur.
+- [Spine](https://esotericsoftware.com/spine-pixi) to play skeletal animations made in the Spine editor.
+
+Like every app template, they also come with [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md).
+
+There's no engine, screen manager or asset pipeline. A single-player web project's code is five short files you can read in a few minutes and change however your game needs.
+
+## Pick a game and a platform
+
+When you choose the Game type, create-pixi.js asks which platform the game runs on and whether it's multiplayer:
+
+- The **game** is what's on screen. The [starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md) is a bunny that jumps when you press a button.
+- The **platform** is where the game runs. [Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md) builds a page for any web host. [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md) runs the game as an Activity that players launch in a Discord channel, signed in with their Discord account.
+- **[Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md)** adds a [Colyseus](https://colyseus.io) server that keeps every player in sync.
+
+Each combination has its own id, `<game>-<platform>`, plus `-multiplayer` for the multiplayer version:
+
+| Game                                                                 | Platform                                                                          | Single-player     | Multiplayer                   |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------- | ----------------------------- |
+| [Starter](https://pixijs.io/create-pixi/docs/guide/games/starter.md) | [Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md)                  | `starter-web`     | `starter-web-multiplayer`     |
+| [Starter](https://pixijs.io/create-pixi/docs/guide/games/starter.md) | [Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md) | `starter-discord` | `starter-discord-multiplayer` |
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web
+```
+
+Add `-js` to any of these ids for JavaScript, such as `starter-web-js`. Every game template is built on the [Vite template](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite), so its `public/` folder and dev port work the same way.
+
+## Project structure
+
+This is `starter-web`:
+
+```text
+my-game/
+├── public/
+│   ├── assets/
+│   │   ├── sounds/
+│   │   │   └── sfx-press.wav
+│   │   ├── bunny.png
+│   │   └── button.png
+│   ├── favicon.png
+│   └── style.css
+├── src/
+│   ├── assets.ts
+│   ├── cube.ts
+│   ├── main.ts
+│   ├── platform.ts
+│   ├── scene.ts
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Config files for oxlint, oxfmt, VS Code and git sit at the root as in every template. The files in `src/` split the work between the game and the platform:
+
+| File              | Comes from          | What it does                                                                 |
+| ----------------- | ------------------- | ---------------------------------------------------------------------------- |
+| `src/main.ts`     | Every game template | Starts PixiJS, loads the assets and adds the scene                           |
+| `src/assets.ts`   | The game            | Lists the files in `public/assets/` to load before the game starts           |
+| `src/scene.ts`    | The game            | Builds what's on screen                                                      |
+| `src/cube.ts`     | The game            | Draws the spinning 3D cube behind the bunny                                  |
+| `src/platform.ts` | The platform        | Starts the platform's SDK, if it has one, and tells it how the game is doing |
+
+The game's files are the same on every platform, so `src/scene.ts` in `starter-web` and in `starter-discord` is the same file. The [Discord platform](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#project-structure) adds a sign-in server and a few config files, and [multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#project-structure) adds a `server/` folder and `src/connect.ts`.
+
+## Start the game
+
+```ts title="src/main.ts"
+// Registers PixiJS 3D, so app.init loads its WebGL or WebGPU code. Keep this
+// import here even if your 3D code moves to a lazily loaded file.
+import "@pixi/3d";
+// Registers the asset loader for sound files
+import "@pixi/sound";
+import { Application, Assets } from "pixi.js";
+
+import { assets } from "./assets.ts";
+import { gameReady, initPlatform, setLoadingProgress } from "./platform.ts";
+import { createScene } from "./scene.ts";
+
+await initPlatform();
+
+const app = new Application();
+
+await app.init({
+  background: "#1099bb",
+  resizeTo: window,
+  // Capped at 2: a 3x phone screen looks almost the same at 2, and the canvas
+  // needs less than half the memory
+  resolution: Math.min(window.devicePixelRatio, 2),
+  autoDensity: true,
+  antialias: true,
+});
+
+document.getElementById("pixi-container")!.appendChild(app.canvas);
+
+await Assets.load(assets, setLoadingProgress);
+
+app.stage.addChild(createScene(app));
+
+gameReady(app);
+```
+
+The `@pixi/3d` import at the top registers [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) before `app.init` runs, so a `View3D` draws anywhere in the game, including in code that loads later. The `@pixi/sound` import adds a loader to `Assets`, so `Assets.load` loads sound files the same way it loads images. Spine files load the same way once a file imports `Spine`, as in [add a Spine animation](#add-a-spine-animation). `Assets.load` loads the list in `src/assets.ts`, which gives each file an alias, so the rest of the code asks for `"bunny"` instead of a path. See [the starter's assets](https://pixijs.io/create-pixi/docs/guide/games/starter.md#the-assets) and [static assets](https://pixijs.io/create-pixi/docs/guide/bundlers.md#static-assets) for how paths work.
+
+`resizeTo: window` keeps the canvas the size of the window. `resolution` and `autoDensity` render at the screen's pixel density, up to 2, so sprites and text stay sharp on phones and high-DPI displays. `antialias` smooths the edges of 3D shapes.
+
+`initPlatform`, `setLoadingProgress` and `gameReady` come from `src/platform.ts`. See [platform startup code](#platform-startup-code).
+
+## Platform startup code
+
+`src/platform.ts` holds the startup code that changes from platform to platform. Every platform's version exports the three functions `main.ts` calls:
+
+| Function                       | When `main.ts` calls it                                         |
+| ------------------------------ | --------------------------------------------------------------- |
+| `initPlatform()`               | First, before PixiJS starts. `main.ts` waits until it finishes. |
+| `setLoadingProgress(progress)` | While the assets load, with progress from 0 to 1                |
+| `gameReady(app)`               | Once the scene is on screen and the game can be played          |
+
+A platform with its own SDK, such as a game portal or a chat app that runs games, usually asks for three things: start the SDK before the game, report loading progress, and say when the game is ready to play. Each of those calls goes in one of these functions, so `main.ts` and the game's files stay the same on every platform. When the platform pauses the game, for example because the player switched away, stopping `app.ticker` isn't enough: GSAP and PixiJS Sound keep their own time, so also call `gsap.globalTimeline.pause()` and `sound.pauseAll()`.
+
+On the [web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#platform-startup-code), the three functions do nothing. On [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#the-discord-sdk), `initPlatform` starts the Discord SDK and signs the player in. A platform's `src/platform.ts` can export more than these three, as Discord's does to share the signed-in player with the game.
+
+## Add a Spine animation
+
+The templates have the Spine runtime, `@esotericsoftware/spine-pixi-v8` 4.3.13, but no Spine files. To add a character:
+
+1. Export the skeleton from the Spine editor as binary (`.skel`) or JSON (`.json`), with a texture atlas. Use Spine 4.3. The runtime can't read exports from other editor versions. A Spine 4.2 export, for example, fails with `Bone name must not be null`.
+
+2. Copy the skeleton file, the `.atlas` file and the atlas `.png` into `public/assets/`. Keep the `.png` next to the `.atlas`, which refers to it by name.
+
+3. Add the skeleton and the atlas to the [list in `src/assets.ts`](https://pixijs.io/create-pixi/docs/guide/games/starter.md#the-assets), each with its own alias:
+
+   ```ts title="src/assets.ts"
+   { alias: "spineboy-data", src: "assets/spineboy-pro.skel" },
+   { alias: "spineboy-atlas", src: "assets/spineboy-pma.atlas" },
+   ```
+
+4. Import `Spine` at the top of `src/scene.ts`:
+
+   ```ts title="src/scene.ts"
+   import { Spine } from "@esotericsoftware/spine-pixi-v8";
+   ```
+
+   Then create the character inside `createScene` and play an animation:
+
+   ```ts title="src/scene.ts"
+   const spineboy = Spine.from({
+     skeleton: "spineboy-data",
+     atlas: "spineboy-atlas",
+     scale: 0.5,
+   });
+
+   spineboy.state.setAnimation(0, "run", true);
+   scene.addChild(spineboy);
+   ```
+
+`setAnimation(track, name, loop)` takes an animation name from the Spine project. To try this without your own files, download `spineboy-pro.skel`, `spineboy-pma.atlas` and `spineboy-pma.png` from the [Spine runtimes examples](https://github.com/EsotericSoftware/spine-runtimes/tree/4.3/examples/spineboy/export).
+
+The [spine-pixi documentation](https://esotericsoftware.com/spine-pixi) covers mixing animations, skins, attaching PixiJS objects to bones, and the other `Spine` options.
+
+Using Spine adds about 200 kB to the build. In `starter-web`, that takes the game past Vite's 500 kB default, so `vite build` prints a chunk size warning. The warning is advice, not an error. To hide it, raise `build.chunkSizeWarningLimit` in `vite.config.ts`, as the multiplayer and Discord templates do.
+
+## Remove a library you don't use
+
+Each library is one dependency and a few lines of code. To remove PixiJS Sound, for example, delete the `@pixi/sound` imports from `src/main.ts` and `src/scene.ts`, the sound from the list in `src/assets.ts`, and the `sound.play` call, then uninstall it:
+
+```bash
+npm uninstall @pixi/sound
+```
+
+If any file still imports it, `build` fails and names the file. Spine adds nothing to the build until a file imports it.
+
+To remove PixiJS 3D, follow [remove it](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md#remove-it).
+
+## Scripts
+
+Every game template has `dev`, `build` and `preview`. `dev` starts the dev server on port 8080, and `build` lints, type-checks in TypeScript projects, and builds the game. Where the build goes, and what `preview` runs, depends on your choices:
+
+|         | Single-player                                                                                                                         | Multiplayer                                                                                                                        |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Web     | Static files in `dist/` for any web host. See [deploy](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#deploy).             | The game and a Node.js game server in `dist/`. See [deploy](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#deploy).       |
+| Discord | The game and a Node.js sign-in server in `dist/`. See [deploy](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#deploy). | The game and a Node.js game server in `dist/`. See [deploy](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#deploy). |
+
+## Learn more
+
+- [GSAP documentation](https://gsap.com/docs/v3/), including [timelines](https://gsap.com/docs/v3/GSAP/Timeline/) and easing.
+- [PixiJS UI storybook](https://pixijs.io/ui/storybook/) and [PixiJS Sound examples](https://pixijs.io/sound/examples/).
+- [PixiJS assets guide](https://pixijs.com/8.x/guides/components/assets) for bundles, background loading and other ways to load files.
+- [Open Games](https://github.com/pixijs/open-games), complete games built with PixiJS and the same libraries.
+
+---
+
+# Starter game
+
+The starter game is a glowing bunny that jumps when you press a button, in front of a spinning 3D cube. It's small on purpose: one scene that shows how GSAP, PixiJS UI, PixiJS Sound, PixiJS Filters and PixiJS 3D work together, ready to replace with your own game. It runs on every platform, and it has a [multiplayer version](#multiplayer).
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web
+```
+
+Use `starter-discord` to run it [inside Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md). [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md) explains what every game template shares, such as `src/main.ts` and `src/platform.ts`.
+
+The game is three files and its assets:
+
+- `src/assets.ts` lists the files to load before the game starts.
+- `src/scene.ts` builds what's on screen.
+- `src/cube.ts` draws the spinning cube with [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md).
+- `public/assets/button.png` and `public/assets/sounds/sfx-press.wav` are the button and its sound. `public/assets/bunny.png` is the same bunny the bundler templates use.
+
+## The assets
+
+```ts title="src/assets.ts"
+/**
+ * The files in public/assets that load before the game starts. Each alias is
+ * the name the rest of the code uses for its file.
+ */
+export const assets = [
+  { alias: "bunny", src: "assets/bunny.png" },
+  { alias: "button", src: "assets/button.png" },
+  { alias: "sfx-press", src: "assets/sounds/sfx-press.wav" },
+];
+```
+
+`src/main.ts` loads this list before it creates the scene, and passes the progress to the platform. Add your own files to `public/assets/` and to this list. The alias is the name the rest of the code uses for a file, as in `Sprite.from("bunny")`, `defaultView: "button"` and `sound.play("sfx-press")`. See [static assets](https://pixijs.io/create-pixi/docs/guide/bundlers.md#static-assets) for how paths work.
+
+## The scene
+
+`src/scene.ts` exports `createScene(app)`, which returns a `Container` holding everything on screen. Each library does one job in it.
+
+### Filters
+
+The bunny has a glow from PixiJS Filters:
+
+```ts title="src/scene.ts"
+const glow = new GlowFilter({ distance: 20, outerStrength: 1.5 });
+
+bunny.filters = [glow];
+```
+
+`filters` takes an array, so you can stack effects. The [PixiJS Filters demo](https://pixijs.io/filters/examples/) lets you try every filter and its options.
+
+### Animation
+
+GSAP can tween any number on any object, not only positions. The glow pulses by tweening the filter's `outerStrength` back and forth forever:
+
+```ts title="src/scene.ts"
+gsap.to(glow, {
+  outerStrength: 5,
+  duration: 1,
+  repeat: -1,
+  yoyo: true,
+  ease: "sine.inOut",
+});
+```
+
+The jump is a GSAP timeline, which plays its steps one after another. The bunny rises and spins, then bounces back down:
+
+```ts title="src/scene.ts"
+function jump(bunny: Sprite) {
+  if (gsap.isTweening(bunny)) return;
+
+  gsap
+    .timeline()
+    .to(bunny, {
+      y: -JUMP_HEIGHT,
+      rotation: Math.PI * 2,
+      duration: 0.4,
+      ease: "power2.out",
+    })
+    .to(bunny, { y: 0, duration: 0.6, ease: "bounce.out" })
+    .set(bunny, { rotation: 0 });
+}
+```
+
+`JUMP_HEIGHT` is 120. `gsap.isTweening` ignores presses while a jump is playing. GSAP runs on its own timer, not the PixiJS ticker. Use `app.ticker` for code that has to run every frame, such as movement or collision checks.
+
+### Button and sound
+
+The Jump button is a `FancyButton` from PixiJS UI. It uses the `button` texture from `src/assets.ts`, and scales up on hover and down on press:
+
+```ts title="src/scene.ts"
+const button = new FancyButton({
+  defaultView: "button",
+  text: new Text({
+    text: "Jump",
+    style: { fill: 0x4a4a4a, fontSize: 44, fontWeight: "bold" },
+  }),
+  textOffset: { y: -12 },
+  anchor: 0.5,
+  scale: 0.7,
+  animations: {
+    hover: { props: { scale: { x: 1.05, y: 1.05 } }, duration: 100 },
+    pressed: { props: { scale: { x: 0.95, y: 0.95 } }, duration: 100 },
+  },
+});
+
+button.onPress.connect(() => {
+  sound.play("sfx-press");
+  jump(bunny);
+});
+```
+
+`onPress` fires for mouse, touch and pen. `sound.play` from PixiJS Sound plays the sound loaded with the `sfx-press` alias. To loop music, add it to `src/assets.ts` like the other files and pass options:
+
+```ts
+sound.play("music", { loop: true, volume: 0.5 });
+```
+
+Browsers don't let a page play audio until the player clicks, taps or presses a key. PixiJS Sound sets up audio when it's imported, so Chrome logs "The AudioContext was not allowed to start" when the page loads. You can ignore it. Audio starts with the player's first press, which is why the starter only plays sound from the button.
+
+PixiJS UI also has sliders, checkboxes, radio groups, progress bars, text inputs, scroll boxes, lists and dialogs. Its [storybook](https://pixijs.io/ui/storybook/) shows each one with live options.
+
+### 3D
+
+`createSpinningCube(app, size)` in `src/cube.ts` returns a PixiJS 3D `View3D`, a 2D display object that draws a 3D scene. The scene adds it at index 0, behind the bunny and the button. It adds it after measuring them, so the empty space around the cube doesn't change the layout:
+
+```ts title="src/scene.ts"
+scene.addChildAt(createSpinningCube(app, 300), 0);
+```
+
+The view is a square 300 pixels wide with its anchor in the middle, like a sprite with `anchor` set to 0.5, so it sits centered behind the bunny and scales with the rest of the scene. Inside it, a sun and the view's soft `environment` light shine on the cube, and the app's ticker turns it. [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) explains each part.
+
+### Layout
+
+`createScene` positions the bunny and the button around the container's origin. It then measures them, adds room above the bunny for its jump, and sets the container's `pivot` to the middle of that area. Whenever the renderer resizes, the container moves to the middle of the screen and shrinks if the screen is too small for it:
+
+```ts title="src/scene.ts"
+const bounds = scene.getLocalBounds().clone();
+
+// Leave room above the bunny for its jump
+bounds.minY -= JUMP_HEIGHT;
+scene.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+
+// Center the scene, and shrink it to fit small screens, with a margin
+const fit = (width: number, height: number) => {
+  scene.scale.set(
+    Math.min(1, width / (bounds.width + 80), height / (bounds.height + 80)),
+  );
+  scene.position.set(width / 2, height / 2);
+};
+
+fit(app.screen.width, app.screen.height);
+app.renderer.on("resize", fit);
+```
+
+The scale stops at 1, so the scene keeps its size on large screens, and the button stays on screen on a phone held sideways. `app.screen` is the visible area in CSS pixels. Place your own content relative to its width and height, and update it in the same `resize` handler.
+
+## Multiplayer
+
+In the multiplayer version, everyone who opens the game gets a bunny on a shared floor. Click or tap the floor to walk there, and press Jump to make your bunny jump on every player's screen.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web-multiplayer
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web-multiplayer
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web-multiplayer
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web-multiplayer
+```
+
+It keeps `src/assets.ts`, replaces `src/scene.ts` with a scene that draws a bunny for each player, and adds a [Colyseus](https://colyseus.io) game server in `server/`. [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) walks through the server and the scene. On Discord, use `starter-discord-multiplayer`, and each player's Discord name shows above their bunny.
+
+---
+
+# Web
+
+The web platform runs the game as a page in any browser, with no SDK and no sign-in.
+
+| Template                                                                        | Id                        | Runs on                                           |
+| ------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------- |
+| [Starter](https://pixijs.io/create-pixi/docs/guide/games/starter.md)            | `starter-web`             | Any static web host                               |
+| [Starter, multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) | `starter-web-multiplayer` | A Node.js host that accepts WebSocket connections |
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web
+```
+
+Add `-js` to the id for JavaScript. [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md) covers the files every game template shares, and the [starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md) covers the scene.
+
+## Platform startup code
+
+`src/main.ts` calls three functions from `src/platform.ts` while the game starts. A plain web page has nothing to start or report, so they do nothing:
+
+```ts title="src/platform.ts"
+import type { Application } from "pixi.js";
+
+/**
+ * Startup hooks that main.ts calls. A plain web page needs none of them.
+ * Other platforms, such as Discord, have their own version of this file that
+ * starts their SDK and tells the platform when the game is ready.
+ */
+
+/** Runs first, before PixiJS starts */
+export async function initPlatform() {}
+
+/** Called while assets load, with progress from 0 to 1 */
+export function setLoadingProgress(_progress: number) {}
+
+/**
+ * Runs once the scene is on screen and the game can be played. A platform
+ * that pauses the game can stop `app.ticker` here.
+ */
+export function gameReady(_app: Application) {}
+```
+
+They're still a good place for your own startup code. For example, add a loading bar to `index.html`, update it from `setLoadingProgress`, and remove it in `gameReady`. See [platform startup code](https://pixijs.io/create-pixi/docs/guide/games.md#platform-startup-code) for when each one runs.
+
+## Scripts
+
+The scripts are the same as the [Vite template](https://pixijs.io/create-pixi/docs/guide/bundlers.md#scripts): `dev` starts the dev server on port 8080, `build` lints, type-checks in TypeScript projects, and writes the game to `dist/`, and `preview` serves that build locally.
+
+## Deploy
+
+Upload `dist/` to any static web host, such as GitHub Pages or itch.io. The build uses relative paths, so it works from any folder.
+
+## Multiplayer
+
+`starter-web-multiplayer` adds a Colyseus game server. Anyone who opens the page joins the game, without signing in. [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) covers the server, the scripts and how to deploy it. The web platform adds two files to it.
+
+`src/connect.ts` joins the game's room:
+
+```ts title="src/connect.ts"
+import { Client } from "@colyseus/sdk";
+
+import type { server } from "../server/index.ts";
+
+/**
+ * Joins a game room on the server that served this page. The scene shows the
+ * message of any error this throws.
+ */
+export async function joinGame() {
+  try {
+    return await new Client<typeof server>().joinOrCreate("game");
+  } catch (error) {
+    throw new Error("Can't reach the game server", { cause: error });
+  }
+}
+```
+
+- `new Client()` without a URL connects to the server that served the page, which is the same in development and production.
+- `joinOrCreate("game")` joins a `game` room, or creates one if none is open.
+- If joining fails, `joinGame()` throws "Can't reach the game server", and the scene shows that message.
+
+`server/platform.ts` tells the game's room who can join and which room they join:
+
+```ts title="server/platform.ts"
+import { createRouter } from "colyseus";
+
+// How the game server lets players in. On the web anyone can join any room,
+// without options, so none of these change anything. Platforms with sign-in,
+// such as Discord Activities, check players and split them into rooms here.
+
+export type JoinOptions = undefined;
+
+/** Runs before a player joins. `true` lets them in without signing in. */
+export async function onAuth() {
+  return true;
+}
+
+/** Join options that split players into separate rooms */
+export const filterBy: string[] = [];
+
+/** HTTP routes the platform adds to the game server */
+export const routes = createRouter({});
+```
+
+On the web, everyone can join, every player joins the same room, and there are no extra routes. [How platforms change the server](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#how-platforms-change-the-server) explains what each export does. To ask players for a name, see [show player names](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#change-the-game).
+
+### Play with friends
+
+The dev server lets in requests through a [cloudflared](https://github.com/cloudflare/cloudflared) quick tunnel, which gives it a public HTTPS address. Start the dev server, then in a second terminal:
+
+```bash
+npx cloudflared tunnel --url http://localhost:8080
+```
+
+Send the address it prints, such as `https://funky-jogging-bunny.trycloudflare.com`, to your friends. Anyone with it can play on your dev server until you stop the tunnel. See [allowed hosts](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#allowed-hosts) for other tunnels.
+
+---
+
+# Discord Activity
+
+The Discord platform runs the game inside Discord as an [Activity](https://docs.discord.com/developers/activities/overview). Players launch it from the App Launcher in a Discord channel, and the game signs them in with their Discord account.
+
+| Template                                                             | Id                            | Players                                                                                                         |
+| -------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [Starter](https://pixijs.io/create-pixi/docs/guide/games/starter.md) | `starter-discord`             | Each player plays on their own                                                                                  |
+| [Starter, multiplayer](#multiplayer)                                 | `starter-discord-multiplayer` | Everyone in the same Activity session plays in one room, and each player's Discord name shows above their bunny |
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-discord
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-discord
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-discord
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-discord
+```
+
+Add `-js` to the id for JavaScript. As with every multiplayer template, the first install of `starter-discord-multiplayer` needs [Git](https://git-scm.com/downloads). See [npm install fails with spawn git](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md#npm-install-fails-with-spawn-git).
+
+Both templates come with a small Node.js server as well as the game. Signing in needs your app's client secret, which can't be in the browser, so the server trades the player's sign-in code for an access token. In the single-player template, that's all the server does. In the multiplayer template, the Colyseus game server does it too. Either way, `npm run dev` runs the game and the server in one process on one port.
+
+You don't need a Discord app to start. `npm run dev` runs the game in a browser tab with a made-up player. To run it inside Discord, you need a Discord app, a tunnel to your computer, and a few settings in the Discord Developer Portal.
+
+## Project structure
+
+This is `starter-discord`:
+
+```text
+my-game/
+├── public/
+├── server/
+│   ├── discord.ts
+│   └── main.ts
+├── src/
+│   ├── assets.ts
+│   ├── cube.ts
+│   ├── main.ts
+│   ├── platform.ts
+│   ├── scene.ts
+│   └── vite-env.d.ts
+├── .env.example
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Compared with [`starter-web`](https://pixijs.io/create-pixi/docs/guide/platforms/web.md):
+
+- `src/platform.ts` starts the Discord SDK and signs the player in.
+- `server/main.ts` is the server: the sign-in route, plus the game's files in production.
+- `server/discord.ts` trades a sign-in code for an access token.
+- `vite.config.ts` adds the sign-in route to the dev server, and builds the server as well as the game.
+- `.env.example` lists the two values the game needs from your Discord app. `.gitignore` also ignores `.env`.
+- `src/vite-env.d.ts` adds the type of `VITE_DISCORD_CLIENT_ID`. JavaScript projects don't have this file.
+- `package.json` adds [`@discord/embedded-app-sdk`](https://docs.discord.com/developers/developer-tools/embedded-app-sdk) and Express, and `preview` runs the built server.
+
+`starter-discord-multiplayer` is the [multiplayer template](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#project-structure) with the same `src/platform.ts`, `server/discord.ts`, `.env.example` and `src/vite-env.d.ts`. It has no `server/main.ts`, because the game server answers the sign-in route, and its `vite.config.ts` is the multiplayer one. Its `server/platform.ts` and `src/connect.ts` are Discord's own. See [multiplayer](#multiplayer). The game's files, such as `src/scene.ts` and `server/GameRoom.ts`, are the same as on the web.
+
+## Scripts
+
+Both templates have the [multiplayer scripts](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#scripts). In the single-player template, the sign-in server takes the place of the game server: `dev` runs it inside the dev server, `build` writes it to `dist/server/`, and `preview` runs the built server.
+
+## Run it in a browser
+
+```bash
+npm run dev
+```
+
+A browser tab has no Discord client to talk to, so in development `src/platform.ts` uses `DiscordSDKMock`, the stand-in that comes with the Discord SDK. Sign-in still goes through your server, which gives the mock's code a made-up token. In the single-player template, the player is the mock's made-up account, `mock_user_username`. In the multiplayer template, the game server names each tab after its token, such as "Player 5c12", and every tab joins the same room, so open a second tab to see two bunnies with different names. Reloading a tab signs it in as a new player.
+
+This needs no `.env` file. The mock only exists in development; see [the sign-in route](#the-sign-in-route).
+
+## Set up a Discord app
+
+1. In Discord, open User Settings, then Advanced, and turn on Developer Mode. It lets you launch Activities that are still in development.
+2. In the [Discord Developer Portal](https://discord.com/developers/applications), create an application. Only you and members of the app's team can launch it while it's in development. If other people need to test it, create a [team](https://discord.com/developers/teams) first and choose it as the owner.
+3. On the **Installation** page, check that both User Install and Guild Install are selected.
+4. On the **OAuth2** page, copy the Client ID and the Client Secret into `.env`, as described in the next section. The secret only shows after you press Reset Secret. Under Redirects, add `https://127.0.0.1`. Discord requires a redirect, but the SDK handles sign-in inside the Activity, so it's never used.
+5. Under **Activities**, open **Settings** and turn on Enable Activities. This also creates the Launch command that opens the Activity. Under Supported Platforms, tick each platform you'll test on, or the Activity won't show up there.
+6. Under **Activities**, open **URL Mappings**. The `/` prefix needs a target, which is your tunnel's host while you develop and your server's host in production. The next sections cover both.
+
+Discord's [Building an Activity](https://docs.discord.com/developers/activities/building-an-activity) guide walks through the same pages with screenshots.
+
+## Environment variables
+
+```bash title=".env.example"
+# Copy this file to .env, then fill in the values from the OAuth2 page of
+# your app at https://discord.com/developers/applications
+
+# Built into the game, so anyone can read it
+VITE_DISCORD_CLIENT_ID=
+
+# Only the game server reads this. Keep it private.
+DISCORD_CLIENT_SECRET=
+```
+
+Copy `.env.example` to `.env` and fill in both values. `.gitignore` lists `.env`, so git won't pick up the secret.
+
+- `VITE_DISCORD_CLIENT_ID` is your app's Client ID. The game needs it in the browser to start the SDK and ask Discord for a sign-in code. Vite only builds variables that start with `VITE_` into the game, and anyone can read them there. The server reads the same value, which the build writes into the server code in `dist/server/`.
+- `DISCORD_CLIENT_SECRET` lets the server trade a sign-in code for an access token. Only `server/discord.ts` reads it, when the server runs, and it never reaches `dist/client/`. Don't add a `VITE_` prefix to it, or Vite builds it into the game.
+
+The server reads `.env` from the folder it runs in: the project folder for npm scripts, or wherever you start `node dist/server/server.mjs`.
+
+- In the single-player template, the built server loads `.env` with Node.js's `process.loadEnvFile()` when it starts. Variables that are already set, for example in a host's settings, keep their value. In `npm run dev`, `vite.config.ts` reads `.env` instead, and reads it again when you edit it.
+- In the multiplayer template, Colyseus loads `.env` when the server starts, in both `npm run dev` and `npm run preview`. Variables that are already set keep their value. The file is read once, so after editing `.env`, stop `npm run dev` and start it again.
+
+## Test inside Discord
+
+Discord loads an Activity through its own proxy at `https://<client id>.discordsays.com`. The proxy forwards requests to the host in your `/` URL mapping, which has to be a public HTTPS address. A tunnel gives your dev server one.
+
+1. Fill in `.env`, then start the dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+2. In a second terminal, start a [cloudflared](https://github.com/cloudflare/cloudflared) quick tunnel to the dev server:
+
+   ```bash
+   npx cloudflared tunnel --url http://localhost:8080
+   ```
+
+   `npx cloudflared` runs the `cloudflared` npm package, a community wrapper that downloads Cloudflare's program the first time. If you've [installed cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) yourself, leave out `npx`. The tunnel prints its address, for example `https://funky-jogging-bunny.trycloudflare.com`. The tunnel handles HTTPS, so the dev server stays on plain HTTP.
+
+3. In the Developer Portal, open **Activities**, then **URL Mappings**. Set the target of the `/` prefix to the tunnel's host without `https://`, for example `funky-jogging-bunny.trycloudflare.com`, and save.
+
+4. In Discord, go to a channel in a server you're in, open the App Launcher, and launch your app. Search for its name if it isn't listed. The first time, Discord asks you to let the app see your account. The game then signs you in.
+
+In the multiplayer template, your bunny shows your name, and when another member of the app's team joins your Activity, you share a room and see each other's bunnies.
+
+Each quick tunnel gets a new address, so update the URL mapping every time you start cloudflared. When you're done, stop the tunnel and remove the mapping. You don't own the `trycloudflare.com` address, and someone else could get it later. While the tunnel runs, anyone with its address can open your dev server in a browser and play as a made-up player.
+
+Saving a file should reload the Activity, as it does a browser tab. Vite's reload connection goes to the page's own address, which the `/` mapping forwards to your dev server.
+
+PixiJS 3D loads its Draco decoder from `www.gstatic.com` the first time a Draco-compressed model loads, and Discord blocks requests to hosts without a URL mapping. Copy the two decoder files into `public/` and pass their paths to `setDracoDecoderPath` before the first Draco model loads, as the [PixiJS 3D compression guide](https://github.com/pixijs/3d/blob/main/src/assets/__docs__/compression.md) shows.
+
+### Allowed hosts
+
+Vite answers every request for an unknown host, including the sign-in route, with `Blocked request. This host ("...") is not allowed`. `vite.config.ts` sets `allowedHosts: [".trycloudflare.com"]`, which lets in every cloudflared quick tunnel. The leading dot in `.trycloudflare.com` allows every subdomain. If you use another tunnel, such as ngrok, add its host to the list. The production server doesn't check the host, so this only matters for `npm run dev`.
+
+If you change the dev server's port in `vite.config.ts`, use the new port in the cloudflared command.
+
+## How sign-in works
+
+### The Discord SDK
+
+`src/platform.ts` creates the SDK and signs the player in:
+
+```ts title="src/platform.ts"
+import { DiscordSDK, DiscordSDKMock } from "@discord/embedded-app-sdk";
+import type { CommandResponse, IDiscordSDK } from "@discord/embedded-app-sdk";
+import type { Application } from "pixi.js";
+
+/**
+ * Talks to the Discord app the game runs in. In a plain browser tab,
+ * `npm run dev` uses a mock instead, so the game runs without Discord. A
+ * production build opened outside Discord has neither.
+ */
+export const discordSdk = createDiscordSdk();
+
+/**
+ * The signed-in player's Discord account, once initPlatform has run. It's
+ * undefined when nobody is signed in: in a production build opened outside
+ * Discord, or when sign-in failed.
+ */
+export let user: CommandResponse<"authenticate">["user"] | undefined;
+
+/** The player's access token, which your server can check with Discord */
+export let accessToken: string | undefined;
+
+function createDiscordSdk(): IDiscordSDK | undefined {
+  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+
+  // Discord adds frame_id to the page URL when it opens the game
+  if (new URLSearchParams(location.search).has("frame_id")) {
+    if (!clientId) throw new Error("Set VITE_DISCORD_CLIENT_ID in .env");
+
+    return new DiscordSDK(clientId);
+  }
+
+  if (import.meta.env.DEV) {
+    return new DiscordSDKMock(clientId, null, null, null);
+  }
+
+  return undefined;
+}
+
+/** Runs first, before PixiJS starts. Connects to Discord and signs in. */
+export async function initPlatform() {
+  if (!discordSdk) return;
+
+  await discordSdk.ready();
+
+  try {
+    await signIn(discordSdk);
+  } catch (error) {
+    // The game still starts, so a player who declines can play signed out
+    console.error("Discord sign-in failed:", error);
+  }
+}
+
+/** Asks the player to share their Discord account with the game */
+async function signIn(sdk: IDiscordSDK) {
+  const { code } = await sdk.commands.authorize({
+    client_id: sdk.clientId,
+    response_type: "code",
+    state: "",
+    prompt: "none",
+    scope: ["identify"],
+  });
+
+  // The server trades the code for a token, since only it has the secret
+  const response = await fetch("/api/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+
+  if (!response.ok) throw new Error(`/api/token answered ${response.status}`);
+
+  const { access_token } = (await response.json()) as { access_token: string };
+
+  user = (await sdk.commands.authenticate({ access_token })).user;
+  accessToken = access_token;
+}
+
+/** Discord has no loading screen to update */
+export function setLoadingProgress(_progress: number) {}
+
+/** Discord doesn't need to know when the game is ready */
+export function gameReady(_app: Application) {}
+```
+
+Discord opens an Activity with `frame_id`, `instance_id` and `platform` in the page's URL. `DiscordSDK` reads them and throws if they're missing, so the game only creates it when `frame_id` is there. A production build opened outside Discord has no SDK, so it starts without signing anyone in.
+
+`initPlatform` runs before PixiJS starts. It waits for `ready()`, which resolves once the SDK has connected to Discord, then signs the player in:
+
+1. `authorize` asks Discord for a one-time code. The `identify` scope lets the game read the player's basic profile, such as their id, username, display name and avatar, but not their email. With `prompt: "none"`, Discord only asks the player the first time.
+2. The game posts the code to `/api/token` on its own server, which trades it for an access token. The trade needs the client secret, so it can't happen in the browser.
+3. `authenticate` gives the token to the SDK, which answers with the player's account. SDK commands that need the player's permission only work after it.
+
+If sign-in fails, for example because the player declined, `initPlatform` logs the error and the game starts anyway, signed out. Discord has no loading screen to update and no ready call, so `setLoadingProgress` and `gameReady` stay empty.
+
+### Use the player's account
+
+After `initPlatform`, `src/platform.ts` exports the signed-in player as `user` and their access token as `accessToken`. Both are `undefined` when nobody is signed in. The starter game doesn't use them. To greet the player, for example:
+
+```ts title="src/scene.ts"
+import { user } from "./platform.ts";
+
+const greeting = new Text({
+  text: `Hi, ${user?.global_name ?? user?.username ?? "player"}`,
+  style: { fill: 0xffffff },
+});
+```
+
+`global_name` is the player's display name, when they've set one. `user` also has their `id` and `avatar`. Code that imports `user` only works on Discord, because the [web's `src/platform.ts`](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#platform-startup-code) doesn't export it.
+
+Use `accessToken` to show your server who the player is. Don't trust a user id sent from the game, because a modified client can send any id. The server can ask Discord who the token belongs to, as the [multiplayer server](#checking-players) does.
+
+### The sign-in route
+
+In the single-player template, `server/main.ts` is a small [Express](https://expressjs.com) server with one route, `POST /api/token`:
+
+```ts title="server/main.ts"
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+import express from "express";
+
+import { getAccessToken } from "./discord.ts";
+
+/**
+ * The game's server. `npm run dev` adds its routes under /api/ to the dev
+ * server. The build writes this file to dist/server/server.mjs, which also
+ * serves the game from dist/client.
+ */
+export const app = express();
+
+/** Trades the sign-in code from src/platform.ts for an access token */
+app.post("/api/token", express.json(), async (req, res) => {
+  const access_token = await getAccessToken(req.body?.code);
+
+  if (!access_token) {
+    res.sendStatus(401);
+    return;
+  }
+
+  res.json({ access_token });
+});
+
+// `npm run dev` serves the game itself
+if (!import.meta.env.DEV) {
+  // Loads DISCORD_CLIENT_SECRET. Variables that are already set, for example
+  // in a host's settings, keep their value.
+  if (existsSync(".env")) process.loadEnvFile();
+
+  const port = Number(process.env.PORT) || 8080;
+
+  // Keeps stack traces out of error pages
+  app.set("env", "production");
+
+  app.use(express.static(fileURLToPath(new URL("../client", import.meta.url))));
+  app.listen(port, (error) => {
+    if (error) throw error;
+
+    console.log(`Game server running at http://localhost:${port}`);
+  });
+}
+```
+
+In development, `vite.config.ts` hands every request under `/api/` to this server, so the dev server answers the route itself. Saving a file in `server/` takes effect on the next request. `vite build` builds the game into `dist/client/` and this file into `dist/server/server.mjs`, which also serves the game:
+
+```ts title="vite.config.ts"
+import { existsSync, readFileSync } from "node:fs";
+import { parseEnv } from "node:util";
+
+import { defineConfig } from "vite";
+import type { Plugin } from "vite";
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [serverRoutes()],
+  server: {
+    // dist/server/server.mjs also uses 8080, unless PORT is set
+    port: 8080,
+    open: true,
+    // Lets Discord reach the dev server through a cloudflared tunnel
+    allowedHosts: [".trycloudflare.com"],
+  },
+  // `vite build` builds the game into dist/client and the server below
+  builder: {},
+  build: {
+    outDir: "dist/client",
+    // PixiJS, PixiJS 3D and the game libraries together are larger than
+    // Vite's 500 kB default
+    chunkSizeWarningLimit: 1000,
+  },
+  environments: {
+    ssr: {
+      build: {
+        outDir: "dist/server",
+        // The server serves public/ from dist/client, so skip a second copy
+        copyPublicDir: false,
+        rolldownOptions: {
+          input: "server/main.ts",
+          output: { entryFileNames: "server.mjs" },
+        },
+      },
+    },
+  },
+});
+
+/**
+ * Lets the routes in server/main.ts answer requests under /api/, so
+ * `npm run dev` runs the game and its server in one process. Saving a file in
+ * server/ takes effect on the next request.
+ */
+function serverRoutes(): Plugin {
+  return {
+    name: "server-routes",
+    configureServer(server) {
+      // Gives the server DISCORD_CLIENT_SECRET from .env. Vite restarts when
+      // .env changes, so edits apply. VITE_ variables stay out of process.env,
+      // where they would hide those edits from Vite.
+      if (existsSync(".env")) {
+        const env = parseEnv(readFileSync(".env", "utf8"));
+
+        for (const [key, value] of Object.entries(env)) {
+          if (!key.startsWith("VITE_")) process.env[key] = value;
+        }
+      }
+
+      server.middlewares.use((req, res, next) => {
+        if (!req.url?.startsWith("/api/")) return next();
+
+        server
+          .ssrLoadModule("/server/main.ts")
+          .then(({ app }) => app(req, res), next);
+      });
+    },
+  };
+}
+```
+
+Add your own routes to `app` under `/api/`, such as a route that saves a score. They work in development and in production.
+
+`server/discord.ts` does the trade. The multiplayer template's [sign-in route](#checking-players) uses the same function:
+
+```ts title="server/discord.ts"
+export const DISCORD_API = "https://discord.com/api/v10";
+
+/**
+ * Trades the code from Discord's `authorize` command for an access token, or
+ * returns undefined if Discord refuses the code or can't be reached. It runs
+ * on the server because it needs the client secret.
+ */
+export async function getAccessToken(code: unknown) {
+  if (typeof code !== "string" || code.length > 200) return undefined;
+
+  // Outside Discord, `npm run dev` signs each tab in as a made-up player
+  if (import.meta.env.DEV && code === "mock_code") {
+    return `mock_${crypto.randomUUID()}`;
+  }
+
+  try {
+    const response = await fetch(`${DISCORD_API}/oauth2/token`, {
+      method: "POST",
+      body: new URLSearchParams({
+        client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
+        client_secret: process.env.DISCORD_CLIENT_SECRET ?? "",
+        grant_type: "authorization_code",
+        code,
+      }),
+    });
+
+    if (response.ok) {
+      const { access_token } = (await response.json()) as {
+        access_token: string;
+      };
+
+      return access_token;
+    }
+
+    console.error("Discord sign-in failed:", await response.text());
+  } catch (error) {
+    console.error("Discord sign-in failed:", error);
+  }
+
+  return undefined;
+}
+```
+
+- `getAccessToken` sends the code and the client secret to Discord and returns the access token. When Discord refuses the code or can't be reached, it logs why in the server's terminal, and the route answers with 401.
+- The mock code path checks `import.meta.env.DEV`. `vite build` replaces it with `false` and drops that path from the built server, so the production server never signs anyone in without Discord. Use it for your own development-only code too. `process.env.NODE_ENV` doesn't work for this, because `npm run preview` leaves it unset.
+
+## Multiplayer
+
+`starter-discord-multiplayer` adds a [Colyseus](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) game server. Everyone in the same Activity session plays in one room, and each player's Discord name shows above their bunny. [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) covers the game server, the scene and the scripts. The Discord platform adds two files to it.
+
+### Joining the room
+
+The multiplayer scene joins its room through `joinGame()` in `src/connect.ts`:
+
+```ts title="src/connect.ts"
+import { Client } from "@colyseus/sdk";
+
+import type { server } from "../server/index.ts";
+import { accessToken, discordSdk } from "./platform.ts";
+
+/**
+ * Joins the room for this Activity session with the player initPlatform
+ * signed in, so everyone in the session plays together. The scene shows the
+ * message of any error this throws.
+ */
+export async function joinGame() {
+  if (!discordSdk) throw new Error("Open this game from Discord");
+  if (!accessToken) throw new Error("Discord sign-in failed");
+
+  // Discord's proxy sends every path to this server. Without a urlBuilder, the
+  // SDK would rewrite URLs to /.proxy/colyseus/... inside Discord.
+  const client = new Client<typeof server>(undefined, {
+    urlBuilder: (url) => url.href,
+  });
+
+  // The room asks Discord who the token belongs to
+  client.auth.token = accessToken;
+
+  return await client.joinOrCreate("game", {
+    instanceId: discordSdk.instanceId,
+  });
+}
+```
+
+`initPlatform` has already signed the player in by the time the scene starts. `joinGame()` sets `client.auth.token` to the player's `accessToken`, which sends it with the join request, and `joinOrCreate` passes the session's `instanceId`. If sign-in failed, `joinGame()` throws "Discord sign-in failed" instead.
+
+Inside Discord, the Colyseus SDK rewrites every request to `/.proxy/colyseus/...` by default, which would need a second URL mapping. The game and the server share one address in this template, so `urlBuilder: (url) => url.href` keeps each URL as it is. The `/` mapping then covers the page, the sign-in route and the room.
+
+The scene shows the message of any error `joinGame()` throws, such as "Discord sign-in failed".
+
+### Checking players
+
+`server/platform.ts` tells the game's room who can join and which room they join. The [web version](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer) lets everyone into one room. Discord's checks every player:
+
+```ts title="server/platform.ts"
+import { createEndpoint, createRouter, ErrorCode, ServerError } from "colyseus";
+
+import { DISCORD_API, getAccessToken } from "./discord.ts";
+
+export interface JoinOptions {
+  /** src/connect.ts joins with the Activity session the player is in */
+  instanceId: string;
+}
+
+/**
+ * Runs before a player joins, and only lets in players signed in with
+ * Discord. What it returns becomes `client.auth`.
+ */
+export async function onAuth(
+  token: string | undefined,
+  options: { instanceId?: unknown },
+) {
+  const { instanceId } = options;
+
+  // Without an instanceId, filterBy would let the player into any room
+  if (typeof instanceId !== "string" || instanceId.length > 100) {
+    throw new ServerError(ErrorCode.AUTH_FAILED, "Open this game from Discord");
+  }
+
+  const name = token && (await getDiscordName(token));
+
+  if (!name) {
+    throw new ServerError(ErrorCode.AUTH_FAILED, "Sign in with Discord");
+  }
+
+  return { name };
+}
+
+/** Each Activity session gets its own room */
+export const filterBy = ["instanceId"];
+
+/** The sign-in route src/platform.ts calls */
+export const routes = createRouter({
+  discordToken: createEndpoint(
+    "/api/token",
+    { method: "POST" },
+    async (ctx) => {
+      const access_token = await getAccessToken(ctx.body?.code);
+
+      if (!access_token) {
+        throw ctx.error("UNAUTHORIZED", { message: "Discord sign-in failed" });
+      }
+
+      return { access_token };
+    },
+  ),
+});
+
+/** Asks Discord for the name of the player an access token belongs to */
+async function getDiscordName(token: string) {
+  if (import.meta.env.DEV && token.startsWith("mock_")) {
+    return `Player ${token.slice(5, 9)}`;
+  }
+
+  const response = await fetch(`${DISCORD_API}/oauth2/@me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) return undefined;
+
+  const { application, user } = (await response.json()) as {
+    application: { id: string };
+    user?: { username: string; global_name: string | null };
+  };
+
+  // Only accept tokens from this app's sign-in, not from other Discord apps
+  if (application.id !== import.meta.env.VITE_DISCORD_CLIENT_ID) {
+    return undefined;
+  }
+
+  // global_name is the display name, when the player has set one
+  return user && (user.global_name ?? user.username);
+}
+```
+
+- `onAuth` runs before a player joins, and what it returns becomes `client.auth`. It asks Discord who the token belongs to and checks that your app issued it, so a modified client can't join without signing in or pick its own name. It returns the player's Discord display name, or their username if they haven't set one.
+- The game's room sets each new player's `name` from `client.auth`. `name` is a field of `Player` in `server/GameState.ts`, and the scene draws it above each bunny.
+- `JoinOptions` declares the options `src/connect.ts` joins with, so TypeScript checks them.
+- `routes` adds the [sign-in route](#the-sign-in-route) to the game server, as a Colyseus [API route](https://docs.colyseus.io/server/http-routes). It uses the same `getAccessToken` as the single-player server.
+
+[How platforms change the server](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#how-platforms-change-the-server) shows how the game's room uses these exports.
+
+### One room per Activity session
+
+Discord gives each Activity session an `instanceId`, and everyone who launches or joins that session gets the same one. When everyone leaves, the session ends, and the next launch gets a new id. `filterBy = ["instanceId"]` makes `joinOrCreate` join the room whose `instanceId` matches the player's, or create one.
+
+- `onAuth` refuses a join without an `instanceId`. Without the option, `filterBy` doesn't filter, and the player would land in any open room.
+- If you set `maxClients` on the room, a full session splits in two, because `joinOrCreate` then opens a second room with the same `instanceId`.
+- The mock gives every browser tab the same `instanceId`, which is why tabs share a room in development.
+
+### What the server doesn't check
+
+The server knows each player's Discord account, but not that they're in the session they joined. A signed-in Discord user who knows a session's `instanceId` could join its room from outside the Activity. To check, your server can ask Discord's [Activity Instance API](https://docs.discord.com/developers/activities/development-guides/multiplayer-experience#using-the-activity-instance-api) who is in a session, which needs a bot token.
+
+The Colyseus SDK also adds the access token to the room's WebSocket URL, so it can appear in access logs of proxies between Discord and your server. The token only gives access to the player's basic profile, but whoever has it can also join your game as that player until it expires, after seven days.
+
+## Deploy
+
+Both templates need a host that runs Node.js. One Node.js process serves the game and the sign-in route, and in the multiplayer template the rooms too, so it needs one URL mapping.
+
+1. Build with the Client ID set, in `.env` or in the environment of the build. Vite writes it into both the game and the server, so a build without it can't sign anyone in.
+2. On the server, copy `dist/`, `package.json` and your lockfile, install the dependencies without the dev tools, for example with `npm ci --omit=dev`, and run `node dist/server/server.mjs`, or `npm run preview`. The [multiplayer deploy steps](https://pixijs.io/create-pixi/docs/guide/multiplayer.md#deploy) have more about the game server.
+3. On the host, set `DISCORD_CLIENT_SECRET` in its environment settings, or put a `.env` file in the folder the server starts from.
+4. Serve the game over HTTPS. Discord's proxy only connects to HTTPS addresses. Most Node.js hosts handle HTTPS for you. On your own server, put a reverse proxy such as [Caddy](https://caddyserver.com) or nginx in front of the game server.
+5. In the Developer Portal, set the target of the `/` URL mapping to your host, without `https://`.
+
+The single-player server listens on the port in the `PORT` environment variable, or 8080 without it, so it works on hosts that choose the port. The multiplayer server listens on `port` from `vite.config.ts` and doesn't read `PORT`.
+
+To try the production build inside Discord before you deploy, run `npm run build` and `npm run preview`, then start the tunnel and update the URL mapping as in [test inside Discord](#test-inside-discord).
+
+The game is also reachable outside Discord, at your host's address and at `https://<client id>.discordsays.com`. There, the single-player game starts without signing anyone in, and the multiplayer game shows "Open this game from Discord".
+
+Discord's proxy keeps the cache headers your server sends, except on HTML pages. Vite adds a hash to the name of each file it builds, so players get the new code after a deploy. Files in `public/` keep their names, so if you give them long cache times, rename a file when you change it.
+
+Discord's [production readiness guide](https://docs.discord.com/developers/activities/development-guides/production-readiness) covers caching, rate limits and older Discord clients. Its [Discovery](https://docs.discord.com/developers/discovery/overview) guide covers listing your app so other people can find it.
+
+## Troubleshooting
+
+### The game shows "Open this game from Discord"
+
+You opened a multiplayer production build in a browser, either with `npm run preview` or at the deployed address. Use `npm run dev` to play in a browser, or launch the game from Discord.
+
+### Sign-in fails
+
+The multiplayer game shows "Discord sign-in failed". The single-player game starts signed out and logs "Discord sign-in failed" in [the game's console](#see-the-games-console-inside-discord).
+
+Usually Discord refused to trade the sign-in code. The server's terminal shows Discord's answer. `invalid_client` means the Client ID or the Client Secret is wrong or missing. Fix `.env` and restart `npm run dev`. In production, check the host's `DISCORD_CLIENT_SECRET`, and build again if the Client ID changed.
+
+### The Activity stays blank or shows an error page
+
+- Check that the target of the `/` URL mapping is the tunnel that's running now, without `https://`.
+- Check that the tunnel points at the port `npm run dev` uses.
+- Check that `.env` has `VITE_DISCORD_CLIENT_ID`, and that you restarted `npm run dev` after filling it in. Without it, the game stops with "Set VITE_DISCORD_CLIENT_ID in .env" in [the game's console](#see-the-games-console-inside-discord).
+- If you've set an Application URL Override in Discord, turn it off. It makes Discord skip the proxy and the URL mapping.
+- `Blocked request. This host ("...") is not allowed` means the tunnel's host isn't in `server.allowedHosts`. See [allowed hosts](#allowed-hosts).
+
+### The app isn't in the App Launcher
+
+Check that Developer Mode is on in Discord, that Enable Activities is on, and that the platform you're on is ticked under Supported Platforms. Only the app's owner and its team members can launch an app in development.
+
+### The Activity doesn't update when you save
+
+Close the Activity and launch it again. After editing `.env`, also restart `npm run dev`.
+
+### See the game's console inside Discord
+
+The Discord SDK forwards the game's console messages to Discord. Open Discord in a browser at [discord.com/app](https://discord.com/app) and use the browser's developer tools, or use the [Discord PTB](https://discord.com/download) desktop app's View > Developer > Toggle Developer Tools. On mobile, turn on Developer Mode and open Debug Logs in User Settings. See [logging](https://docs.discord.com/developers/activities/development-guides/local-development#logging) in Discord's docs.
+
+## Learn more
+
+- Discord's [Activities documentation](https://docs.discord.com/developers/activities/overview), including [local development](https://docs.discord.com/developers/activities/development-guides/local-development), [networking](https://docs.discord.com/developers/activities/development-guides/networking) and the [multiplayer guide](https://docs.discord.com/developers/activities/development-guides/multiplayer-experience).
+- The [Embedded App SDK reference](https://docs.discord.com/developers/developer-tools/embedded-app-sdk) for the commands and events the game can use.
+- [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) for how the room and the scene keep players in sync.
+
+---
+
+# Multiplayer
+
+A multiplayer game template adds a [Colyseus](https://colyseus.io) 0.18 game server to the game. The server is in charge. Players send it requests, such as "move me here". The server checks them, updates the game state, and Colyseus sends the changes to every player.
+
+Answer Yes to "Multiplayer?" when you create a game, or add `-multiplayer` to its id. [Pick a game and a platform](https://pixijs.io/create-pixi/docs/guide/games.md#pick-a-game-and-a-platform) lists every id.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web-multiplayer
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web-multiplayer
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web-multiplayer
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web-multiplayer
+```
+
+Add `-js` to the id for JavaScript. This page uses the [starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md#multiplayer) on the web: everyone who opens the game gets a bunny on a shared floor. Click or tap the floor to walk there, and press Jump to make your bunny jump on every player's screen. Open the game in two browser windows to see both bunnies.
+
+The first install needs [Git](https://git-scm.com/downloads) and takes longer than the other templates. Colyseus lists a uWebSockets.js transport as a peer dependency, so npm also downloads `uWebSockets.js`, about 125 MB, from GitHub. The template doesn't use it. See [npm install fails with spawn git](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md#npm-install-fails-with-spawn-git).
+
+## Project structure
+
+```text
+my-game/
+├── public/
+│   ├── assets/
+│   │   ├── sounds/
+│   │   │   └── sfx-press.wav
+│   │   ├── bunny.png
+│   │   └── button.png
+│   ├── favicon.png
+│   └── style.css
+├── server/
+│   ├── GameRoom.ts
+│   ├── GameState.ts
+│   ├── index.ts
+│   ├── platform.ts
+│   └── world.ts
+├── src/
+│   ├── assets.ts
+│   ├── connect.ts
+│   ├── cube.ts
+│   ├── main.ts
+│   ├── platform.ts
+│   ├── scene.ts
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+The code in `server/` runs on Node.js. Most of it belongs to the game:
+
+- `index.ts` defines the server and its rooms. A room is one game session that players join.
+- `GameRoom.ts` handles players joining, sending messages and leaving.
+- `GameState.ts` describes the state that Colyseus keeps in sync on every player's screen.
+- `world.ts` holds the size of the floor, which the server and the game both import.
+
+Two files come from the platform: `server/platform.ts` decides who can join and which room they join, and `src/connect.ts` joins the room from the game. `src/scene.ts` replaces the single-player scene and draws a bunny for each player, with the spinning cube in the middle of the floor. `src/main.ts`, `src/assets.ts`, `src/cube.ts` and `src/platform.ts` are the same as in the [single-player template](https://pixijs.io/create-pixi/docs/guide/games.md#start-the-game).
+
+## Scripts
+
+| Script    | Runs                          | What it does                                                                                    |
+| --------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| `dev`     | `vite`                        | Starts the dev server with the game server inside it, on port 8080                              |
+| `build`   | `oxlint && tsc && vite build` | Lints, type-checks, then builds the game into `dist/client/` and the server into `dist/server/` |
+| `preview` | `node dist/server/server.mjs` | Runs the production server, which serves the game and the rooms on port 8080                    |
+
+`start` runs `dev`. In JavaScript projects, `build` skips `tsc`.
+
+## The game and the server in one process
+
+`vite.config.ts` adds the Colyseus [Vite plugin](https://docs.colyseus.io/server/vite):
+
+```ts title="vite.config.ts"
+import { colyseus } from "colyseus/vite";
+import { defineConfig } from "vite";
+
+// The dev server and the built game server both listen on this port
+const port = 8080;
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    // Runs the game server inside the dev server. The build writes it to
+    // dist/server/server.mjs, which also serves the game from dist/client.
+    colyseus({ serverEntry: "/server/index.ts", port, serveClient: true }),
+  ],
+  server: {
+    port,
+    open: true,
+    // Lets other people reach the dev server through a cloudflared tunnel
+    allowedHosts: [".trycloudflare.com"],
+  },
+  build: {
+    // PixiJS, PixiJS 3D and the game libraries together are larger than
+    // Vite's 500 kB default
+    chunkSizeWarningLimit: 1000,
+  },
+  environments: {
+    // The game server serves public/ from dist/client, so skip a second copy
+    colyseus: { build: { copyPublicDir: false } },
+  },
+});
+```
+
+`allowedHosts` lets the dev server answer requests that come through a [cloudflared](https://github.com/cloudflare/cloudflared) quick tunnel, which gives it a public HTTPS address. You can use one to [play with friends](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#play-with-friends) on your dev server, and the [Discord platform](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#test-inside-discord) runs the game inside Discord this way.
+
+In development, `npm run dev` starts one process. Vite serves the game, and the plugin runs the server from `server/index.ts` on the same port, so there's no second terminal and no proxy. When you save a file in `src/`, the page reloads. When you save a file in `server/`, the plugin reloads the server code without restarting the process. Rooms keep their state, and open pages reconnect on their own, so bunnies stay where they were. A file that both the game and the server import, such as `server/world.ts`, reloads the pages too. Their old bunnies stay for about 15 seconds, until the room gives up on the old connections. If a page shows "Can't reach the game server", refresh it.
+
+`vite build` builds two things: the game into `dist/client/`, and a standalone server into `dist/server/server.mjs`. With `serveClient: true`, that server also serves the files in `dist/client/`, so one Node.js process runs the whole game.
+
+## How state sync works
+
+### The state
+
+`server/GameState.ts` describes the state with `schema()` from `@colyseus/schema`:
+
+```ts title="server/GameState.ts"
+import { schema, t } from "@colyseus/schema";
+import type { SchemaType } from "@colyseus/schema";
+
+/**
+ * A player's bunny. The server sets its position, and its name when players
+ * sign in.
+ */
+export const Player = schema(
+  { x: t.number(), y: t.number(), name: t.string() },
+  "Player",
+);
+
+/** The room state. Every change is sent to every player in the room. */
+export const GameState = schema({ players: t.map(Player) }, "GameState");
+export type GameState = SchemaType<typeof GameState>;
+```
+
+`players` is a map from each player's session id to their `Player`. Only fields declared here are synced. Colyseus sends just the fields that changed, 20 times a second by default, in a compact binary format.
+
+### The room
+
+`server/GameRoom.ts` is the only code that changes the state:
+
+```ts title="server/GameRoom.ts"
+import { Room } from "colyseus";
+import type { Client } from "colyseus";
+
+import { GameState, Player } from "./GameState.ts";
+import { onAuth } from "./platform.ts";
+import type { JoinOptions } from "./platform.ts";
+import { WORLD_HEIGHT, WORLD_WIDTH } from "./world.ts";
+
+/** Every player who joins gets a bunny they can move and make jump */
+export class GameRoom extends Room<{ state: GameState }> {
+  /** Signs players in on platforms that need it, before they join */
+  static onAuth = onAuth;
+
+  state = new GameState();
+
+  messages = {
+    move: (client: Client, message: { x: number; y: number }) => {
+      const player = this.state.players.get(client.sessionId);
+
+      // Clients can send anything, so check the message before using it
+      if (
+        !player ||
+        !Number.isFinite(message?.x) ||
+        !Number.isFinite(message?.y)
+      ) {
+        return;
+      }
+
+      player.x = clamp(message.x, 0, WORLD_WIDTH);
+      player.y = clamp(message.y, 0, WORLD_HEIGHT);
+    },
+    jump: (client: Client) => {
+      this.broadcast("jump", client.sessionId);
+    },
+  };
+
+  /** The options src/connect.ts joins with, already checked by onAuth */
+  onJoin(client: Client<{ auth?: { name: string } }>, _options?: JoinOptions) {
+    // Reloading the dev server rejoins every player into the restored room
+    if (this.state.players.has(client.sessionId)) return;
+
+    this.state.players.set(
+      client.sessionId,
+      new Player({
+        x: Math.random() * WORLD_WIDTH,
+        y: Math.random() * WORLD_HEIGHT,
+        // Templates that sign players in, like Discord, set client.auth
+        name: client.auth?.name ?? "",
+      }),
+    );
+  }
+
+  onLeave(client: Client) {
+    this.state.players.delete(client.sessionId);
+  }
+
+  /** Without this, an error in the room stops the whole server */
+  onUncaughtException(error: Error) {
+    console.error(error);
+  }
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+```
+
+- `onJoin` adds a `Player` at a random spot when someone joins, and `onLeave` removes it when they leave. After a dev server reload, players join the restored room again, so `onJoin` keeps a bunny that's already there. The player's `name` comes from `client.auth`, which the platform's `onAuth` sets. On the web it doesn't, so `name` stays empty.
+- `messages` handles what players send. `move` ignores anything that isn't a pair of numbers and keeps the bunny on the floor, so a modified client can't send its bunny off the floor. Use `client.sessionId` to know who sent a message, never an id from the message itself.
+- `jump` isn't state. Nothing needs to remember that a bunny jumped, so the room passes it on to every player with `broadcast` instead.
+- `onUncaughtException` logs errors thrown in the room's code, so one bug doesn't take the server down for everyone.
+
+`server/index.ts` registers the room under the name `game`:
+
+```ts title="server/index.ts"
+import { defineRoom, defineServer } from "colyseus";
+
+import { GameRoom } from "./GameRoom.ts";
+import { filterBy, routes } from "./platform.ts";
+
+export const server = defineServer({
+  rooms: {
+    // The platform can split players into separate rooms, as Discord does
+    // with one room per Activity session
+    game: defineRoom(GameRoom).filterBy(filterBy),
+  },
+  routes,
+});
+```
+
+### How platforms change the server
+
+`onAuth`, `JoinOptions`, `filterBy` and `routes` come from `server/platform.ts`, which belongs to the platform. They're how the same room works on every platform:
+
+| Export        | What it does                                                       | Web                              | Discord                                                      |
+| ------------- | ------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------ |
+| `onAuth`      | Runs before a player joins. What it returns becomes `client.auth`. | Lets everyone in                 | Lets in only players signed in with Discord, with their name |
+| `JoinOptions` | The options `src/connect.ts` joins with, so TypeScript checks them | None                             | The Activity session's `instanceId`                          |
+| `filterBy`    | Join options that split players into separate rooms                | None, so everyone joins one room | `instanceId`, so each Activity session gets its own room     |
+| `routes`      | HTTP routes the server adds                                        | None                             | `/api/token`, which trades a sign-in code for a token        |
+
+See the [web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer) and [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer) platforms for their versions of the file.
+
+### The game
+
+`src/connect.ts` exports `joinGame()`, which joins the `game` room. On the web it's one call to `joinOrCreate("game")`; on Discord it also sends the token of the player `initPlatform` signed in, and the Activity session's id. Either way, the scene doesn't change. See [the web's `src/connect.ts`](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer).
+
+`src/scene.ts` calls `joinGame()` and reacts to state changes with `Callbacks` from `@colyseus/sdk`:
+
+```ts title="src/scene.ts"
+const room = await joinGame();
+const callbacks = Callbacks.get(room);
+const players = new Map<string, Container>();
+
+status.text = "";
+
+callbacks.onAdd("players", (player, sessionId) => {
+  const view = createPlayer(sessionId === room.sessionId, player.name);
+
+  view.position.set(player.x, player.y);
+  players.set(sessionId, view);
+  world.addChild(view);
+
+  const stopWalking = callbacks.onChange(player, () =>
+    walk(view, player.x, player.y),
+  );
+
+  // Without this, a dev server reload can try to move a removed bunny
+  view.once("destroyed", stopWalking);
+});
+
+const removePlayer = (sessionId: string) => {
+  const view = players.get(sessionId)!;
+
+  players.delete(sessionId);
+  gsap.killTweensOf([view, ...view.children]);
+  view.destroy({ children: true });
+};
+
+callbacks.onRemove("players", (_player, sessionId) => removePlayer(sessionId));
+```
+
+- The local `players` map holds the bunny drawn for each session id, so later callbacks can find it.
+- `onAdd` runs for every player already in the room and for each one who joins later, including you. Your own bunny gets the glow. `createPlayer` also draws the player's `name` above the bunny. On the web `name` is empty, so no label shows.
+- `onChange` runs when the server changes a player's `x` or `y`. It returns a function that stops listening, which the scene calls when it destroys the bunny.
+- `onRemove` runs when a player leaves.
+
+If the connection drops, the SDK tries to reconnect on its own, and the scene shows "Reconnecting..." until it succeeds or "Disconnected" if it can't. The room removes a player as soon as they disconnect, so apart from server reloads in development, a player who drops has to reload the page to play again. When the game leaves the room, the scene removes every bunny.
+
+Clicking the floor sends a `move` message with the spot you clicked. The bunny doesn't move until the server answers with a new position. `walk` then tweens it there with GSAP at a steady speed, which also smooths over the gaps between updates:
+
+```ts title="src/scene.ts"
+function walk(view: Container, x: number, y: number) {
+  gsap.to(view, {
+    x,
+    y,
+    duration: Math.hypot(x - view.x, y - view.y) / SPEED,
+    ease: "none",
+    overwrite: true,
+  });
+}
+```
+
+`Client<typeof server>` in `connect.ts` imports the server's type, so TypeScript checks room names, and `player` in the scene's callbacks has the fields from the schema. The import is type-only, so no server code ends up in the game bundle. The game does import `server/world.ts`, which holds plain numbers.
+
+The floor's size is set in world units in `server/world.ts`. The scene scales the floor to fit the screen, so a position means the same spot for every player, whatever their screen size.
+
+## Run the production build
+
+```bash
+npm run build
+npm run preview
+```
+
+Then open <http://localhost:8080>. `preview` runs `dist/server/server.mjs` with Node.js. It's the same server you deploy.
+
+## Deploy
+
+A multiplayer game needs a host that runs Node.js and accepts WebSocket connections. A static host can serve `dist/client/`, but the game can't connect without the server.
+
+`dist/server/server.mjs` loads `colyseus`, `express` and the other dependencies from `node_modules` instead of bundling them. On the server:
+
+1. Copy `dist/`, `package.json` and your lockfile.
+2. Install the dependencies without the dev tools, for example with `npm ci --omit=dev`. This still comes to about 380 MB, mostly `uWebSockets.js`.
+3. Run `node dist/server/server.mjs`, or `npm run preview`.
+
+The server listens on `port` from `vite.config.ts`, 8080 by default. The build writes the port into `dist/server/server.mjs`, so to use another one, change it and build again. The server doesn't read the `PORT` environment variable. A host that picks the port when the server starts and passes it in `PORT` needs `PORT` set to your port; if the host doesn't let you choose it, the built server can't run there as it is.
+
+The server answers any path it has no file for with `index.html`, so a missing asset in production loads as HTML and fails to decode instead of returning a 404.
+
+The [Colyseus deployment guide](https://docs.colyseus.io/deployment) covers process managers, scaling to more than one process, and Colyseus Cloud. A Discord Activity also needs HTTPS and its Discord settings; see [deploy a Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#deploy).
+
+## Change the game
+
+- **Sync more data**: add a field to `Player` or `GameState`, such as `score: t.number()`, and set it in the room. The game sees it in `onChange`. See [schema types](https://docs.colyseus.io/state/schema).
+- **Show player names**: on the web, pass a name in `joinOrCreate("game", { name })` in `src/connect.ts`, change `JoinOptions` in `server/platform.ts` to `{ name: string }`, and use `options.name` for the new `Player`'s `name` in the room's `onJoin`. The scene draws it above the bunny. Check that it's a short string first, as `move` checks its message. The [Discord platform](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer) takes the name from the player's Discord account instead.
+- **Send another action**: add a handler to `messages` in the room and call `room.send()` from the game.
+- **Limit message spam**: set `maxMessagesPerSecond` on the room to disconnect a client that sends more messages than that.
+- **Limit players**: set `maxClients` on the room. When a room is full, `joinOrCreate` opens a new one.
+- **Keep a player's seat after a dropped connection**: the template removes a player as soon as they disconnect. Colyseus can hold the seat while the game reconnects. See [reconnection](https://docs.colyseus.io/room/reconnection).
+
+## Learn more
+
+- [Colyseus documentation](https://docs.colyseus.io), including [state sync callbacks](https://docs.colyseus.io/state/callbacks), [rooms](https://docs.colyseus.io/room) and the [client SDK](https://docs.colyseus.io/sdk).
+- [Client prediction](https://docs.colyseus.io/netcode/client-prediction), to move your own bunny before the server answers.
+- [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md) for the libraries the game uses.
+
+---
+
+# Bundler templates
+
+The bundler templates are the smallest starting point: a PixiJS `Application`, a spinning bunny in front of a spinning [3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) cube, and a build setup. All four run the same code. They differ in how that code reaches the browser.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template bundler-vite
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template bundler-vite
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template bundler-vite
+```
+
+Swap `bundler-vite` for `bundler-webpack`, `bundler-esbuild` or `bundler-import-map`, and add `-js` for the JavaScript version of the first three.
+
+## Project structure
+
+This is the Vite template in TypeScript:
+
+```text
+my-app/
+├── .vscode/
+│   ├── extensions.json
+│   └── settings.json
+├── public/
+│   ├── assets/
+│   │   └── bunny.png
+│   ├── favicon.png
+│   └── style.css
+├── src/
+│   ├── main.ts
+│   └── vite-env.d.ts
+├── .gitignore
+├── .oxfmtrc.json
+├── .oxlintrc.json
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+The other templates change a few files:
+
+- webpack has `webpack.config.mjs` in place of `vite.config.ts` and `src/vite-env.d.ts`.
+- esbuild has `scripts/dev.mjs` and `scripts/build.mjs`, and keeps `index.html` in `public/`.
+- Import map has no bundler config and no TypeScript. Its code is in `src/main.js`, and `index.html` holds the import map.
+
+`index.html` has a `#pixi-container` element inside `#app`, and `public/style.css` makes `#app` fill the window. `src/main.ts` creates the app, a [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) view with a lit cube, and the bunny:
+
+```ts title="src/main.ts"
+import {
+  CubeGeometry,
+  DirectionalLight,
+  Material3D,
+  Mesh3D,
+  View3D,
+} from "@pixi/3d";
+import { Application, Assets, Sprite } from "pixi.js";
+
+const app = new Application();
+
+await app.init({ background: "#1099bb", resizeTo: window, antialias: true });
+document.getElementById("pixi-container")!.appendChild(app.canvas);
+
+// A View3D draws a 3D scene. autoResize makes it fill the screen.
+const view = new View3D({
+  autoResize: true,
+  // Soft light from the sky above and the ground below
+  environment: { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 },
+});
+
+const cube = new Mesh3D({
+  geometry: new CubeGeometry(),
+  material: new Material3D({ baseColor: 0xe72264 }),
+});
+
+// A directional light works like the sun: only its direction matters.
+// This one shines down on the cube from the upper left.
+const sun = new DirectionalLight({ intensity: 3 });
+
+sun.position.set(-3, 5, 2);
+sun.lookAt(cube.position);
+
+view.root.addChild(cube, sun);
+view.camera.position.set(0, 1.6, 3);
+view.camera.lookAt(cube.position);
+
+const texture = await Assets.load("assets/bunny.png");
+const bunny = new Sprite(texture);
+
+bunny.anchor.set(0.5);
+
+// Center the bunny, and keep it centered when the window resizes
+bunny.position.set(app.screen.width / 2, app.screen.height / 2);
+app.renderer.on("resize", (width, height) => {
+  bunny.position.set(width / 2, height / 2);
+});
+
+// The bunny is added after the view, so it draws in front of the cube
+app.stage.addChild(view, bunny);
+
+// deltaTime keeps the speed the same at any frame rate
+app.ticker.add((time) => {
+  cube.rotation.y += 0.01 * time.deltaTime;
+  bunny.rotation += 0.1 * time.deltaTime;
+});
+```
+
+## Scripts
+
+| Script    | Vite           | webpack                            | esbuild                  | Import map              |
+| --------- | -------------- | ---------------------------------- | ------------------------ | ----------------------- |
+| `dev`     | `vite`         | `webpack serve --mode=development` | `node scripts/dev.mjs`   | `http-server . -o -c-1` |
+| `build`   | `vite build`   | `webpack --mode=production`        | `node scripts/build.mjs` | none                    |
+| `preview` | `vite preview` | `webpack serve --mode=production`  | none                     | none                    |
+
+`start` runs `dev`. `lint` runs oxlint and `format` runs oxfmt, as described in [linting and formatting](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md).
+
+In TypeScript templates, `build` first runs `oxlint`, then `tsc` to type-check, then the bundler. A lint error or a type error stops the build. JavaScript templates skip the `tsc` step. Every build writes to `dist/`.
+
+## Static assets
+
+Put images, sounds, fonts and other files in `public/`. The dev server serves them next to `index.html`, and the build copies them into `dist/` unchanged. `public/assets/bunny.png` loads like this:
+
+```ts
+const texture = await Assets.load("assets/bunny.png");
+```
+
+The import map template serves the whole project folder, so the same file is at `./public/assets/bunny.png`.
+
+Code in the templates loads files with paths that don't start with `/`, and the Vite templates set `base: "./"`, so a build works from any folder, such as a GitHub Pages project site at `/my-app/`. In your own code, a path that starts with `/` resolves from the domain root.
+
+## Change the dev server port
+
+Every template uses port 8080.
+
+| Template   | Where the port is set                                     | One-off override             |
+| ---------- | --------------------------------------------------------- | ---------------------------- |
+| Vite       | `server.port` in `vite.config.ts`                         | `npm run dev -- --port 3000` |
+| webpack    | `devServer.port` in `webpack.config.mjs`                  | `npm run dev -- --port 3000` |
+| esbuild    | `port` in the `context.serve()` call in `scripts/dev.mjs` | none                         |
+| Import map | add `-p 3000` to the `dev` script in `package.json`       | `npm run dev -- -p 3000`     |
+
+With yarn, pnpm and bun, leave out the `--`, for example `pnpm dev --port 3000`.
+
+In the [multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) game templates, change `const port` in `vite.config.ts`. It sets the dev server port and the production server's port. The single-player [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#deploy) template's production server listens on the `PORT` environment variable instead, or 8080 without it.
+
+## Vite
+
+[Vite](https://vite.dev) serves your source files directly in development, so the dev server starts at once and the page updates when you save. It's the recommended template.
+
+```ts title="vite.config.ts"
+import { defineConfig } from "vite";
+
+// https://vite.dev/config/
+export default defineConfig({
+  // Relative URLs so the build works from any folder, e.g. GitHub Pages
+  base: "./",
+  server: {
+    port: 8080,
+    open: true,
+  },
+});
+```
+
+`base: "./"` makes the built files reference each other with relative URLs. `open: true` opens the browser when the dev server starts. After `npm run build`, run `npm run preview` to serve `dist/` locally and check the production build.
+
+Vite can import any file as a string with the `?raw` suffix, which is how you load GLSL shaders. See [importing shader files](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md#importing-glsl-shader-files).
+
+## webpack
+
+The webpack template uses [webpack](https://webpack.js.org) 5 with [esbuild-loader](https://github.com/privatenumber/esbuild-loader) to compile TypeScript and modern JavaScript. esbuild-loader doesn't type-check, which is why `build` runs `tsc` first.
+
+`webpack.config.mjs` sets up:
+
+- `copy-webpack-plugin` to copy `public/` into `dist/`.
+- `html-webpack-plugin` to write `dist/index.html` from `index.html` with the bundle script added.
+- A content hash in the bundle file name, `[name].[contenthash].js`, so browsers fetch new files after each release.
+- Source maps in development only.
+- esbuild minification in production.
+
+`npm run preview` serves a production build from memory, so you can check it without a separate server.
+
+> **Production builds remove console calls**
+>
+> The production minifier is configured with `drop: ["console"]`, so the build removes every `console` call from `dist/`. Remove that option from the `EsbuildPlugin` in `webpack.config.mjs` if you need logs in production.
+
+## esbuild
+
+The esbuild template uses [esbuild](https://esbuild.github.io)'s own API in two short scripts, with no plugins.
+
+- `scripts/dev.mjs` bundles `src/main.ts` in memory, serves `public/` on port 8080, and reloads the page after each rebuild using esbuild's live reload event. Changes to files in `public/` need a manual refresh.
+- `scripts/build.mjs` deletes `dist/`, copies `public/` into it, and writes a minified `dist/bundle.js`.
+
+Both scripts output an ES module, so top-level `await` works. `public/index.html` loads `bundle.js`. The dev server doesn't open a browser, so go to <http://localhost:8080> yourself.
+
+## Import map
+
+The import map template has no bundler and no build step. `index.html` tells the browser where to find `pixi.js` and PixiJS 3D:
+
+```html title="index.html"
+<script type="importmap">
+  {
+    "imports": {
+      "pixi.js": "https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.mjs",
+      "@pixi/3d": "https://cdn.jsdelivr.net/npm/@pixi/3d@0.1.0/dist/pixijs-3d.min.mjs",
+      "@pixi/3d/extras": "https://cdn.jsdelivr.net/npm/@pixi/3d@0.1.0/dist/pixijs-3d-extras.min.mjs"
+    }
+  }
+</script>
+<script type="module" src="./src/main.js"></script>
+```
+
+`pixi.js@8` loads the newest 8.x release each time. Pin an exact version, such as `pixi.js@8.23.0`, before you ship so an update can't change your project without warning. `@pixi/3d` is pinned already. Its main file loads its WebGL or WebGPU code from the same folder, and with a version range, a cached main file could load that code from a newer release. Keep both `@pixi/3d` entries on the same version, and both minified or both not. The extras file imports the engine file next to it, so a mismatch loads a second copy of PixiJS 3D.
+
+`npm run dev` runs [http-server](https://github.com/http-party/http-server) on the project folder. `-o` opens the browser and `-c-1` turns off caching. It doesn't reload the page for you, so refresh after you save.
+
+To publish, upload `index.html`, `src/` and `public/`. The browser doesn't load the `pixi.js` and `@pixi/3d` packages from `node_modules`. They're in `package.json` so your editor has their types for autocompletion.
+
+---
+
+# React template
+
+The React template renders PixiJS from React components with [@pixi/react](https://react.pixijs.io). It's built on the [Vite template](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite), so the scripts, the `public/` folder and the dev port all work the same way.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template framework-react
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template framework-react
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template framework-react
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template framework-react
+```
+
+Use `framework-react-js` for JavaScript.
+
+## Project structure
+
+```text
+my-app/
+├── public/
+│   ├── assets/
+│   │   └── bunny.png
+│   ├── favicon.png
+│   └── style.css
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── pixi-react.d.ts
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Config files for oxlint, oxfmt, VS Code and git sit at the root as in every template. `vite.config.ts` adds `@vitejs/plugin-react`, and `src/main.tsx` mounts `<App />` into `#pixi-container`.
+
+## Register PixiJS classes with extend
+
+@pixi/react only knows about the PixiJS classes you pass to `extend`. Each one becomes a JSX element with a `pixi` prefix:
+
+```tsx title="src/App.tsx"
+import { extend } from "@pixi/react";
+import { Sprite } from "pixi.js";
+
+extend({ Sprite });
+```
+
+After this, `<pixiSprite>` is available. Add `Container` to the same call to use `<pixiContainer>`, and so on. Using an element you haven't registered throws an error. Registering only what you use keeps the bundle small.
+
+To draw shapes, register `Graphics` and pass a `draw` callback:
+
+```tsx
+import { extend } from "@pixi/react";
+import { Graphics } from "pixi.js";
+import { useCallback } from "react";
+
+extend({ Graphics });
+
+function Box() {
+  const draw = useCallback((graphics: Graphics) => {
+    graphics.clear();
+    graphics.rect(0, 0, 100, 100).fill(0xe91e63);
+  }, []);
+
+  return <pixiGraphics draw={draw} />;
+}
+```
+
+## Create the app with Application
+
+`<Application>` creates the PixiJS `Application` and its canvas. It takes the same options as `app.init()`:
+
+```tsx title="src/App.tsx"
+import { Application } from "@pixi/react";
+
+export default function App() {
+  return (
+    <Application background="#1099bb" resizeTo={window} antialias>
+      <SpinningCube />
+      <BunnySprite />
+    </Application>
+  );
+}
+```
+
+`antialias` smooths the edges of 3D shapes. Children draw in order, so the bunny draws in front of the cube. Components inside `<Application>` can call `useApplication()` to reach the app. The template uses it to keep the bunny centered on the screen.
+
+## Run code every frame with useTick
+
+`useTick` adds a callback to the app's ticker and removes it when the component unmounts:
+
+```tsx title="src/App.tsx"
+import { useApplication, useTick } from "@pixi/react";
+import { Assets, Sprite, Texture } from "pixi.js";
+import { useEffect, useRef, useState } from "react";
+
+const BunnySprite = () => {
+  const { app } = useApplication();
+  const spriteRef = useRef<Sprite>(null);
+  const [texture, setTexture] = useState(Texture.EMPTY);
+
+  useEffect(() => {
+    Assets.load<Texture>("assets/bunny.png").then(setTexture);
+  }, []);
+
+  useTick((ticker) => {
+    const sprite = spriteRef.current;
+    if (!sprite) return;
+
+    sprite.position.set(app.screen.width / 2, app.screen.height / 2);
+    sprite.rotation += 0.1 * ticker.deltaTime;
+  });
+
+  return <pixiSprite ref={spriteRef} texture={texture} anchor={0.5} />;
+};
+```
+
+The bunny moves and rotates by changing the sprite through a ref, not through React state. Setting its position every frame keeps it centered after the window resizes. Per-frame changes stay out of React's render cycle, which keeps them fast. If the callback sets React state, wrap it in `useCallback`, because `useTick` re-adds the callback whenever it changes.
+
+## Draw 3D with View3D
+
+The template also passes `View3D` from [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) to `extend`, which adds `<pixiView3D>`. A `View3D` is a 2D display object that draws a 3D scene, so it goes in JSX like a sprite:
+
+```tsx title="src/App.tsx"
+import {
+  CubeGeometry,
+  DirectionalLight,
+  Material3D,
+  Mesh3D,
+  View3D,
+} from "@pixi/3d";
+import { extend, useTick } from "@pixi/react";
+import { useEffect, useRef } from "react";
+
+extend({ View3D });
+
+const environment = { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 };
+
+const SpinningCube = () => {
+  const viewRef = useRef<View3D>(null);
+  const cubeRef = useRef<Mesh3D>(null);
+
+  useEffect(() => {
+    const view = viewRef.current!;
+    const cube = new Mesh3D({
+      geometry: new CubeGeometry(),
+      material: new Material3D({ baseColor: 0xe72264 }),
+    });
+    const sun = new DirectionalLight({ intensity: 3 });
+
+    sun.position.set(-3, 5, 2);
+    sun.lookAt(cube.position);
+
+    view.root.addChild(cube, sun);
+    view.camera.position.set(0, 1.6, 3);
+    view.camera.lookAt(cube.position);
+    cubeRef.current = cube;
+
+    return () => {
+      cubeRef.current = null;
+      cube.destroy({ geometry: true, material: true });
+      sun.destroy();
+    };
+  }, []);
+
+  useTick((ticker) => {
+    const cube = cubeRef.current;
+    if (!cube) return;
+
+    cube.rotation.y += 0.01 * ticker.deltaTime;
+  });
+
+  return <pixiView3D ref={viewRef} autoResize environment={environment} />;
+};
+```
+
+The 3D scene inside the view isn't JSX. Meshes and lights go under `view.root`, which @pixi/react doesn't manage, so the effect builds them and keeps the cube in a ref for `useTick`. Its cleanup destroys them when the component unmounts, and before a hot reload runs the effect again. `destroy` also takes each one out of the view, and the `geometry` and `material` flags destroy the cube's geometry and material too. `autoResize` makes the view fill the screen. [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) explains the lights and the camera.
+
+In TypeScript, `src/pixi-react.d.ts` adds `pixiView3D` to @pixi/react's element types. Classes from `pixi.js` are typed already, so add a line there only for other classes you pass to `extend`.
+
+## Linting
+
+The React template's oxlint config adds the `react` plugin with three rules: `rules-of-hooks` as an error, and `exhaustive-deps` and `only-export-components` as warnings. See [linting and formatting](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md).
+
+## Learn more
+
+The [@pixi/react documentation](https://react.pixijs.io) covers custom components, TypeScript types for them, and the other hooks.
+
+---
+
+# Extension template
+
+The extension template is a library project for publishing your own PixiJS plugin, such as a filter, a display object or new methods on existing classes. It uses [PixiJS Extension Scripts](https://github.com/pixijs/extension-scripts), a CLI called `xs` that wraps the build, lint, test, docs and release tools in one dev dependency.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-extension -- --template extension-default
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-extension --template extension-default
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-extension --template extension-default
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-extension --template extension-default
+```
+
+The extension template is TypeScript only. It doesn't use oxlint or oxfmt. `xs lint` runs ESLint with the PixiJS config instead.
+
+## Project structure
+
+```text
+my-extension/
+├── examples/
+│   └── index.html
+├── src/
+│   ├── __tests__/
+│   │   └── Rectangle.test.ts
+│   └── index.ts
+├── .gitignore
+├── jest.config.mjs
+├── LICENSE
+├── README.md
+├── package.json
+└── tsconfig.json
+```
+
+The example in `src/index.ts` adds an `expand` method to PixiJS's `Rectangle` and declares it on the global `PixiMixins` namespace, so TypeScript knows about the new method:
+
+```ts title="src/index.ts"
+import { Rectangle } from "pixi.js";
+
+declare global {
+  namespace PixiMixins {
+    interface Rectangle {
+      expand(amount: number): this;
+    }
+  }
+}
+
+Rectangle.prototype.expand = function expand(this: Rectangle, amount: number) {
+  this.x -= amount;
+  this.y -= amount;
+  this.width += amount * 2;
+  this.height += amount * 2;
+
+  return this;
+};
+```
+
+`pixi.js` (`>=8.23.0 <9`) and `@pixi/3d` (`^0.1.0`) are peer dependencies, so your package uses the app's copies instead of shipping its own. Both are dev dependencies too, so the build and the tests have them.
+
+The CLI fills in `name` from the folder name and `author` from your `git config user.name`. Update `description` in `package.json` before you publish.
+
+## Scripts
+
+| Script         | Runs            | What it does                                                                                     |
+| -------------- | --------------- | ------------------------------------------------------------------------------------------------ |
+| `dev`, `start` | `xs serve`      | Rebuilds on change and serves the project on port 8080, opening `examples/`                      |
+| `watch`        | `xs watch`      | Rebuilds on change without a server                                                              |
+| `build`        | `xs build`      | Cleans, lints, type-checks, then bundles into `lib/` and `dist/`                                 |
+| `lint`         | `xs lint`       | Runs ESLint on `src/` and `examples/`                                                            |
+| `format`       | `xs lint --fix` | Runs ESLint and fixes what it can                                                                |
+| `types`        | `xs types`      | Type-checks the project with TypeScript                                                          |
+| `test`         | `xs test`       | Runs the Jest tests in `src/__tests__/` inside Electron, so they have a real browser environment |
+| `docs`         | `xs docs`       | Writes API docs from your JSDoc comments into `docs/`                                            |
+| `release`      | `xs release`    | Bumps the version, tests, builds, deploys docs to GitHub Pages, publishes to npm and pushes tags |
+
+`xs` commands chain with commas, so `"test": "xs types,test"` runs the type check before the tests.
+
+## Build output
+
+`npm run build` writes two sets of files:
+
+- `lib/` holds ES module (`index.mjs`) and CommonJS (`index.js`) builds plus type declarations. These are what bundlers and Node.js use through `main`, `module`, `types` and `exports` in `package.json`.
+- `dist/` holds `extension.mjs`, a single ES module for browsers, set by `extensionConfig` in `package.json`. `examples/index.html` loads it through an import map, with `pixi.js` and `@pixi/3d` from jsDelivr.
+
+PixiJS 3D is only published as ES modules, so there's no bundle for a plain `<script>` tag. `"environments": ["node"]` in `extensionConfig` turns that bundle off.
+
+If your extension doesn't use PixiJS 3D, run `npm uninstall @pixi/3d`, which also removes the peer dependency. Then delete `environments` and add `"bundle": "dist/extension.js"` to `extensionConfig` to build the `<script>` tag bundle again.
+
+Both folders are generated and listed in `.gitignore`. The `files` field in `package.json` limits the npm package to these two folders, plus `package.json`, `README.md` and `LICENSE`.
+
+## Tests on CI
+
+`xs test` runs Jest inside Electron with the config in `jest.config.mjs`. That file is the Extension Scripts default plus a transform for the packages that are only published as ES modules: `earcut`, which PixiJS uses, and `@pixi/3d` and its `meshoptimizer` dependency.
+
+On a Linux CI machine without a display, install `xvfb` and run the tests through it:
+
+```yaml
+- run: sudo apt-get install xvfb
+- run: xvfb-run --auto-servernum npm test
+```
+
+## Publishing
+
+`npm run release` asks which version to bump to, then runs the tests, builds, deploys the docs and examples to the `gh-pages` branch, publishes to npm and pushes the git tags. You need to be logged in to npm (`npm login`) and have a GitHub remote.
+
+The [Extension Scripts README](https://github.com/pixijs/extension-scripts) lists every command and every `extensionConfig` option.
+
+---
+
+# PixiJS 3D
+
+Every template comes with [PixiJS 3D](https://github.com/pixijs/3d), the `@pixi/3d` package. Its `View3D` is a 2D display object that draws a 3D scene into its rectangle, so 3D and 2D share one stage. Each app template draws a lit, spinning cube behind its 2D content to show this.
+
+## How it's set up
+
+- `@pixi/3d` is a dependency next to `pixi.js`. It needs `pixi.js` 8.23.0 or later, which the templates install.
+- Importing `@pixi/3d` registers it with PixiJS. `app.init` then loads the 3D code for the renderer it starts, WebGL or WebGPU. Vite, webpack and the import map keep each in its own file, so the browser downloads only the one it uses. The esbuild template bundles both into `bundle.js`.
+- Import `@pixi/3d` before `app.init` runs. A `View3D` on an app that started earlier draws nothing. That happens when 3D code is in a file that loads later, so the game templates import `@pixi/3d` at the top of `src/main.ts`. Keep that import when you split your game into files that load on demand.
+- The import map template maps `@pixi/3d` and `@pixi/3d/extras` to jsDelivr, next to `pixi.js`.
+- The [extension template](https://pixijs.io/create-pixi/docs/guide/extension.md) lists `@pixi/3d` as a peer dependency, like `pixi.js`.
+
+## The cube
+
+The bundler templates draw the cube in `src/main.ts`, the React template in the `SpinningCube` component in `src/App.tsx`, and the game templates in `src/cube.ts`. This is the bundler version:
+
+```ts title="src/main.ts"
+const view = new View3D({
+  autoResize: true,
+  environment: { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 },
+});
+
+const cube = new Mesh3D({
+  geometry: new CubeGeometry(),
+  material: new Material3D({ baseColor: 0xe72264 }),
+});
+
+const sun = new DirectionalLight({ intensity: 3 });
+
+sun.position.set(-3, 5, 2);
+sun.lookAt(cube.position);
+
+view.root.addChild(cube, sun);
+view.camera.position.set(0, 1.6, 3);
+view.camera.lookAt(cube.position);
+```
+
+- `autoResize` makes the view fill the screen, and keeps it filling the screen when the window resizes. The game templates give the view a fixed `width`, `height` and `anchor` instead, and place it like a sprite. See [the starter game](https://pixijs.io/create-pixi/docs/guide/games/starter.md#3d).
+- `environment` is soft light from every direction: `skyColor` lights surfaces that face up, and `groundColor` lights surfaces that face down.
+- Everything 3D goes under `view.root`, including lights. The view owns its camera.
+- Lights and cameras face along their -Z axis. `lookAt` turns them to face a point.
+- The view is added to the stage before the bunny, so the bunny draws in front of it. A 2D object added after a view always draws over it. The view also catches pointer events anywhere on screen, so put clickable 2D objects in front of it.
+- The camera sits above and in front of the cube, so you see its top as well as its sides.
+- The app's ticker turns the cube every frame.
+
+Every app template passes `antialias: true` to `app.init`, which smooths the edges of 3D shapes. `View3D` has no antialias option of its own.
+
+## Extras
+
+`@pixi/3d/extras` has optional pieces, such as camera controls, particles, toon shading and post-processing effects like bloom. For example, to orbit the camera around the cube when you drag, import `OrbitCamera` and create one after the `view.camera` lines:
+
+```ts
+import { OrbitCamera } from "@pixi/3d/extras";
+
+new OrbitCamera({ view });
+```
+
+`OrbitCamera` reads the view's pointer events. In a game template, change `eventMode` in `src/cube.ts` to `"static"` first. In the React template, keep it in a `const` and call its `destroy()` in the effect's cleanup, or each hot reload adds another controller.
+
+## TypeScript
+
+The app templates' `tsconfig.json` uses the `DOM` library, which in TypeScript 7 leaves out some WebGPU constants, such as `GPUTextureUsage`. If your code uses them, install `@types/web` and use it in place of `DOM` and `DOM.Iterable`, as the [PixiJS 3D README](https://github.com/pixijs/3d#typescript) explains.
+
+## Coding agents
+
+`@pixi/3d` comes with an agent skill in `node_modules/@pixi/3d/skills/pixijs-3d`. It has a complete example for each job, such as loading glTF models, shadows, picking and particles. Point your coding agent at that folder before it writes 3D code.
+
+## Remove it
+
+If your project is 2D only:
+
+1. Delete the cube code and its `@pixi/3d` imports:
+
+   - In a bundler template, the code from `new View3D` to the camera lines in `src/main.ts` or `src/main.js`, `view` in `app.stage.addChild`, and the cube line in the ticker.
+   - In the React template, `SpinningCube` and `<SpinningCube />`, the `environment` constant, `View3D` in `extend`, and `src/pixi-react.d.ts`.
+   - In a game template, `src/cube.ts`, and in `src/scene.ts` the `createSpinningCube` import and the code that adds the cube.
+
+2. In a game template, delete `import "@pixi/3d"` from `src/main.ts`.
+
+3. Run `npm uninstall @pixi/3d`. In the import map template, delete the two `@pixi/3d` entries from `index.html`.
+
+Only code that imports `@pixi/3d` adds it to a build, so steps 1 and 2 are what make the build smaller.
+
+## Learn more
+
+The [PixiJS 3D repository](https://github.com/pixijs/3d) has a [quick start](https://github.com/pixijs/3d/blob/main/src/__docs__/getting-started/quick-start.md), guides for each part, and examples.
+
+---
+
+# Linting and formatting
+
+Every app template comes with [oxlint](https://oxc.rs/docs/guide/usage/linter) for linting and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting. Both come from the [Oxc](https://oxc.rs) project and are written in Rust, so they check a whole template in well under a second. A new project passes both with no changes.
+
+The [extension template](https://pixijs.io/create-pixi/docs/guide/extension.md) is the exception. It lints with ESLint through `xs lint`.
+
+## Scripts
+
+Lint the project:
+
+**npm**
+
+```bash
+npm run lint
+```
+
+**yarn**
+
+```bash
+yarn lint
+```
+
+**pnpm**
+
+```bash
+pnpm run lint
+```
+
+**bun**
+
+```bash
+bun run lint
+```
+
+Format every file in place:
+
+**npm**
+
+```bash
+npm run format
+```
+
+**yarn**
+
+```bash
+yarn format
+```
+
+**pnpm**
+
+```bash
+pnpm run format
+```
+
+**bun**
+
+```bash
+bun run format
+```
+
+`build` runs oxlint first, so a lint error stops the build. Warnings don't.
+
+Two useful variations, shown with npm:
+
+```bash
+npm run lint -- --fix   # fix what oxlint can fix on its own
+npx oxfmt --check       # list unformatted files without changing them, for CI
+```
+
+## Config files
+
+`.oxlintrc.json` turns on the plugins and rules:
+
+```json title=".oxlintrc.json"
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "import/no-duplicates": "error",
+    "typescript/consistent-type-imports": "error"
+  },
+  "ignorePatterns": ["dist"]
+}
+```
+
+- The `correctness` category reports code that is almost certainly a bug, such as unreachable code or a comparison that is always false.
+- `import/no-duplicates` flags two import statements for the same module.
+- `typescript/consistent-type-imports` asks for `import type` when an import is only used as a type, so bundlers can drop it.
+
+The React template adds the `react` plugin with the `rules-of-hooks`, `exhaustive-deps` and `only-export-components` rules.
+
+For more checks, add a category such as `"suspicious": "warn"` or `"perf": "warn"`, or set single rules under `rules`. The [oxlint rules list](https://oxc.rs/docs/guide/usage/linter/rules) shows every rule and its category.
+
+`.oxfmtrc.json` sets the formatter options:
+
+```json title=".oxfmtrc.json"
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "sortImports": true
+}
+```
+
+oxfmt formats code the way Prettier does and accepts Prettier's common options, such as `semi`, `singleQuote` and `tabWidth`. `sortImports` sorts and groups import statements.
+
+The `$schema` lines give you autocompletion in editors that read JSON schemas.
+
+## VS Code
+
+`.vscode/extensions.json` recommends the [Oxc extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode), `oxc.oxc-vscode`. VS Code offers to install it when you open the project. It shows lint problems as you type.
+
+`.vscode/settings.json` makes the extension the formatter for the project's file types, and formats and applies safe lint fixes when you save:
+
+```json title=".vscode/settings.json"
+{
+  "[css][html][javascript][javascriptreact][json][jsonc][markdown][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  }
+}
+```
+
+The formatter is set per language so it also wins over language-specific formatters in your user settings, such as Prettier for `[json]`.
+
+The template's `.gitignore` ignores everything in `.vscode/` except these two files.
+
+## Other editors
+
+oxlint and oxfmt work in any editor with language server support, and there are plugins for editors such as Zed and the JetBrains IDEs. See the [Oxc editor setup guide](https://oxc.rs/docs/guide/usage/linter/editors).
+
+## Using ESLint or Prettier instead
+
+The templates run oxlint in `lint` and at the start of `build`, and oxfmt in `format`. To switch, uninstall both, delete their configs and change those scripts.
+
+---
+
+# TypeScript and JavaScript
+
+Most templates come in TypeScript and JavaScript. Choose at the language prompt, or pick the id directly: JavaScript ids end in `-js`, such as `bundler-vite-js`.
+
+- TypeScript and JavaScript: [Game: Starter, Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md); [Game: Starter, Web, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer); [Game: Starter, Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md); [Game: Starter, Discord Activity, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer); [Bundler: Vite](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite); [Bundler: webpack](https://pixijs.io/create-pixi/docs/guide/bundlers.md#webpack); [Bundler: esbuild](https://pixijs.io/create-pixi/docs/guide/bundlers.md#esbuild); [Framework: React](https://pixijs.io/create-pixi/docs/guide/react.md)
+- TypeScript only: [Extension: Default](https://pixijs.io/create-pixi/docs/guide/extension.md)
+- JavaScript only: [Bundler: Import map](https://pixijs.io/create-pixi/docs/guide/bundlers.md#import-map)
+
+## What changes in JavaScript
+
+The JavaScript versions are generated from the TypeScript ones when create-pixi.js is published, so the code is the same apart from the types. Compared with the TypeScript version, a JavaScript project:
+
+- Has `.js` and `.jsx` files instead of `.ts` and `.tsx`, with type annotations removed.
+- Has no `tsconfig.json`, no `.d.ts` files and no `typescript` dependency.
+- Skips `tsc` in the `build` script, so `build` only lints and bundles.
+- Has no `typescript` plugin or rules in `.oxlintrc.json`.
+
+Everything else matches: the bundler config, the dev port, and the oxfmt setup.
+
+## TypeScript version
+
+The app templates use TypeScript 7 and set `noEmit`, so `tsc` only type-checks. Vite, esbuild and esbuild-loader in webpack strip the types when they bundle, which is why `build` runs `tsc` as a separate step. The extension template uses the TypeScript version that comes with Extension Scripts.
+
+`tsconfig.json` turns on `strict` mode and a few extra checks, including `noUnusedLocals` and `noUnusedParameters`. Unused variables and parameters fail the build. Delete them, or prefix an unused parameter with `_`.
+
+## Adding types to a JavaScript project
+
+You can type-check a JavaScript project without converting it. Install TypeScript, add a `jsconfig.json` or `tsconfig.json` with `"checkJs": true`, and describe types with JSDoc comments:
+
+```js
+/** @param {import("pixi.js").Sprite} sprite */
+function spin(sprite) {
+  sprite.rotation += 0.1;
+}
+```
+
+To move to TypeScript completely, it's usually quicker to create a new project from the TypeScript version of the same template and copy your code across.
+
+---
+
+# CLI reference
+
+```text
+create-pixi [OPTION]... [DIRECTORY]
+```
+
+With no arguments, create-pixi.js asks for everything it needs. Arguments answer prompts up front.
+
+## Arguments
+
+| Argument           | Description                                                                                                                                               |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DIRECTORY`        | The folder to create the project in. Use `.` for the current folder. When it's left out, the CLI asks, with `pixi-project` as the default.                |
+| `-t`, `--template` | The template id. It answers every template prompt. An unknown id shows the template prompts instead.                                                      |
+| `--overwrite`      | Answers the prompt for a folder that isn't empty. `yes` removes the existing files, `ignore` keeps them and writes the template on top, and `no` cancels. |
+| `-h`, `--help`     | Prints usage and the list of template ids.                                                                                                                |
+
+The folder name also becomes the `name` in `package.json`. If it isn't a valid npm package name, the CLI asks for one.
+
+## Prompts
+
+The CLI asks only what the arguments don't answer. [Answer the prompts](https://pixijs.io/create-pixi/docs/guide/installation.md#answer-the-prompts) lists each prompt and when it appears.
+
+## Passing options through a package manager
+
+When you run create-pixi.js through `npm create`, put the options after `--`. Otherwise npm treats them as its own:
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template bundler-vite
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template bundler-vite
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template bundler-vite
+```
+
+To run the CLI without prompts, for example in a script or CI job, pass a folder whose name is a valid package name, the template and, if the folder might not be empty, `--overwrite`:
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite --overwrite yes
+```
+
+The CLI exits with code 1 if it's cancelled or fails, or if `--overwrite` gets a value other than `yes`, `ignore` or `no`.
+
+You can also run the CLI with `npx create-pixi.js`, or install the `create-pixi.js` package globally and run `create-pixi` or `cpa`. Both take the same options without the extra `--`.
+
+## Template ids
+
+| `--template`                     | Template                                                                                                                  | Language   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `starter-web`                    | [Game: Starter, Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md)                                           | TypeScript |
+| `starter-web-js`                 | [Game: Starter, Web](https://pixijs.io/create-pixi/docs/guide/platforms/web.md)                                           | JavaScript |
+| `starter-web-multiplayer`        | [Game: Starter, Web, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer)                  | TypeScript |
+| `starter-web-multiplayer-js`     | [Game: Starter, Web, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/web.md#multiplayer)                  | JavaScript |
+| `starter-discord`                | [Game: Starter, Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md)                          | TypeScript |
+| `starter-discord-js`             | [Game: Starter, Discord Activity](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md)                          | JavaScript |
+| `starter-discord-multiplayer`    | [Game: Starter, Discord Activity, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer) | TypeScript |
+| `starter-discord-multiplayer-js` | [Game: Starter, Discord Activity, multiplayer](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#multiplayer) | JavaScript |
+| `bundler-vite`                   | [Bundler: Vite](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite)                                                | TypeScript |
+| `bundler-vite-js`                | [Bundler: Vite](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite)                                                | JavaScript |
+| `bundler-webpack`                | [Bundler: webpack](https://pixijs.io/create-pixi/docs/guide/bundlers.md#webpack)                                          | TypeScript |
+| `bundler-webpack-js`             | [Bundler: webpack](https://pixijs.io/create-pixi/docs/guide/bundlers.md#webpack)                                          | JavaScript |
+| `bundler-esbuild`                | [Bundler: esbuild](https://pixijs.io/create-pixi/docs/guide/bundlers.md#esbuild)                                          | TypeScript |
+| `bundler-esbuild-js`             | [Bundler: esbuild](https://pixijs.io/create-pixi/docs/guide/bundlers.md#esbuild)                                          | JavaScript |
+| `bundler-import-map`             | [Bundler: Import map](https://pixijs.io/create-pixi/docs/guide/bundlers.md#import-map)                                    | JavaScript |
+| `framework-react`                | [Framework: React](https://pixijs.io/create-pixi/docs/guide/react.md)                                                     | TypeScript |
+| `framework-react-js`             | [Framework: React](https://pixijs.io/create-pixi/docs/guide/react.md)                                                     | JavaScript |
+| `extension-default`              | [Extension: Default](https://pixijs.io/create-pixi/docs/guide/extension.md)                                               | TypeScript |
+
+Game template ids are `<game>-<platform>`, plus `-multiplayer` for the multiplayer version and `-js` for JavaScript. See [game templates](https://pixijs.io/create-pixi/docs/guide/games.md#pick-a-game-and-a-platform).
+
+## What the CLI writes
+
+The CLI copies the template into the folder, renames `_gitignore` to `.gitignore`, and fills in the `name` field of `package.json`. The extension template also gets `author` in `package.json` and `LICENSE`, read from `git config user.name`. With Yarn 2 or newer, the CLI also writes a `.yarnrc.yml` with `nodeLinker: node-modules`, because TypeScript 7's `tsc` can't resolve packages through Plug'n'Play. It doesn't install dependencies or create a git repository. When it finishes, it prints the next commands for the package manager you used.
+
+---
+
+# Troubleshooting
+
+## pnpm fails with ERR_PNPM_DLX_MULTIPLE_BINS
+
+```text
+ERR_PNPM_DLX_MULTIPLE_BINS  Could not determine executable to run. create-pixi.js has multiple binaries: cpa, create-pixi
+```
+
+create-pixi.js 1.4.0 and earlier had two commands, `cpa` and `create-pixi`, and `pnpm create` couldn't tell which one to run. Newer versions have a `create-pixi.js` command, named after the package, which is the one pnpm runs. Ask for the latest version:
+
+```bash
+pnpm create pixi.js@latest
+```
+
+pnpm reuses a package it ran in the last 24 hours. If you still get the error, skip that cache:
+
+```bash
+pnpm --config.dlx-cache-max-age=0 create pixi.js@latest
+```
+
+To run an older version anyway, name the command yourself: `pnpm --package=create-pixi.js dlx create-pixi`.
+
+## yarn create fails with yarn 1
+
+`yarn create pixi.js` in yarn 1 installs `create-pixi.js` globally and runs a command with the same name. Versions 1.4.0 and earlier didn't have a `create-pixi.js` command, so yarn couldn't find anything to run. Newer versions do.
+
+If you have an old version installed globally, update it, then run the create command again:
+
+```bash
+yarn global upgrade create-pixi.js
+yarn create pixi.js
+```
+
+## Node.js version errors
+
+The templates need Node.js 22.12 or newer, because Vite, oxlint and oxfmt do. The webpack template needs 22.15 or newer for webpack-dev-server 6. On an older version, `npm install` prints `npm warn EBADENGINE Unsupported engine`, and the Vite templates stop with a message that names the Node.js versions Vite supports.
+
+Check your version:
+
+```bash
+node --version
+```
+
+Install the current LTS release from [nodejs.org](https://nodejs.org/) or through a version manager such as [fnm](https://github.com/Schniz/fnm) or [nvm](https://github.com/nvm-sh/nvm). Then delete `node_modules` and install again, because some packages download a build for the Node.js version that installed them.
+
+## npm warns about install scripts not covered by allowScripts
+
+```text
+npm warn allow-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
+```
+
+npm 11.16 and newer list dependencies whose install scripts aren't covered by `allowScripts` in `package.json`. The templates that use esbuild already allow its script, so you'll usually see this after adding a package such as `sharp`. A new multiplayer project lists `msgpackr-extract`, an optional native add-on that makes Colyseus encode and decode messages faster in Node.js. The scripts still run, and the project works. To stop the warning, approve the packages you trust, which records them in `package.json`:
+
+```bash
+npm approve-scripts sharp
+```
+
+## npm install fails with spawn git
+
+```text
+npm error code ENOENT
+npm error syscall spawn git
+npm error enoent An unknown git error occurred
+```
+
+This happens in a new multiplayer project on a machine without Git. Colyseus lists `@colyseus/uwebsockets-transport` as a peer dependency, so npm installs it too, along with `uWebSockets.js`, which comes from GitHub instead of the npm registry. The template doesn't use it, but npm needs [Git](https://git-scm.com/downloads) to look up that version the first time. Install Git, then run `npm install` again. Once the project has a `package-lock.json`, `npm ci` works without Git.
+
+## Importing GLSL shader files
+
+You don't need a plugin to load shaders in the game, Vite and React templates. Add `?raw` to the import and Vite gives you the file contents as a string:
+
+```ts
+import { Filter, GlProgram } from "pixi.js";
+
+import fragment from "./shaders/wave.frag?raw";
+import vertex from "./shaders/wave.vert?raw";
+
+const filter = new Filter({
+  glProgram: new GlProgram({ vertex, fragment }),
+});
+```
+
+TypeScript already knows the type of `?raw` imports through `src/vite-env.d.ts`. See [importing an asset as a string](https://vite.dev/guide/assets#importing-asset-as-string) in the Vite docs. For shader `#include` support, the [vite-plugin-glsl](https://github.com/UstymUkhman/vite-plugin-glsl) plugin is an option.
+
+## A View3D draws nothing
+
+The app started before `@pixi/3d` was imported, so its renderer has no 3D code. This happens when 3D code is in a file that loads after `app.init`. Import `@pixi/3d` at the top of your entry file, as [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md#how-its-set-up) shows. With an import map, load `pixi.js` only through the map, not a `<script>` tag.
+
+## The dev server port is already in use
+
+Something else is using port 8080. Stop it, or [change the dev server port](https://pixijs.io/create-pixi/docs/guide/bundlers.md#change-the-dev-server-port).
+
+## Discord Activity problems
+
+The Discord guide has its own [troubleshooting](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#troubleshooting) section, for an Activity that stays blank, sign-in that fails, and an app missing from the App Launcher.
+
+## Something else
+
+Search the [issues on GitHub](https://github.com/pixijs/create-pixi/issues), or ask in the [PixiJS Discord](https://discord.gg/CPTjeb28nH).
+
+---
+
+# Contributing
+
+create-pixi.js lives at [github.com/pixijs/create-pixi](https://github.com/pixijs/create-pixi). Bug reports, template fixes and docs changes are all welcome.
+
+## Set up the repository
+
+```bash
+git clone https://github.com/pixijs/create-pixi.git
+cd create-pixi
+npm install
+npm run build
+npm test
+```
+
+You need Node.js 22.18 or newer to run the TypeScript build scripts. `npm run build` builds the CLI and generates every template into `dist/templates/`. Run the built CLI with `npm start`.
+
+## How templates are made
+
+The templates aren't stored as finished projects. Each one is put together from shared layers when the package is built, so a file that several templates use lives in one place. `templates/manifest.ts` lists every template and its layers, and `templates/package.json` holds every dependency version.
+
+Game templates aren't listed one by one. The manifest lists games, in `templates/layers/games/`, and platforms, in `templates/layers/platforms/`, and puts every game on every platform, with a multiplayer version when both the game and the platform have one.
+
+The CLI prompts, its `--help` output and the template lists on this site all read from `templates/manifest.ts`.
+
+[templates/README.md](https://github.com/pixijs/create-pixi/blob/main/templates/README.md) explains how layers combine, how the JavaScript versions are generated, and how to add a template, a game or a platform.
+
+## Try a template while you edit it
+
+```bash
+npm run play -- bundler-vite
+```
+
+This generates the template into `playground/bundler-vite`, installs its dependencies, starts its dev server, and regenerates the template when files in `templates/layers` change.
+
+To check a template the way CI does, scaffold it with the built CLI, install, lint, check formatting and build:
+
+```bash
+npm run verify -- bundler-vite framework-react-js
+```
+
+## Work on these docs
+
+The site is in `docs/` and uses [Docusaurus](https://docusaurus.io). From the repository root:
+
+```bash
+npm run start:docs
+```
+
+Pages are in `docs/docs/guide/`. The [docs README](https://github.com/pixijs/create-pixi/blob/main/docs/README.md) has the build and deploy commands.

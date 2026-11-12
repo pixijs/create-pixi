@@ -1,0 +1,204 @@
+# Starter game
+
+The starter game is a glowing bunny that jumps when you press a button, in front of a spinning 3D cube. It's small on purpose: one scene that shows how GSAP, PixiJS UI, PixiJS Sound, PixiJS Filters and PixiJS 3D work together, ready to replace with your own game. It runs on every platform, and it has a [multiplayer version](#multiplayer).
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web
+```
+
+Use `starter-discord` to run it [inside Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md). [Game templates](https://pixijs.io/create-pixi/docs/guide/games.md) explains what every game template shares, such as `src/main.ts` and `src/platform.ts`.
+
+The game is three files and its assets:
+
+- `src/assets.ts` lists the files to load before the game starts.
+- `src/scene.ts` builds what's on screen.
+- `src/cube.ts` draws the spinning cube with [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md).
+- `public/assets/button.png` and `public/assets/sounds/sfx-press.wav` are the button and its sound. `public/assets/bunny.png` is the same bunny the bundler templates use.
+
+## The assets
+
+```ts title="src/assets.ts"
+/**
+ * The files in public/assets that load before the game starts. Each alias is
+ * the name the rest of the code uses for its file.
+ */
+export const assets = [
+  { alias: "bunny", src: "assets/bunny.png" },
+  { alias: "button", src: "assets/button.png" },
+  { alias: "sfx-press", src: "assets/sounds/sfx-press.wav" },
+];
+```
+
+`src/main.ts` loads this list before it creates the scene, and passes the progress to the platform. Add your own files to `public/assets/` and to this list. The alias is the name the rest of the code uses for a file, as in `Sprite.from("bunny")`, `defaultView: "button"` and `sound.play("sfx-press")`. See [static assets](https://pixijs.io/create-pixi/docs/guide/bundlers.md#static-assets) for how paths work.
+
+## The scene
+
+`src/scene.ts` exports `createScene(app)`, which returns a `Container` holding everything on screen. Each library does one job in it.
+
+### Filters
+
+The bunny has a glow from PixiJS Filters:
+
+```ts title="src/scene.ts"
+const glow = new GlowFilter({ distance: 20, outerStrength: 1.5 });
+
+bunny.filters = [glow];
+```
+
+`filters` takes an array, so you can stack effects. The [PixiJS Filters demo](https://pixijs.io/filters/examples/) lets you try every filter and its options.
+
+### Animation
+
+GSAP can tween any number on any object, not only positions. The glow pulses by tweening the filter's `outerStrength` back and forth forever:
+
+```ts title="src/scene.ts"
+gsap.to(glow, {
+  outerStrength: 5,
+  duration: 1,
+  repeat: -1,
+  yoyo: true,
+  ease: "sine.inOut",
+});
+```
+
+The jump is a GSAP timeline, which plays its steps one after another. The bunny rises and spins, then bounces back down:
+
+```ts title="src/scene.ts"
+function jump(bunny: Sprite) {
+  if (gsap.isTweening(bunny)) return;
+
+  gsap
+    .timeline()
+    .to(bunny, {
+      y: -JUMP_HEIGHT,
+      rotation: Math.PI * 2,
+      duration: 0.4,
+      ease: "power2.out",
+    })
+    .to(bunny, { y: 0, duration: 0.6, ease: "bounce.out" })
+    .set(bunny, { rotation: 0 });
+}
+```
+
+`JUMP_HEIGHT` is 120. `gsap.isTweening` ignores presses while a jump is playing. GSAP runs on its own timer, not the PixiJS ticker. Use `app.ticker` for code that has to run every frame, such as movement or collision checks.
+
+### Button and sound
+
+The Jump button is a `FancyButton` from PixiJS UI. It uses the `button` texture from `src/assets.ts`, and scales up on hover and down on press:
+
+```ts title="src/scene.ts"
+const button = new FancyButton({
+  defaultView: "button",
+  text: new Text({
+    text: "Jump",
+    style: { fill: 0x4a4a4a, fontSize: 44, fontWeight: "bold" },
+  }),
+  textOffset: { y: -12 },
+  anchor: 0.5,
+  scale: 0.7,
+  animations: {
+    hover: { props: { scale: { x: 1.05, y: 1.05 } }, duration: 100 },
+    pressed: { props: { scale: { x: 0.95, y: 0.95 } }, duration: 100 },
+  },
+});
+
+button.onPress.connect(() => {
+  sound.play("sfx-press");
+  jump(bunny);
+});
+```
+
+`onPress` fires for mouse, touch and pen. `sound.play` from PixiJS Sound plays the sound loaded with the `sfx-press` alias. To loop music, add it to `src/assets.ts` like the other files and pass options:
+
+```ts
+sound.play("music", { loop: true, volume: 0.5 });
+```
+
+Browsers don't let a page play audio until the player clicks, taps or presses a key. PixiJS Sound sets up audio when it's imported, so Chrome logs "The AudioContext was not allowed to start" when the page loads. You can ignore it. Audio starts with the player's first press, which is why the starter only plays sound from the button.
+
+PixiJS UI also has sliders, checkboxes, radio groups, progress bars, text inputs, scroll boxes, lists and dialogs. Its [storybook](https://pixijs.io/ui/storybook/) shows each one with live options.
+
+### 3D
+
+`createSpinningCube(app, size)` in `src/cube.ts` returns a PixiJS 3D `View3D`, a 2D display object that draws a 3D scene. The scene adds it at index 0, behind the bunny and the button. It adds it after measuring them, so the empty space around the cube doesn't change the layout:
+
+```ts title="src/scene.ts"
+scene.addChildAt(createSpinningCube(app, 300), 0);
+```
+
+The view is a square 300 pixels wide with its anchor in the middle, like a sprite with `anchor` set to 0.5, so it sits centered behind the bunny and scales with the rest of the scene. Inside it, a sun and the view's soft `environment` light shine on the cube, and the app's ticker turns it. [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) explains each part.
+
+### Layout
+
+`createScene` positions the bunny and the button around the container's origin. It then measures them, adds room above the bunny for its jump, and sets the container's `pivot` to the middle of that area. Whenever the renderer resizes, the container moves to the middle of the screen and shrinks if the screen is too small for it:
+
+```ts title="src/scene.ts"
+const bounds = scene.getLocalBounds().clone();
+
+// Leave room above the bunny for its jump
+bounds.minY -= JUMP_HEIGHT;
+scene.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+
+// Center the scene, and shrink it to fit small screens, with a margin
+const fit = (width: number, height: number) => {
+  scene.scale.set(
+    Math.min(1, width / (bounds.width + 80), height / (bounds.height + 80)),
+  );
+  scene.position.set(width / 2, height / 2);
+};
+
+fit(app.screen.width, app.screen.height);
+app.renderer.on("resize", fit);
+```
+
+The scale stops at 1, so the scene keeps its size on large screens, and the button stays on screen on a phone held sideways. `app.screen` is the visible area in CSS pixels. Place your own content relative to its width and height, and update it in the same `resize` handler.
+
+## Multiplayer
+
+In the multiplayer version, everyone who opens the game gets a bunny on a shared floor. Click or tap the floor to walk there, and press Jump to make your bunny jump on every player's screen.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-game -- --template starter-web-multiplayer
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-game --template starter-web-multiplayer
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-game --template starter-web-multiplayer
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-game --template starter-web-multiplayer
+```
+
+It keeps `src/assets.ts`, replaces `src/scene.ts` with a scene that draws a bunny for each player, and adds a [Colyseus](https://colyseus.io) game server in `server/`. [Multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) walks through the server and the scene. On Discord, use `starter-discord-multiplayer`, and each player's Discord name shows above their bunny.

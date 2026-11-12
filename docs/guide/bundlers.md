@@ -1,0 +1,233 @@
+# Bundler templates
+
+The bundler templates are the smallest starting point: a PixiJS `Application`, a spinning bunny in front of a spinning [3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) cube, and a build setup. All four run the same code. They differ in how that code reaches the browser.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template bundler-vite
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template bundler-vite
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template bundler-vite
+```
+
+Swap `bundler-vite` for `bundler-webpack`, `bundler-esbuild` or `bundler-import-map`, and add `-js` for the JavaScript version of the first three.
+
+## Project structure
+
+This is the Vite template in TypeScript:
+
+```text
+my-app/
+├── .vscode/
+│   ├── extensions.json
+│   └── settings.json
+├── public/
+│   ├── assets/
+│   │   └── bunny.png
+│   ├── favicon.png
+│   └── style.css
+├── src/
+│   ├── main.ts
+│   └── vite-env.d.ts
+├── .gitignore
+├── .oxfmtrc.json
+├── .oxlintrc.json
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+The other templates change a few files:
+
+- webpack has `webpack.config.mjs` in place of `vite.config.ts` and `src/vite-env.d.ts`.
+- esbuild has `scripts/dev.mjs` and `scripts/build.mjs`, and keeps `index.html` in `public/`.
+- Import map has no bundler config and no TypeScript. Its code is in `src/main.js`, and `index.html` holds the import map.
+
+`index.html` has a `#pixi-container` element inside `#app`, and `public/style.css` makes `#app` fill the window. `src/main.ts` creates the app, a [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) view with a lit cube, and the bunny:
+
+```ts title="src/main.ts"
+import {
+  CubeGeometry,
+  DirectionalLight,
+  Material3D,
+  Mesh3D,
+  View3D,
+} from "@pixi/3d";
+import { Application, Assets, Sprite } from "pixi.js";
+
+const app = new Application();
+
+await app.init({ background: "#1099bb", resizeTo: window, antialias: true });
+document.getElementById("pixi-container")!.appendChild(app.canvas);
+
+// A View3D draws a 3D scene. autoResize makes it fill the screen.
+const view = new View3D({
+  autoResize: true,
+  // Soft light from the sky above and the ground below
+  environment: { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 },
+});
+
+const cube = new Mesh3D({
+  geometry: new CubeGeometry(),
+  material: new Material3D({ baseColor: 0xe72264 }),
+});
+
+// A directional light works like the sun: only its direction matters.
+// This one shines down on the cube from the upper left.
+const sun = new DirectionalLight({ intensity: 3 });
+
+sun.position.set(-3, 5, 2);
+sun.lookAt(cube.position);
+
+view.root.addChild(cube, sun);
+view.camera.position.set(0, 1.6, 3);
+view.camera.lookAt(cube.position);
+
+const texture = await Assets.load("assets/bunny.png");
+const bunny = new Sprite(texture);
+
+bunny.anchor.set(0.5);
+
+// Center the bunny, and keep it centered when the window resizes
+bunny.position.set(app.screen.width / 2, app.screen.height / 2);
+app.renderer.on("resize", (width, height) => {
+  bunny.position.set(width / 2, height / 2);
+});
+
+// The bunny is added after the view, so it draws in front of the cube
+app.stage.addChild(view, bunny);
+
+// deltaTime keeps the speed the same at any frame rate
+app.ticker.add((time) => {
+  cube.rotation.y += 0.01 * time.deltaTime;
+  bunny.rotation += 0.1 * time.deltaTime;
+});
+```
+
+## Scripts
+
+| Script    | Vite           | webpack                            | esbuild                  | Import map              |
+| --------- | -------------- | ---------------------------------- | ------------------------ | ----------------------- |
+| `dev`     | `vite`         | `webpack serve --mode=development` | `node scripts/dev.mjs`   | `http-server . -o -c-1` |
+| `build`   | `vite build`   | `webpack --mode=production`        | `node scripts/build.mjs` | none                    |
+| `preview` | `vite preview` | `webpack serve --mode=production`  | none                     | none                    |
+
+`start` runs `dev`. `lint` runs oxlint and `format` runs oxfmt, as described in [linting and formatting](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md).
+
+In TypeScript templates, `build` first runs `oxlint`, then `tsc` to type-check, then the bundler. A lint error or a type error stops the build. JavaScript templates skip the `tsc` step. Every build writes to `dist/`.
+
+## Static assets
+
+Put images, sounds, fonts and other files in `public/`. The dev server serves them next to `index.html`, and the build copies them into `dist/` unchanged. `public/assets/bunny.png` loads like this:
+
+```ts
+const texture = await Assets.load("assets/bunny.png");
+```
+
+The import map template serves the whole project folder, so the same file is at `./public/assets/bunny.png`.
+
+Code in the templates loads files with paths that don't start with `/`, and the Vite templates set `base: "./"`, so a build works from any folder, such as a GitHub Pages project site at `/my-app/`. In your own code, a path that starts with `/` resolves from the domain root.
+
+## Change the dev server port
+
+Every template uses port 8080.
+
+| Template   | Where the port is set                                     | One-off override             |
+| ---------- | --------------------------------------------------------- | ---------------------------- |
+| Vite       | `server.port` in `vite.config.ts`                         | `npm run dev -- --port 3000` |
+| webpack    | `devServer.port` in `webpack.config.mjs`                  | `npm run dev -- --port 3000` |
+| esbuild    | `port` in the `context.serve()` call in `scripts/dev.mjs` | none                         |
+| Import map | add `-p 3000` to the `dev` script in `package.json`       | `npm run dev -- -p 3000`     |
+
+With yarn, pnpm and bun, leave out the `--`, for example `pnpm dev --port 3000`.
+
+In the [multiplayer](https://pixijs.io/create-pixi/docs/guide/multiplayer.md) game templates, change `const port` in `vite.config.ts`. It sets the dev server port and the production server's port. The single-player [Discord](https://pixijs.io/create-pixi/docs/guide/platforms/discord.md#deploy) template's production server listens on the `PORT` environment variable instead, or 8080 without it.
+
+## Vite
+
+[Vite](https://vite.dev) serves your source files directly in development, so the dev server starts at once and the page updates when you save. It's the recommended template.
+
+```ts title="vite.config.ts"
+import { defineConfig } from "vite";
+
+// https://vite.dev/config/
+export default defineConfig({
+  // Relative URLs so the build works from any folder, e.g. GitHub Pages
+  base: "./",
+  server: {
+    port: 8080,
+    open: true,
+  },
+});
+```
+
+`base: "./"` makes the built files reference each other with relative URLs. `open: true` opens the browser when the dev server starts. After `npm run build`, run `npm run preview` to serve `dist/` locally and check the production build.
+
+Vite can import any file as a string with the `?raw` suffix, which is how you load GLSL shaders. See [importing shader files](https://pixijs.io/create-pixi/docs/guide/troubleshooting.md#importing-glsl-shader-files).
+
+## webpack
+
+The webpack template uses [webpack](https://webpack.js.org) 5 with [esbuild-loader](https://github.com/privatenumber/esbuild-loader) to compile TypeScript and modern JavaScript. esbuild-loader doesn't type-check, which is why `build` runs `tsc` first.
+
+`webpack.config.mjs` sets up:
+
+- `copy-webpack-plugin` to copy `public/` into `dist/`.
+- `html-webpack-plugin` to write `dist/index.html` from `index.html` with the bundle script added.
+- A content hash in the bundle file name, `[name].[contenthash].js`, so browsers fetch new files after each release.
+- Source maps in development only.
+- esbuild minification in production.
+
+`npm run preview` serves a production build from memory, so you can check it without a separate server.
+
+> **Production builds remove console calls**
+>
+> The production minifier is configured with `drop: ["console"]`, so the build removes every `console` call from `dist/`. Remove that option from the `EsbuildPlugin` in `webpack.config.mjs` if you need logs in production.
+
+## esbuild
+
+The esbuild template uses [esbuild](https://esbuild.github.io)'s own API in two short scripts, with no plugins.
+
+- `scripts/dev.mjs` bundles `src/main.ts` in memory, serves `public/` on port 8080, and reloads the page after each rebuild using esbuild's live reload event. Changes to files in `public/` need a manual refresh.
+- `scripts/build.mjs` deletes `dist/`, copies `public/` into it, and writes a minified `dist/bundle.js`.
+
+Both scripts output an ES module, so top-level `await` works. `public/index.html` loads `bundle.js`. The dev server doesn't open a browser, so go to <http://localhost:8080> yourself.
+
+## Import map
+
+The import map template has no bundler and no build step. `index.html` tells the browser where to find `pixi.js` and PixiJS 3D:
+
+```html title="index.html"
+<script type="importmap">
+  {
+    "imports": {
+      "pixi.js": "https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.mjs",
+      "@pixi/3d": "https://cdn.jsdelivr.net/npm/@pixi/3d@0.1.0/dist/pixijs-3d.min.mjs",
+      "@pixi/3d/extras": "https://cdn.jsdelivr.net/npm/@pixi/3d@0.1.0/dist/pixijs-3d-extras.min.mjs"
+    }
+  }
+</script>
+<script type="module" src="./src/main.js"></script>
+```
+
+`pixi.js@8` loads the newest 8.x release each time. Pin an exact version, such as `pixi.js@8.23.0`, before you ship so an update can't change your project without warning. `@pixi/3d` is pinned already. Its main file loads its WebGL or WebGPU code from the same folder, and with a version range, a cached main file could load that code from a newer release. Keep both `@pixi/3d` entries on the same version, and both minified or both not. The extras file imports the engine file next to it, so a mismatch loads a second copy of PixiJS 3D.
+
+`npm run dev` runs [http-server](https://github.com/http-party/http-server) on the project folder. `-o` opens the browser and `-c-1` turns off caching. It doesn't reload the page for you, so refresh after you save.
+
+To publish, upload `index.html`, `src/` and `public/`. The browser doesn't load the `pixi.js` and `@pixi/3d` packages from `node_modules`. They're in `package.json` so your editor has their types for autocompletion.

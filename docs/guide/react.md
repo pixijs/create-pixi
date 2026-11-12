@@ -1,0 +1,203 @@
+# React template
+
+The React template renders PixiJS from React components with [@pixi/react](https://react.pixijs.io). It's built on the [Vite template](https://pixijs.io/create-pixi/docs/guide/bundlers.md#vite), so the scripts, the `public/` folder and the dev port all work the same way.
+
+**npm**
+
+```bash
+npm create pixi.js@latest my-app -- --template framework-react
+```
+
+**yarn**
+
+```bash
+yarn create pixi.js my-app --template framework-react
+```
+
+**pnpm**
+
+```bash
+pnpm create pixi.js my-app --template framework-react
+```
+
+**bun**
+
+```bash
+bun create pixi.js my-app --template framework-react
+```
+
+Use `framework-react-js` for JavaScript.
+
+## Project structure
+
+```text
+my-app/
+├── public/
+│   ├── assets/
+│   │   └── bunny.png
+│   ├── favicon.png
+│   └── style.css
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── pixi-react.d.ts
+│   └── vite-env.d.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+Config files for oxlint, oxfmt, VS Code and git sit at the root as in every template. `vite.config.ts` adds `@vitejs/plugin-react`, and `src/main.tsx` mounts `<App />` into `#pixi-container`.
+
+## Register PixiJS classes with extend
+
+@pixi/react only knows about the PixiJS classes you pass to `extend`. Each one becomes a JSX element with a `pixi` prefix:
+
+```tsx title="src/App.tsx"
+import { extend } from "@pixi/react";
+import { Sprite } from "pixi.js";
+
+extend({ Sprite });
+```
+
+After this, `<pixiSprite>` is available. Add `Container` to the same call to use `<pixiContainer>`, and so on. Using an element you haven't registered throws an error. Registering only what you use keeps the bundle small.
+
+To draw shapes, register `Graphics` and pass a `draw` callback:
+
+```tsx
+import { extend } from "@pixi/react";
+import { Graphics } from "pixi.js";
+import { useCallback } from "react";
+
+extend({ Graphics });
+
+function Box() {
+  const draw = useCallback((graphics: Graphics) => {
+    graphics.clear();
+    graphics.rect(0, 0, 100, 100).fill(0xe91e63);
+  }, []);
+
+  return <pixiGraphics draw={draw} />;
+}
+```
+
+## Create the app with Application
+
+`<Application>` creates the PixiJS `Application` and its canvas. It takes the same options as `app.init()`:
+
+```tsx title="src/App.tsx"
+import { Application } from "@pixi/react";
+
+export default function App() {
+  return (
+    <Application background="#1099bb" resizeTo={window} antialias>
+      <SpinningCube />
+      <BunnySprite />
+    </Application>
+  );
+}
+```
+
+`antialias` smooths the edges of 3D shapes. Children draw in order, so the bunny draws in front of the cube. Components inside `<Application>` can call `useApplication()` to reach the app. The template uses it to keep the bunny centered on the screen.
+
+## Run code every frame with useTick
+
+`useTick` adds a callback to the app's ticker and removes it when the component unmounts:
+
+```tsx title="src/App.tsx"
+import { useApplication, useTick } from "@pixi/react";
+import { Assets, Sprite, Texture } from "pixi.js";
+import { useEffect, useRef, useState } from "react";
+
+const BunnySprite = () => {
+  const { app } = useApplication();
+  const spriteRef = useRef<Sprite>(null);
+  const [texture, setTexture] = useState(Texture.EMPTY);
+
+  useEffect(() => {
+    Assets.load<Texture>("assets/bunny.png").then(setTexture);
+  }, []);
+
+  useTick((ticker) => {
+    const sprite = spriteRef.current;
+    if (!sprite) return;
+
+    sprite.position.set(app.screen.width / 2, app.screen.height / 2);
+    sprite.rotation += 0.1 * ticker.deltaTime;
+  });
+
+  return <pixiSprite ref={spriteRef} texture={texture} anchor={0.5} />;
+};
+```
+
+The bunny moves and rotates by changing the sprite through a ref, not through React state. Setting its position every frame keeps it centered after the window resizes. Per-frame changes stay out of React's render cycle, which keeps them fast. If the callback sets React state, wrap it in `useCallback`, because `useTick` re-adds the callback whenever it changes.
+
+## Draw 3D with View3D
+
+The template also passes `View3D` from [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) to `extend`, which adds `<pixiView3D>`. A `View3D` is a 2D display object that draws a 3D scene, so it goes in JSX like a sprite:
+
+```tsx title="src/App.tsx"
+import {
+  CubeGeometry,
+  DirectionalLight,
+  Material3D,
+  Mesh3D,
+  View3D,
+} from "@pixi/3d";
+import { extend, useTick } from "@pixi/react";
+import { useEffect, useRef } from "react";
+
+extend({ View3D });
+
+const environment = { skyColor: 0xc9d6ff, groundColor: 0x3a2f45 };
+
+const SpinningCube = () => {
+  const viewRef = useRef<View3D>(null);
+  const cubeRef = useRef<Mesh3D>(null);
+
+  useEffect(() => {
+    const view = viewRef.current!;
+    const cube = new Mesh3D({
+      geometry: new CubeGeometry(),
+      material: new Material3D({ baseColor: 0xe72264 }),
+    });
+    const sun = new DirectionalLight({ intensity: 3 });
+
+    sun.position.set(-3, 5, 2);
+    sun.lookAt(cube.position);
+
+    view.root.addChild(cube, sun);
+    view.camera.position.set(0, 1.6, 3);
+    view.camera.lookAt(cube.position);
+    cubeRef.current = cube;
+
+    return () => {
+      cubeRef.current = null;
+      cube.destroy({ geometry: true, material: true });
+      sun.destroy();
+    };
+  }, []);
+
+  useTick((ticker) => {
+    const cube = cubeRef.current;
+    if (!cube) return;
+
+    cube.rotation.y += 0.01 * ticker.deltaTime;
+  });
+
+  return <pixiView3D ref={viewRef} autoResize environment={environment} />;
+};
+```
+
+The 3D scene inside the view isn't JSX. Meshes and lights go under `view.root`, which @pixi/react doesn't manage, so the effect builds them and keeps the cube in a ref for `useTick`. Its cleanup destroys them when the component unmounts, and before a hot reload runs the effect again. `destroy` also takes each one out of the view, and the `geometry` and `material` flags destroy the cube's geometry and material too. `autoResize` makes the view fill the screen. [PixiJS 3D](https://pixijs.io/create-pixi/docs/guide/pixijs-3d.md) explains the lights and the camera.
+
+In TypeScript, `src/pixi-react.d.ts` adds `pixiView3D` to @pixi/react's element types. Classes from `pixi.js` are typed already, so add a line there only for other classes you pass to `extend`.
+
+## Linting
+
+The React template's oxlint config adds the `react` plugin with three rules: `rules-of-hooks` as an error, and `exhaustive-deps` and `only-export-components` as warnings. See [linting and formatting](https://pixijs.io/create-pixi/docs/guide/linting-and-formatting.md).
+
+## Learn more
+
+The [@pixi/react documentation](https://react.pixijs.io) covers custom components, TypeScript types for them, and the other hooks.
