@@ -1,0 +1,54 @@
+---
+title: CLI reference
+description: Every create-pixi.js option and template id.
+---
+
+import { CreateCommand } from "@site/src/components/PackageManagerTabs";
+import { TemplateIds } from "@site/src/components/TemplateTables";
+
+```text
+create-pixi [OPTION]... [DIRECTORY]
+```
+
+With no arguments, create-pixi.js asks for everything it needs. Arguments answer prompts up front.
+
+## Arguments
+
+| Argument           | Description                                                                                                                                               |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DIRECTORY`        | The folder to create the project in. Use `.` for the current folder. When it's left out, the CLI asks, with `pixi-project` as the default.                |
+| `-t`, `--template` | The template id. It answers every template prompt. An unknown id shows the template prompts instead.                                                      |
+| `--overwrite`      | Answers the prompt for a folder that isn't empty. `yes` removes the existing files, `ignore` keeps them and writes the template on top, and `no` cancels. |
+| `-h`, `--help`     | Prints usage and the list of template ids.                                                                                                                |
+
+The folder name also becomes the `name` in `package.json`. If it isn't a valid npm package name, the CLI asks for one.
+
+## Prompts
+
+The CLI asks only what the arguments don't answer. [Answer the prompts](./installation.mdx#answer-the-prompts) lists each prompt and when it appears.
+
+## Passing options through a package manager
+
+When you run create-pixi.js through `npm create`, put the options after `--`. Otherwise npm treats them as its own:
+
+<CreateCommand dir="my-app" template="bundler-vite" />
+
+To run the CLI without prompts, for example in a script or CI job, pass a folder whose name is a valid package name, the template and, if the folder might not be empty, `--overwrite`:
+
+```bash
+npm create pixi.js@latest my-app -- --template bundler-vite --overwrite yes
+```
+
+The CLI exits with code 1 if it's cancelled or fails, or if `--overwrite` gets a value other than `yes`, `ignore` or `no`.
+
+You can also run the CLI with `npx create-pixi.js`, or install the `create-pixi.js` package globally and run `create-pixi` or `cpa`. Both take the same options without the extra `--`.
+
+## Template ids
+
+<TemplateIds />
+
+Game template ids are `<game>-<platform>`, plus `-multiplayer` for the multiplayer version and `-js` for JavaScript. See [game templates](./games/index.mdx#pick-a-game-and-a-platform).
+
+## What the CLI writes
+
+The CLI copies the template into the folder, renames `_gitignore` to `.gitignore`, and fills in the `name` field of `package.json`. The extension template also gets `author` in `package.json` and `LICENSE`, read from `git config user.name`. With Yarn 2 or newer, the CLI also writes a `.yarnrc.yml` with `nodeLinker: node-modules`, because TypeScript 7's `tsc` can't resolve packages through Plug'n'Play. It doesn't install dependencies or create a git repository. When it finishes, it prints the next commands for the package manager you used.

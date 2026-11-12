@@ -1,0 +1,144 @@
+/* pixijs.com's outline Button (src/components/ui/Button) */
+.button {
+  --c: var(--px-ink);
+  --text: var(--px-ink);
+  --text-hover: var(--px-bg);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  max-width: 100%;
+  border-radius: var(--px-r-pill);
+  color: var(--text);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--px-focus);
+  outline-offset: 4px;
+}
+
+.body {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 30px;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--c);
+  color: inherit;
+  font: 600 15px/1 var(--px-font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    transform 350ms var(--px-ease),
+    color 350ms var(--px-ease);
+}
+
+.label {
+  display: inline-block;
+}
+
+.arrow {
+  transition: transform 350ms var(--px-ease-spring);
+}
+
+.body::before,
+.body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* The fill, which sweeps in from the left on hover */
+.body::before {
+  z-index: -1;
+  background: var(--c);
+  clip-path: inset(0 100% 0 0 round 999px);
+  transition: clip-path 350ms var(--px-ease);
+}
+
+/* The offset shadow, which the body settles into on hover and press */
+.body::after {
+  z-index: -2;
+  border: 2px solid transparent;
+  border-right-color: var(--c);
+  border-bottom-color: var(--c);
+  transform: translate(5px, 5px);
+  transition: transform 350ms var(--px-ease);
+}
+
+@media (hover: hover) {
+  .button:hover .body {
+    color: var(--text-hover);
+  }
+
+  .button:hover .body::before {
+    clip-path: inset(0 0 0 0 round 999px);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:hover .body {
+    transform: translate(2px, 2px);
+  }
+
+  .button:hover .body::after {
+    transform: translate(3px, 3px);
+  }
+
+  .button:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+}
+
+.button:active .body {
+  transform: translate(5px, 5px) scale(0.98);
+}
+
+.button:active .body::after {
+  transform: translate(0, 0);
+}
+
+/* The shadow slides out from under the button as the page first paints */
+@media (prefers-reduced-motion: no-preference) {
+  .body::after {
+    animation: shadow-in 600ms var(--px-ease-spring) 450ms backwards;
+  }
+}
+
+@keyframes shadow-in {
+  from {
+    transform: translate(0, 0);
+  }
+}
+
+@media (max-width: 600px) {
+  .body {
+    height: 48px;
+    font-size: 14px;
+  }
+}
+
+@media (forced-colors: active) {
+  .body {
+    border: 2px solid ButtonText;
+  }
+
+  .body::before,
+  .body::after {
+    display: none;
+  }
+}

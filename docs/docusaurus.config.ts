@@ -1,33 +1,88 @@
+import type { Options as RedirectOptions } from "@docusaurus/plugin-client-redirects";
 import type * as Preset from "@docusaurus/preset-classic";
-import type { Config } from "@docusaurus/types";
-import { themes as prismThemes } from "prism-react-renderer";
+import type { Config, Plugin } from "@docusaurus/types";
+
+import llmsPlugin from "./plugins/llms";
+import { guideLinks } from "./src/data/guideLinks";
+import { pixiDark, pixiLight } from "./src/data/prism";
+
+const fonts =
+  "https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Roboto:ital,wght@0,400;0,500;0,600;1,400&family=Roboto+Mono:wght@400;500&display=swap";
+
+/** Lets the site import `templates/manifest.ts` and template files as `@templates/*` */
+function templatesAlias({ siteDir }: { siteDir: string }): Plugin {
+  return {
+    name: "templates-alias",
+    configureWebpack: () => ({
+      resolve: { alias: { "@templates": `${siteDir}/../templates` } },
+    }),
+  };
+}
 
 const config: Config = {
   title: "PixiJS Create",
-  tagline: "A CLI tool to create PixiJS projects with ease",
+  tagline: "Scaffold a PixiJS project in one command",
   favicon: "img/favicon.png",
 
-  // Set the production url of your site here
   url: "https://pixijs.io",
   baseUrl: "/create-pixi/",
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "pixijs", // Usually your GitHub org/user name.
-  projectName: "create-pixi", // Usually your repo name.
-  deploymentBranch: "gh-pages", // Branch that GitHub pages will deploy to.
+  organizationName: "pixijs",
+  projectName: "create-pixi",
+  deploymentBranch: "gh-pages",
   trailingSlash: true,
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
+  onBrokenAnchors: "throw",
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "throw",
+    },
+  },
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
   },
+
+  headTags: [
+    {
+      tagName: "link",
+      attributes: { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    },
+    {
+      tagName: "link",
+      attributes: {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossorigin: "anonymous",
+      },
+    },
+  ],
+  stylesheets: [fonts],
+
+  plugins: [
+    templatesAlias,
+    llmsPlugin,
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            // The creation template's pages, and the page about the game
+            // templates before they were split into games and platforms
+            from: [
+              "/docs/guide/creations/intro",
+              "/docs/guide/creations/engine",
+              "/docs/guide/platform",
+            ],
+            to: "/docs/guide/games",
+          },
+          { from: "/docs/guide/discord", to: "/docs/guide/platforms/discord" },
+        ],
+      } satisfies RedirectOptions,
+    ],
+  ],
 
   presets: [
     [
@@ -35,18 +90,9 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/pixijs/create-pixi/tree/main/packages/docs/",
+          editUrl: "https://github.com/pixijs/create-pixi/tree/main/docs/",
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/pixijs/create-pixi/tree/main/packages/docs/",
-        },
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -58,37 +104,47 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: "img/ogimage.jpg",
+    image: "img/ogimage.png",
     colorMode: {
       defaultMode: "dark",
-      disableSwitch: true,
-      respectPrefersColorScheme: false,
+      respectPrefersColorScheme: true,
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+      },
     },
     navbar: {
       title: "Create",
       logo: {
-        alt: "PixiJS Logo",
+        alt: "PixiJS",
         src: "img/logo.svg",
+        width: 32,
+        height: 32,
       },
       items: [
         {
-          type: "docSidebar",
-          sidebarId: "guide",
-          position: "left",
+          to: "/docs/guide/installation",
           label: "Guide",
+          position: "left",
+          // Templates and CLI have their own items
+          activeBaseRegex: "/docs/guide/(?!choosing-a-template|cli)",
         },
         {
-          href: "https://opencollective.com/pixijs",
-          className: "header-link header-open-col-link",
-          "aria-label": "Open Collective",
-          position: "right",
+          to: "/docs/guide/choosing-a-template",
+          label: "Templates",
+          position: "left",
         },
         {
-          href: "https://twitter.com/pixijs",
+          to: "/docs/guide/cli",
+          label: "CLI",
+          position: "left",
+        },
+        {
+          href: "https://github.com/pixijs/create-pixi",
           position: "right",
-          className: "header-link header-twitter-link",
-          "aria-label": "Twitter account",
+          className: "header-link header-github-link",
+          "aria-label": "GitHub repository",
         },
         {
           href: "https://discord.gg/CPTjeb28nH",
@@ -97,16 +153,59 @@ const config: Config = {
           "aria-label": "Discord server",
         },
         {
-          href: "https://github.com/pixijs/create-pixi",
+          href: "https://twitter.com/pixijs",
           position: "right",
-          className: "header-link header-github-link",
-          "aria-label": "GitHub repository",
+          className: "header-link header-twitter-link",
+          "aria-label": "Twitter account",
+        },
+        {
+          href: "https://opencollective.com/pixijs",
+          className: "header-link header-open-col-link",
+          "aria-label": "Open Collective",
+          position: "right",
         },
       ],
     },
+    footer: {
+      style: "dark",
+      links: [
+        {
+          title: "Guide",
+          items: [
+            ...guideLinks,
+            { label: "llms.txt", to: "pathname:///llms.txt" },
+          ],
+        },
+        {
+          title: "PixiJS",
+          items: [
+            { label: "pixijs.com", href: "https://pixijs.com" },
+            { label: "Guides", href: "https://pixijs.com/8.x/guides" },
+            {
+              label: "API reference",
+              href: "https://pixijs.download/release/docs/index.html",
+            },
+            { label: "Examples", href: "https://pixijs.com/8.x/examples" },
+          ],
+        },
+        {
+          title: "Community",
+          items: [
+            { label: "GitHub", href: "https://github.com/pixijs/create-pixi" },
+            { label: "Discord", href: "https://discord.gg/CPTjeb28nH" },
+            {
+              label: "Open Collective",
+              href: "https://opencollective.com/pixijs",
+            },
+          ],
+        },
+      ],
+      copyright: "Released under the MIT License.",
+    },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: pixiLight,
+      darkTheme: pixiDark,
+      additionalLanguages: ["bash", "json"],
     },
   } satisfies Preset.ThemeConfig,
 };

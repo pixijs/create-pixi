@@ -1,0 +1,57 @@
+/* The whole column sticks below the navbar, and the list scrolls inside it when it's taller than the window */
+.column {
+  position: sticky;
+  top: calc(var(--ifm-navbar-height) + 40px);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--ifm-navbar-height) - 64px);
+}
+
+.column > :global(.theme-doc-toc-desktop) {
+  position: static;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+}
+
+/* pixijs.com's TOC footer */
+.actions {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--px-line);
+}
+
+.actions a,
+.actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--px-ink-3);
+  font: 400 13.5px/1.3 var(--px-font-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--px-dur-1) var(--px-ease);
+}
+
+.actions a:hover,
+.actions button:hover {
+  color: var(--px-ink);
+  text-decoration: none;
+}
+
+.github {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  mask: url("/social/github.svg") no-repeat center / contain;
+}

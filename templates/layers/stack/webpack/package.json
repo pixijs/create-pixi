@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "dev": "webpack serve --mode=development",
+    "build": "oxlint && tsc && webpack --mode=production",
+    "preview": "webpack serve --mode=production"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "catalog:",
+    "esbuild-loader": "catalog:",
+    "html-webpack-plugin": "catalog:",
+    "webpack": "catalog:",
+    "webpack-cli": "catalog:",
+    "webpack-dev-server": "catalog:"
+  },
+  "allowScripts": {
+    "esbuild": true
+  }
+}

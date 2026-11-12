@@ -1,6 +1,6 @@
 node_modules
-.vscode
-.idea
+/.vscode
+/.idea
 .DS_Store
 .env
 dist
@@ -10,7 +10,5 @@ dist
 .cache-loader
 docs/build
 
-
-templates/template-creation-web/public/assets
-templates/template-creation-web/.assetpack
-templates/template-creation-web/src/manifest.json
+# Template playground (npm run play)
+playground

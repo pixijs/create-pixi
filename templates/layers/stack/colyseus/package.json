@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "preview": "node dist/server/server.mjs"
+  },
+  "dependencies": {
+    "@colyseus/schema": "catalog:",
+    "@colyseus/sdk": "catalog:",
+    "colyseus": "catalog:",
+    "express": "catalog:"
+  }
+}

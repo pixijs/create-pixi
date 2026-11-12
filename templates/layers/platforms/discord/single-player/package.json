@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "preview": "node dist/server/server.mjs"
+  },
+  "dependencies": {
+    "express": "catalog:"
+  },
+  "devDependencies": {
+    "@types/express": "catalog:"
+  }
+}

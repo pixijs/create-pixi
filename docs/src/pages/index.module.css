@@ -1,24 +1,293 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
+/*
+ * Gutters that line up with the site shell: the footer's columns from 997px, and the navbar's menu button below.
+ * Docusaurus only zeroes the footer padding variable on the footer itself, so here it's always 2rem.
  */
-
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.home :global(.container) {
+  width: calc(100% - 2 * var(--ifm-footer-padding-horizontal));
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+/* ---------- hero ---------- */
+
+.hero {
+  padding: 4.5rem 0 5rem;
+}
+
+.heroGrid {
+  --title-size: clamp(2.5rem, 5vw, 4.5rem);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 4rem;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+/* In em, not ch, so the fallback font breaks the title on the same word as Outfit */
+.title {
+  max-width: 9.6em;
+  margin: 0;
+  color: var(--px-ink);
+  font-size: var(--title-size);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--px-ink-2);
+  font: 400 var(--px-text-lede) / 1.55 var(--px-font-body);
+  text-wrap: balance;
+}
+
+.install {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 36rem;
+}
+
+/* Dark on both themes, through .px-on-dark */
+.terminal {
+  overflow: hidden;
+  border: 1px solid var(--px-line);
+  border-radius: var(--px-r-lg);
+  background: var(--px-code-bg);
+  box-shadow: var(--px-shadow-lg);
+  color: var(--px-ink);
+}
+
+/* On a dark page a black shadow barely shows, so the terminal is raised by its surface instead, above the recessed stage */
+:global(html[data-theme="dark"]) .terminal {
+  border-color: var(--px-line-strong);
+  background: var(--px-raised);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    var(--px-shadow-lg);
+}
+
+.terminalBar {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--px-line);
+}
+
+.note {
+  margin: 0;
+  color: var(--px-ink-2);
+  font: 400 14px/1.6 var(--px-font-body);
+  text-wrap: balance;
+}
+
+/* Docusaurus centres inline code with padding, which makes lines that hold a chip taller than the rest */
+.home p code {
+  padding-block: 0;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.cta {
+  margin-top: 0.25rem;
+}
+
+/* Its top edge sits on the cap height of the title's first line, and its caption ends level with the button */
+.stage {
+  margin-top: calc(var(--title-size) * 0.16);
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  padding: 5rem 0;
+}
+
+/* The tint marks the band's edges, so it needs less room inside them. A #templates link lands with the cards in view. */
+.band {
+  padding-block: 4rem;
+  background: var(--px-bg-alt);
+  scroll-margin-top: calc(var(--ifm-navbar-height) - 2rem);
+}
+
+.band .sectionHead {
+  margin-bottom: 2rem;
+}
+
+.sectionHead {
+  margin-bottom: 2.5rem;
+}
+
+.splitHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--px-ink);
+  font: 700 var(--px-text-display-2) / 1.02 var(--px-font-display);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.sectionLead {
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  color: var(--px-ink-2);
+  font: 400 var(--px-text-lede) / 1.55 var(--px-font-body);
+  text-wrap: pretty;
+}
+
+.small {
+  margin: 0;
+  color: var(--px-ink-2);
+  font-size: 14px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- in every project ---------- */
+
+/* The title at the top left, the facts on the right, and the note about the exceptions under the facts */
+.split {
+  display: grid;
+  grid-template-areas:
+    "start facts"
+    ". note";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 2rem 4rem;
+}
+
+.splitStart {
+  grid-area: start;
+}
+
+.footnote {
+  grid-area: note;
+}
+
+.more {
+  display: inline-block;
+  margin-block: calc(1.25rem - var(--hit)) calc(-1 * var(--hit));
+  font: 500 15px/1.6 var(--px-font-display);
+}
+
+.facts {
+  grid-area: facts;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.facts li {
+  margin: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--px-line);
+}
+
+.facts h3 {
+  margin: 0;
+  color: var(--px-ink);
+  font: 600 var(--px-text-h3) / 1.25 var(--px-font-display);
+  letter-spacing: -0.01em;
+}
+
+.facts p {
+  margin: 0.5rem 0 0;
+  color: var(--px-ink-2);
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* Its caption row is as tall as the button beside it, so their text shares a centre line */
+@media (min-width: 997px) {
+  .stage figcaption {
+    min-height: 52px;
   }
 }
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
+/* A wider text column on small laptops keeps the create command on one line beside Copy */
+@media (min-width: 997px) and (max-width: 1199px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 996px) {
+  .home :global(.container) {
+    width: 100%;
+    padding-inline: 24px;
+  }
+
+  /* The footer's columns move in to match */
+  :global(html.plugin-pages .footer) {
+    --ifm-footer-padding-horizontal: 8px;
+  }
+
+  .hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .install {
+    max-width: none;
+  }
+
+  .stage {
+    margin-top: 0;
+  }
+
+  .section,
+  .band {
+    padding-block: 3.5rem;
+  }
+
+  .splitHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .split {
+    grid-template-areas: "start" "facts" "note";
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2.5rem;
+  }
+
+  .footnote {
+    margin-top: -0.5rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 996px) {
+  .heroGrid {
+    --title-size: 3.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
 }

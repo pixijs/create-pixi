@@ -1,0 +1,281 @@
+/* ---------- command line ---------- */
+
+.command {
+  display: flex;
+  min-width: 0;
+}
+
+/* A hanging indent: the prompt and its gap are 2ch, so wrapped lines start under the command */
+.commandText {
+  flex: 1;
+  min-width: 0;
+  padding: 0 0 0 2ch;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--px-ink);
+  text-indent: -2ch;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.prompt {
+  margin-right: 1ch;
+  color: var(--px-accent-text);
+  user-select: none;
+}
+
+.word {
+  white-space: nowrap;
+}
+
+/* Wraps on its own only when it can't fit on a line. As an inline block it would inherit the hanging indent. */
+.id {
+  display: inline-block;
+  max-width: 100%;
+  text-indent: 0;
+}
+
+/* In the hero terminal, which draws the box. Copy sits as far from the right edge as from the top and bottom. */
+.hero {
+  align-items: center;
+  gap: 16px;
+  padding: 18px 18px 18px 22px;
+}
+
+.hero .commandText {
+  font: 400 18px/1.6 var(--px-font-mono);
+}
+
+/* A template's command in its own box, with a labelled Copy button */
+.row {
+  align-items: center;
+  gap: 12px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--px-line);
+  border-radius: var(--px-r-sm);
+  background: var(--px-code-bg);
+}
+
+.row .commandText {
+  font: 400 14px/1.5 var(--px-font-mono);
+}
+
+/* ---------- copy button ---------- */
+
+.copy {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--px-dur-1) var(--px-ease),
+    color var(--px-dur-1) var(--px-ease),
+    transform var(--px-dur-1) var(--px-ease);
+}
+
+.copy:focus-visible {
+  outline-offset: 2px;
+}
+
+.copyIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The page's one primary action */
+.hero .copy {
+  gap: 8px;
+  min-width: 6.75rem;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--px-r-pill);
+  background: var(--px-pink-fill);
+  color: #fff;
+  font: 600 13px/1 var(--px-font-display);
+  letter-spacing: 0.02em;
+}
+
+.hero .copy:hover {
+  background: var(--px-pink-deep);
+}
+
+.row .copy {
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--px-r-pill);
+  background: var(--px-field);
+  color: var(--px-ink);
+  font: 500 13px/1 var(--px-font-display);
+  letter-spacing: 0.02em;
+}
+
+.row .copy:hover {
+  background: var(--px-active);
+}
+
+.row .copied,
+.row .copied:hover {
+  color: var(--px-accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .copy:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ---------- segmented control ---------- */
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid var(--px-line);
+  border-radius: var(--px-r-pill);
+  background: var(--px-field);
+}
+
+.segment {
+  position: relative;
+  display: block;
+}
+
+.segment input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segment span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: var(--px-r-pill);
+  color: var(--px-ink-2);
+  font: 500 14px/1 var(--px-font-display);
+  white-space: nowrap;
+  transition:
+    background-color var(--px-dur-1) var(--px-ease),
+    border-color var(--px-dur-1) var(--px-ease),
+    color var(--px-dur-1) var(--px-ease);
+}
+
+.segment:hover span {
+  color: var(--px-ink);
+}
+
+/* A solid pink outline: 3:1 or more against the track in both themes, with ink text */
+.segment input:checked + span {
+  border-color: var(--px-pink);
+  background: color-mix(in srgb, var(--px-pink) 22%, var(--px-rail));
+  color: var(--px-ink);
+}
+
+/* Inside the track's padding, clear of its border */
+.segment input:focus-visible + span {
+  outline: 2px solid var(--px-focus);
+  outline-offset: 0;
+}
+
+.bar {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.bar .segment span {
+  height: 32px;
+  padding: 0 12px;
+}
+
+/* ---------- shared ---------- */
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    gap: 12px;
+    padding: 14px 14px 14px 16px;
+  }
+
+  .hero .commandText {
+    font-size: 15px;
+  }
+
+  .hero .copy {
+    width: 44px;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+  }
+
+  .row {
+    gap: 8px;
+  }
+
+  .row .commandText {
+    font-size: 13px;
+  }
+
+  .row .copy {
+    width: 40px;
+    padding: 0;
+  }
+
+  .copyText {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (pointer: coarse) {
+  .hero .copy,
+  .row .copy,
+  .segment span,
+  .bar .segment span {
+    height: 44px;
+  }
+}
+
+@media (forced-colors: active) {
+  .segment input:checked + span {
+    border-color: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy,
+  .segment span {
+    transition: none;
+  }
+}

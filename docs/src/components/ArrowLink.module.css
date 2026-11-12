@@ -1,0 +1,65 @@
+.icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/*
+ * Inline, so the padding makes a bigger hit area without moving the text. It also gives the focus ring room around
+ * the arrow when it nudges right.
+ */
+.link {
+  --hit: 4px;
+
+  margin-inline: -4px;
+  padding: var(--hit) 4px;
+  border-radius: var(--px-r-xs);
+  color: var(--px-ink);
+}
+
+@media (pointer: coarse) {
+  .link {
+    --hit: 12px;
+  }
+}
+
+.link:hover {
+  color: var(--px-ink);
+  text-decoration: none;
+}
+
+.link:is(:hover, :focus-visible) {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.link:focus-visible {
+  outline-offset: 2px;
+}
+
+.lastWord {
+  white-space: nowrap;
+}
+
+.arrow {
+  margin-left: 0.4em;
+  color: var(--px-ink-3);
+  vertical-align: -0.05em;
+  transition:
+    color var(--px-dur-1) var(--px-ease),
+    transform var(--px-dur-2) var(--px-ease);
+}
+
+.link:is(:hover, :focus-visible) .arrow {
+  color: var(--px-accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link:is(:hover, :focus-visible) .arrow {
+    transform: translateX(3px);
+  }
+}

@@ -1,0 +1,131 @@
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+}
+
+/* A recessed surface, so the install terminal stays the hero's one raised object */
+.stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 18rem;
+  overflow: hidden;
+  border: 1px solid var(--px-line);
+  border-radius: var(--px-r-lg);
+  background-color: var(--px-bg-alt);
+  background-image: radial-gradient(
+    var(--px-line-strong) 1px,
+    transparent 1.5px
+  );
+  background-position: center;
+  background-size: 22px 22px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+/* The bunny before PixiJS loads, or instead of it without WebGL */
+.still {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  image-rendering: pixelated;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--px-ink-2);
+  font-size: 14px;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+/* A caption that needs two lines breaks between its sentences */
+.sentence {
+  white-space: nowrap;
+}
+
+/* On phones the hint takes its own line, so the first sentence can wrap evenly beside the button */
+@media (max-width: 600px) {
+  .sentence {
+    white-space: normal;
+  }
+
+  .hint {
+    display: block;
+  }
+}
+
+.touch {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .mouse {
+    display: none;
+  }
+
+  .touch {
+    display: inline;
+  }
+}
+
+.add {
+  flex: none;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--px-r-pill);
+  background: var(--px-field);
+  color: var(--px-ink);
+  font: 600 13px/1 var(--px-font-display);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color var(--px-dur-1) var(--px-ease),
+    transform var(--px-dur-1) var(--px-ease);
+}
+
+.add:hover:not(:disabled) {
+  background: var(--px-active);
+}
+
+.add:focus-visible {
+  outline-offset: 2px;
+}
+
+.add:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .add:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+@media (pointer: coarse) {
+  .add {
+    height: 44px;
+  }
+}
+
+@media (max-width: 996px) {
+  .stage {
+    flex: none;
+    height: clamp(12rem, 40vw, 22rem);
+    min-height: 0;
+  }
+}

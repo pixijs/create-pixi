@@ -1,0 +1,43 @@
+---
+title: Choosing a template
+description: Compare every create-pixi.js template by build tool and language, and pick the right one for your project.
+---
+
+import { TemplateComparison } from "@site/src/components/TemplateTables";
+
+Every template is a working PixiJS project. They differ in build tool, in how much code they start you with, and in what you're building.
+
+<TemplateComparison />
+
+## Which one to pick
+
+| If you want                                                     | Use                                                                    |
+| --------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| A browser game with animation, UI, sound, filters and Spine     | [Starter on the web](./platforms/web.mdx)                              |
+| A multiplayer game where a server keeps every player in sync    | [Starter on the web, multiplayer](./multiplayer.mdx)                   |
+| A game that people launch from a Discord channel                | [Starter on Discord](./platforms/discord.mdx)                          |
+| A multiplayer game that people play together inside Discord     | [Starter on Discord, multiplayer](./platforms/discord.mdx#multiplayer) |
+| A blank PixiJS app and no strong opinion on tooling             | [Vite](./bundlers.mdx#vite)                                            |
+| webpack, because your team or another project already uses it   | [webpack](./bundlers.mdx#webpack)                                      |
+| A build you can read in full: two short scripts and no plugins  | [esbuild](./bundlers.mdx#esbuild)                                      |
+| No build step, for a quick prototype or a page on a static host | [Import map](./bundlers.mdx#import-map)                                |
+| PixiJS inside a React app                                       | [React](./react.mdx)                                                   |
+| To publish a library that adds features to PixiJS               | [Extension](./extension.mdx)                                           |
+
+If you're making a game, start with a [game template](./games/index.mdx): pick the platform it runs on, and whether it's multiplayer. It's the Vite template plus the libraries most games add, and you can remove the ones you don't need. For anything else, or if you're unsure, start with Vite. Its config only sets `base: "./"`, the dev server port and `open: true`. The game and React templates use Vite too, so you can move to them later without learning a new build tool.
+
+## What every app template includes
+
+All templates except the extension template share these:
+
+- A `public/` folder for static files such as images and the favicon.
+- A dev server on port 8080. See [change the dev server port](./bundlers.mdx#change-the-dev-server-port).
+- [oxlint and oxfmt](./linting-and-formatting.mdx) with `lint` and `format` scripts, plus VS Code settings that use the Oxc extension to lint and format on save.
+- A `.gitignore` for `node_modules`, `dist` and editor files.
+- [PixiJS 3D](./pixijs-3d.mdx), with a spinning cube that shows 3D and 2D on one stage.
+
+The extension template uses [PixiJS Extension Scripts](./extension.mdx) for building, linting and testing instead, and lists PixiJS 3D as a peer dependency.
+
+## TypeScript or JavaScript
+
+The table above shows which languages each template comes in. When a template has both, pick JavaScript at the language prompt or use its `-js` id. [TypeScript and JavaScript](./typescript-and-javascript.mdx) explains how the two versions differ.

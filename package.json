@@ -1,74 +1,78 @@
 {
   "name": "create-pixi.js",
   "version": "1.4.0",
-  "homepage": "http://pixijs.com/",
-  "bugs": "https://github.com/pixijs/pixijs/issues",
+  "homepage": "https://pixijs.io/create-pixi/",
+  "bugs": "https://github.com/pixijs/create-pixi/issues",
+  "license": "MIT",
+  "author": "PixiJS",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pixijs/create-pixi.git"
   },
   "funding": "https://opencollective.com/pixijs/contribute",
-  "license": "MIT",
-  "author": "PixiJS",
-  "type": "module",
   "bin": {
     "cpa": "index.js",
-    "create-pixi": "index.js"
+    "create-pixi": "index.js",
+    "create-pixi.js": "index.js"
   },
-  "files": [
-    "index.js",
-    "templates/*",
-    "dist"
-  ],
   "workspaces": [
-    "templates/*",
+    "templates",
     "docs"
   ],
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && node scripts/build-templates.ts",
     "build:docs": "npm run --workspace docs build",
     "deploy": "npm run deploy --workspace docs",
-    "lint:fix": "npm run test:lint -- --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "play": "node scripts/playground.ts",
     "prepare": "husky",
     "publish-ci": "xs publish",
     "release": "xs bump,git-push",
     "start": "node index.js",
     "start:docs": "npm run --workspace docs start",
     "test": "vitest run",
-    "test:lint": "eslint .",
-    "test:watch": "vitest"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix"
-    ]
+    "test:watch": "vitest",
+    "typecheck": "tsc && node scripts/typecheck-templates.ts",
+    "update:templates": "npx --yes npm-check-updates@23 --packageFile templates/package.json --target semver -u && npm install",
+    "verify": "node scripts/verify-template.ts"
   },
   "dependencies": {
-    "cross-spawn": "^7.0.6",
     "minimist": "^1.2.8",
     "picocolors": "^1.1.1",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
     "@pixi/extension-scripts": "^4.0.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/cross-spawn": "^6.0.6",
+    "@tsconfig/node22": "^22.0.6",
     "@types/minimist": "^1.2.5",
+    "@types/node": "^24.19.2",
     "@types/prompts": "^2.4.9",
-    "eslint": "^9.21.0",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.6.3",
-    "eslint-plugin-prettier": "^5.2.6",
-    "globals": "^16.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
-    "prettier": "^3.5.3",
-    "rollup-plugin-node-externals": "^8.0.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.25.0",
-    "vite": "^6.2.0",
-    "vitest": "^3.0.7"
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "rollup-plugin-node-externals": "^9.0.1",
+    "sucrase": "^3.35.1",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,mts}": [
+      "oxlint --fix",
+      "oxfmt --no-error-on-unmatched-pattern"
+    ],
+    "*.{json,md,mdx,css,html,yml,yaml}": "oxfmt --no-error-on-unmatched-pattern"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }

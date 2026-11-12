@@ -5,72 +5,71 @@
 <h3>A CLI tool to scaffold PixiJS projects</h3>
 </div>
 
-## Scaffolding Your First PixiJS Project
+## Scaffolding your first PixiJS project
 
 Check out the full documentation at [pixijs.io/create-pixi](https://pixijs.io/create-pixi/).
 
 > **Compatibility Note:**
-> PixiJS requires [Node.js](https://nodejs.org/en/) version 18+, 20+. However, some templates require a higher Node.js version to work, please upgrade if your package manager warns about it.
-
-With NPM:
+> The templates need [Node.js](https://nodejs.org/en/) 22.12 or newer (22.15 or newer for the webpack template). We recommend the current LTS release.
 
 ```bash
-$ npm create pixi.js@latest
-```
+# npm
+npm create pixi.js@latest
 
-With Yarn:
+# yarn
+yarn create pixi.js
 
-```bash
-$ yarn create pixi.js
-```
+# pnpm
+pnpm create pixi.js
 
-With PNPM:
-
-```bash
-$ pnpm create pixi.js
-```
-
-With Bun:
-
-```bash
-$ bun create pixi.js
+# bun
+bun create pixi.js
 ```
 
 Then follow the prompts!
 
-### Advanced Usage
+### Choosing a template up front
 
-You can also directly specify the project name and the template you want to use via additional command line options. For example, to scaffold a PixiJS + Vite project, run:
+Pass a project name and `--template` to skip the prompts. For example, to scaffold a PixiJS + Vite project:
 
 ```bash
-# npm 7+, extra double-dash is needed:
-npm create pixi.js@latest pixi-project -- --template bundler-vite
+# npm needs the extra double-dash
+npm create pixi.js@latest my-app -- --template bundler-vite
 
-# yarn
-yarn create pixi.js pixi-project --template bundler-vite
-
-# pnpm
-pnpm create pixi.js pixi-project --template bundler-vite
-
-# Bun
-bun create pixi.js pixi-project --template bundler-vite
+yarn create pixi.js my-app --template bundler-vite
+pnpm create pixi.js my-app --template bundler-vite
+bun create pixi.js my-app --template bundler-vite
 ```
 
-Currently supported template presets include:
+Use `.` as the project name to scaffold into the current directory. Run with `--help` to list every template.
 
-- `bundler-vite`
-- `bundler-vite-js`
-- `bundler-webpack`
-- `bundler-webpack-js`
-- `bundler-esbuild`
-- `bundler-esbuild-js`
-- `bundler-import-map`
-- `creation-web`
-- `framework-react`
-- `framework-react-js`
-- `extension-default`
+| Template                            | TypeScript                    | JavaScript                       |
+| ----------------------------------- | ----------------------------- | -------------------------------- |
+| Web game                            | `starter-web`                 | `starter-web-js`                 |
+| Web multiplayer game (Colyseus)     | `starter-web-multiplayer`     | `starter-web-multiplayer-js`     |
+| Discord Activity                    | `starter-discord`             | `starter-discord-js`             |
+| Discord Activity multiplayer        | `starter-discord-multiplayer` | `starter-discord-multiplayer-js` |
+| Vite (recommended)                  | `bundler-vite`                | `bundler-vite-js`                |
+| webpack                             | `bundler-webpack`             | `bundler-webpack-js`             |
+| esbuild                             | `bundler-esbuild`             | `bundler-esbuild-js`             |
+| Import map (no build step)          | n/a                           | `bundler-import-map`             |
+| React                               | `framework-react`             | `framework-react-js`             |
+| Extension (publish a PixiJS plugin) | `extension-default`           | n/a                              |
 
-You can use `.` for the project name to scaffold in the current directory.
+The game templates are starters built with Vite, with [GSAP](https://gsap.com/), [PixiJS UI](https://github.com/pixijs/ui), [PixiJS Sound](https://github.com/pixijs/sound), [PixiJS Filters](https://github.com/pixijs/filters) and [Spine](https://esotericsoftware.com/spine-pixi) ready to use. The multiplayer versions add a [Colyseus](https://colyseus.io/) server.
+
+Every app template comes with [oxlint](https://oxc.rs/docs/guide/usage/linter) and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) set up. Each one also includes [PixiJS 3D](https://github.com/pixijs/3d) and draws a spinning 3D cube with it. The extension template lists PixiJS 3D as a peer dependency.
+
+## Contributing
+
+```bash
+npm install
+npm run build        # build the CLI and generate every template into dist/templates
+npm test
+npm run play -- bundler-vite   # live preview a template while editing it
+```
+
+Templates are assembled from shared layers. See [templates/README.md](templates/README.md) for how that works and how to add or update a template.
 
 ## License
 
