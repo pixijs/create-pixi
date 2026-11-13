@@ -1,7 +1,25 @@
 name: Publish Package
+
+# Publishes create-pixi.js with npm trusted publishing: npm checks the job's GitHub OIDC
+# token instead of a stored npm token, and adds provenance. npm matches this file's name
+# against the package's trusted publisher, so renaming it stops publishing until the
+# publisher is updated (`npm trust list create-pixi.js`).
+#
+# A published GitHub release publishes the version in package.json, which must match the
+# tag: to `latest`, or to `beta` when the release is marked as a pre-release.
 on:
   release:
     types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A publish stopped partway can leave npm and the run disagreeing about what shipped
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -11,9 +29,22 @@ jobs:
         with:
           node-version-file: .node-version
           registry-url: "https://registry.npmjs.org"
+      # Trusted publishing needs npm 11.5.1 or later
+      - run: npm install -g npm@11
       - run: npm ci
+      - name: Check the release tag matches package.json
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$TAG" ]; then
+            echo "::error::Release $TAG doesn't match package.json version $version"
+            exit 1
+          fi
       - run: npm run build
       - run: npm test
-      - run: npm run publish-ci
+      # The only script npm publish would run is `prepare`, which sets up git hooks
+      - name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DIST_TAG: ${{ github.event.release.prerelease && 'beta' || 'latest' }}
+        run: npm publish --ignore-scripts --tag "$DIST_TAG"
